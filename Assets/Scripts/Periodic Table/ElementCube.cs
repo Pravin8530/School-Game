@@ -1,7 +1,9 @@
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
-public class ElementCube : MonoBehaviour ,IPickable
+public class ElementCube : MonoBehaviour, IPickable
 {
 
     public ElementType element;
@@ -33,7 +35,7 @@ public class ElementCube : MonoBehaviour ,IPickable
        // throw new System.NotImplementedException();
     }
 
-    public void Interact()
+    public void Interact(Transform hand)
     {
 
         originalScale = transform.localScale;
@@ -45,8 +47,9 @@ public class ElementCube : MonoBehaviour ,IPickable
         transform.localRotation = Quaternion.Euler(rotation);
 
     }
-
-
+ 
+   
+   
 }
 
 public enum ElementType { H, He, Li, Be, B, C, N, O ,Rn }

@@ -5,26 +5,38 @@ using UnityEngine;
 public class Pickable : MonoBehaviour, IPickable
 {
 
-    public Transform playerHand;
+    private Transform playerHand;
     [SerializeField] private float pickUpSpeed = 20f;
     private Rigidbody rb;
+    private Renderer rend;
+    private Collider col;
 
     [SerializeField] bool isPickedup = false;
     private Coroutine pickupRoutine;
-    [SerializeField]private float forceSpeed = 5f;
-    void Start()
+
+
+
+
+
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
+        rend = GetComponent<Renderer>();
+        col = GetComponent<Collider>();
     }
 
- 
 
-    public void Interact()
+
+    //player interact can pass hand ref
+    public void Interact(Transform hand)
     {
         if (isPickedup) return;
+
+        playerHand = hand;
+        rend.enabled = true;
+        col.enabled = true;
         isPickedup = true;
-        pickupRoutine = StartCoroutine(PickupRoutine());  // it does both starts coroutine and saves it in var.
+        StartCoroutine(PickupRoutine());  // it does both starts coroutine and saves it in var.
 
     }
 
@@ -32,7 +44,7 @@ public class Pickable : MonoBehaviour, IPickable
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        if (rb) rb.isKinematic = true;
+        rb.isKinematic = true;
         rb.useGravity = false;
 
         while (Vector3.Distance(transform.position, playerHand.position) > 0.05f)
@@ -49,25 +61,39 @@ public class Pickable : MonoBehaviour, IPickable
         transform.rotation = playerHand.rotation;
         transform.SetParent(playerHand);
 
+        WorldItem worldItem = GetComponent<WorldItem>();
+
+        Inventory inventory = playerHand.GetComponentInParent<Inventory>();
+
+
+        inventory.AddItem(worldItem.itemData);
+
+        inventory.Equip(inventory.items.Count - 1);
+
+        Destroy(gameObject);
     }
 
-    public void Drop()
-    {
-        isPickedup = false;
-        
-        if (pickupRoutine != null)
-        {
-            StopCoroutine(pickupRoutine);
-        }
+    // public void Drop()
+    // {
+    //     GetComponent<Renderer>().enabled = true;
+    //     GetComponent<Collider>().enabled = true;
+    //     isPickedup = false;
 
-        transform.SetParent(null);
-        rb.isKinematic = false;
-        rb.useGravity = true;
+    //     if (pickupRoutine != null)
+    //     {
+    //         StopCoroutine(pickupRoutine);
+    //     }
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.AddForce(transform.right * forceSpeed, ForceMode.Impulse);
+    //     transform.SetParent(null);
+    //     rb.isKinematic = false;
+    //     rb.useGravity = true;
+
+    //     rb.linearVelocity = Vector3.zero;
+    //     rb.angularVelocity = Vector3.zero;
+    //     rb.AddForce(transform.right * forceSpeed, ForceMode.Impulse);
 
 
-    }
+    // }
+
+
 }

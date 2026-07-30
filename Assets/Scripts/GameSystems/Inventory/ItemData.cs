@@ -5,7 +5,8 @@ public class ItemData : ScriptableObject
 {
  public int id;   
  public string itemName;
- public GameObject prefab;
- 
+ [Header("prefabs")]
+ public GameObject worldPrefab;
+ public GameObject heldPrefab;
 
 }

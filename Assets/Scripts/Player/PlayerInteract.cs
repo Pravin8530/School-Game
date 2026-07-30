@@ -1,169 +1,163 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 //***
+// detect if (found) callmethods
+
 public class PlayerInteract : MonoBehaviour
 {
-    
-public static PlayerInteract instance; 
-
+    public static PlayerInteract instance;
 
     [Header("Reycast Distance")]
-    public float interactDistance = 2f;
+    public float interactDistance = 4f;
 
-    [Header("Pickble")]
-    public IPickable currentPickedItem;
-    public IPickable foundPickable;
- 
+    [Header("Pickable")]
+
+    public IPickable targetPickable;  // item you,re currently looking at
+
     [Header("Interactable")]
-    private IInteractables CurrentInteractable = null;
+    private IInteractables currentInteractable = null;
 
-    bool isHoldingItem = false;
-// inventory
     private Inventory inventory;
-    private WorldItem worldItem;
 
-    private WorldItem foundWorldItem;
+    private WorldItem targetWorldItem; // stores worlditem ur looking at
 
+    public Transform hand;
 
-     public void Awake()
+    public void Awake()
     {
+        inventory = GetComponentInParent<Inventory>();
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
     }
 
-   void Start()
-    { //-------
-        inventory= GetComponent<Inventory>();
-      //-----
-    }
+
     void Update()
     {
 
         DetectTargets();
-        HandleInput(); 
+        HandleInput();
 
-
-    }
-
-
-    public void DropCurrentItem()
-    {
-        if (currentPickedItem == null)
-            return;
-
-
-        currentPickedItem.Drop();
-        foundPickable = null;
-        currentPickedItem = null;
     }
 
 
     public void DetectTargets()
     {
-       // foundPickable = null;  // solved the issue with object bellow pickup issue
-        CurrentInteractable= null; // same issue with the interactable
+        targetWorldItem = null;
+        targetPickable = null;  
+        currentInteractable = null; 
         Ray ray = new Ray(transform.position, transform.forward);
+
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
         RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance);
 
-
         int highestPriority = -1;
 
         foreach (RaycastHit hit in hits)
-        { 
+        {
 
-       //-------------------------- inventory    
-            //   WorldItem worldItem =hit.collider.GetComponent<WorldItem>();
-            //  if(worldItem !=null){
-            //   inventory.AddData(worldItem.itemdata);
-            //   }
+            DetectInteraction(hit, ref highestPriority);
+            DetectPickable(hit);
 
-        //---------------------
-
-            /// this is for intract Item like Keys , Door , Drawer , Closet etc :
-            Debug.Log(hit.collider.name);
-
-            IInteractables interactable =
-                 hit.collider.GetComponent<IInteractables>();
-
-            if (interactable != null)
-            {
-                if (interactable.Priority > highestPriority)
-                {
-                    highestPriority = interactable.Priority;
-                    CurrentInteractable = interactable;
-                }
-            }
-            ///Pickabes like Key , Paper , etc :
-
-            IPickable pickable =
-             hit.collider.GetComponent<IPickable>();
-
-            if (pickable != null)
-            {
-                foundPickable = pickable;
-      
-            }
-        
-             WorldItem worldItem =hit.collider.GetComponent<WorldItem>();
-            if (worldItem != null)
-            {
-                
-                foundWorldItem = worldItem;
-            }
-          
         }
 
     }
-  
-   
-  
-    // void InventoryAddData()
-    // {
-    //      inventory.AddItem(foundWorldItem.itemdata);
-    // }
-   
-   void InventoryRemoveItem()
+
+    public void DetectInteraction(RaycastHit hit, ref int highestPriority)
     {
-      
+        IInteractables interactable =
+                hit.collider.GetComponent<IInteractables>();
+
+        if (interactable != null)
+        {
+            if (interactable.Priority > highestPriority)
+            {
+                highestPriority = interactable.Priority;
+                currentInteractable = interactable;
+            }
+        }
+
     }
+
+    public void DetectPickable(RaycastHit hit)
+    {
+        
+        IPickable pickable =
+               hit.collider.GetComponent<IPickable>();
+
+        if (pickable != null)
+        {
+            targetPickable = pickable;
+        }
+
+
+        WorldItem worldItem = hit.collider.GetComponent<WorldItem>();
+        if (worldItem != null)
+        {
+            targetWorldItem = worldItem;
+        }
+
+    }
+
     public void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (currentPickedItem != null)
-            {
-                DropCurrentItem();
-
-                isHoldingItem = false;
-                return;
-            }
-
-
-            if (foundPickable != null && currentPickedItem == null)
-            {
-                currentPickedItem = foundPickable;
-                foundPickable.Interact();
-                //InventoryAddData();
-                isHoldingItem = true;
-                return;
-            }
-
-            CurrentInteractable?.Interact();  // short from of if (CurrentInteractable != null) { CurrentInteractable.Interact();
-
+            Debug.Log($"Items before Equip: {inventory.items.Count}");
+            inventory.Equip(0);
+            return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            inventory.Equip(1);
+            return;
+        }
 
-    }
-    
-
-    public void ClearHeldItem()
-    { 
-        foundPickable = null;
-        currentPickedItem = null;
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            inventory.Drop(transform);
+            return;
+        }
        
+
+        if (!Input.GetKeyDown(KeyCode.E))
+            return;
+
+        if (TryPickup())
+            return;
+
+        TryInteract();
+
+
     }
-    
+
+
+    bool TryPickup()
+    {
+        if (targetPickable == null)
+            return false;
+        targetPickable.Interact(inventory.hand);
+        return true;
+    }
+
+
+
+    void TryInteract()
+    {
+        currentInteractable?.Interact();
+    }
+
+
+
 
 }

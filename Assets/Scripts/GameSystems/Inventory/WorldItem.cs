@@ -2,6 +2,6 @@ using UnityEngine;
 
 public class WorldItem : MonoBehaviour
 {
-    public ItemData itemdata;
+    public ItemData itemData;
    
 }

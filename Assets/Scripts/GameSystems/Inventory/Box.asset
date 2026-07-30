@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Box
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   id: 1
-  itemName: Box
-  prefab: {fileID: 3176797073141724127, guid: 90dabded5e94ad646a1f5e40a8eb4989, type: 3}
+  itemName: Box2
+  worldPrefab: {fileID: 3176797073141724127, guid: 90dabded5e94ad646a1f5e40a8eb4989,
+    type: 3}
+  heldPrefab: {fileID: 3176797073141724127, guid: 90dabded5e94ad646a1f5e40a8eb4989,
+    type: 3}
