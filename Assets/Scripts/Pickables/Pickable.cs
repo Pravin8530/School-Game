@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pickable : MonoBehaviour, IPickable
 {
-
+  //cheaking my git profile 
     private Transform playerHand;
     [SerializeField] private float pickUpSpeed = 20f;
     private Rigidbody rb;
