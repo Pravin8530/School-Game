@@ -7,10 +7,13 @@ public class Inventory : MonoBehaviour
     public Transform hand;
     public GameObject currentHeldPrefab;
     private ItemData equippedItem;
+ 
+    public List<GameObject> items1 = new List<GameObject>();
 
-    public float dropForce = 100f;
+    [Header("Drop Force")]
+  public float dropForce = 100f;
 
-    
+
     // Scripttable Object Way
     public void AddItem(ItemData item)
     {

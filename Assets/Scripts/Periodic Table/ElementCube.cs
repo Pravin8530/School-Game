@@ -30,11 +30,7 @@ public class ElementCube : MonoBehaviour, IPickable
         col = GetComponent<Collider>();
     }
 
-    public void Drop()
-    {
-       // throw new System.NotImplementedException();
-    }
-
+   
     public void Interact(Transform hand)
     {
 

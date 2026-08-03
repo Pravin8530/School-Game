@@ -15,9 +15,6 @@ public class Pickable : MonoBehaviour, IPickable
     private Coroutine pickupRoutine;
 
 
-
-
-
     void Awake()
     {
         rb = GetComponent<Rigidbody>();

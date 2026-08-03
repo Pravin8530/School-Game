@@ -34,7 +34,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Base_color_V1:
-        m_Texture: {fileID: 2800000, guid: 90cc3a1d21645b34c89e0218ee87d683, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1b9c24e1a9b9a9b43a74a9efb897e966, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -74,7 +74,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask_map_V1:
-        m_Texture: {fileID: 2800000, guid: bbc9d7bf39af032489386134cd4129c9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 784b9d5b5f37a0a4cbb98a0e8fba8d83, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -86,7 +86,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_map_V1:
-        m_Texture: {fileID: 2800000, guid: 6c2f0aa6b88bfd945beda00f9abe10b8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 499e4d56f178c784aa11e7b17d88a295, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -121,12 +121,13 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _Boolean: 0
+    - _Boolean_1: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Contrast: 2.28
-    - _Contrast_1: 7.1
-    - _Contrast_V1: 2.13
+    - _Contrast_1: -5.19
+    - _Contrast_V1: -2.69
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -134,14 +135,18 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _Float: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Invert: 0
-    - _Invert_V1: 1
+    - _Invert_V1: 0
     - _Metallic: 0
     - _Multiply_both_graymap: 0
-    - _Noise_scale: -0.1
+    - _Noise_blend: 10
+    - _Noise_scale: 5.64
+    - _Normal_strength: 1
+    - _Normal_strength_1: 2.19
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -156,16 +161,22 @@ Material:
     - _Switch_to_uv: 0
     - _Switvh_to_UV: 0
     - _Tile: 0.119
-    - _Tile_V1: 0.205
-    - _Use_2_gray_map: 0
+    - _Tile_V1: 0.109
+    - _Tiling_l1: 0
+    - _Use_2_gray_map: 1
+    - _Use_Triplaner_l1: 0
+    - _Use_Triplaner_l2: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     - _opacity: 0.122
     - _opacity_1: 0
-    - _opacity_2: 0.074
-    - _opacity_V1: 0.18
-    - _opacity_blend: 0.742
+    - _opacity_2: 0.564
+    - _opacity_V1: 0.635
+    - _opacity_blend: 1
+    - _tiling: 0
+    - _tint_opacity: 0
+    - _tint_opacity_1: 0.44
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -173,6 +184,7 @@ Material:
     - _Overall_hue: {r: 0.121568605, g: 0.9607843, b: 0.9224337, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _color: {r: 0.97735846, g: 0.97090423, b: 0.9128159, a: 0}
+    - _color_tint: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4837143227393856001
