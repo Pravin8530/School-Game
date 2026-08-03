@@ -10,7 +10,7 @@ public class DoorController : MonoBehaviour,IInteractables
 
 
    [Header("Bool Value")]
-   bool isOpen;
+   public bool isOpen;
    public bool isMoving;
    public bool isDoorLocked;
 
@@ -24,10 +24,22 @@ public class DoorController : MonoBehaviour,IInteractables
     [Header("Raycast Priority")]
     public int Priority => 1;
 
+
+    // IMP TIP - you cant set isOpen And isDoorLocked bool True cuz either  door is locked or door is open ; 
+
+    // if you want to set door locked then set isDoorLocked = true and isOpen = false ;
+
+    // if you want door intial open the set isOpen = true and isDoorLocked = false ;
+
+
     void Start()
     {
         closedRot = transform.rotation;
         openRot = Quaternion.Euler(0, openAngle, 0) * closedRot;
+
+        if (lockedDoorAnimation != null)
+            lockedDoorAnimation.enabled = false;
+        
     }
 
     void Update()
@@ -54,27 +66,39 @@ public class DoorController : MonoBehaviour,IInteractables
 
     public void Interact()           // IInteractables function To  Interact 
     {
-         if (isMoving) return;
+        Debug.Log("Intract Door");
+
+        if (isMoving) return;
+        Debug.Log("Intract Door 1 ");
+        if (isDoorLocked && !isOpen)
+        {
+            Debug.Log("Intract Door 2 ");
+            StartCoroutine(DoorLockAnimation());
+            return;
+        }
 
         isOpen = !isOpen;
         isMoving = true;
+        Debug.Log("Intract Door 3");
 
-        if (isDoorLocked)
-        {
-            StartCoroutine(DoorLockAnimation());
-        }
     }
 
     public IEnumerator DoorLockAnimation()     // Play This Animation When Door is Loocked
     {
-        Debug.Log("anim");
+
+        lockedDoorAnimation.enabled = true;
         lockedDoorAnimation.Play("DoorLockAnim");
-        isOpen = false;
-        isMoving = false;
-        yield return null;
-        Debug.Log("anim1");
-       
+        yield return null; 
+        float animLength = lockedDoorAnimation.GetCurrentAnimatorStateInfo(0).length;               //  Get the length of the animation clip 
+        yield return new WaitForSeconds(animLength);                                        // Wait for the animation to finish
+
+        lockedDoorAnimation.enabled = false;
+  
+
     }
-    
+    public void SetLocked(bool locked)                  // Function to set the door's locked state
+    {
+        isDoorLocked = locked;
+    }
 
 }
