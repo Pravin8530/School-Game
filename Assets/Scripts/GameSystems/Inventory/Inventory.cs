@@ -7,11 +7,8 @@ public class Inventory : MonoBehaviour
     public Transform hand;
     public GameObject currentHeldPrefab;
     private ItemData equippedItem;
- 
-    public List<GameObject> items1 = new List<GameObject>();
 
-    [Header("Drop Force")]
-  public float dropForce = 100f;
+    public float dropForce = 100f;
 
 
     // Scripttable Object Way
@@ -52,7 +49,7 @@ public class Inventory : MonoBehaviour
         equippedItem = items[index];
        
         currentHeldPrefab = Instantiate(
-            items[index].heldPrefab,
+            equippedItem.heldPrefab,
             hand.position,
             hand.rotation,
             hand

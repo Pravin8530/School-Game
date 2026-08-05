@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pickable : MonoBehaviour, IPickable
 {
-  //cheaking my git profile 
+  //cheaking
     private Transform playerHand;
     [SerializeField] private float pickUpSpeed = 20f;
     private Rigidbody rb;
@@ -24,7 +24,7 @@ public class Pickable : MonoBehaviour, IPickable
 
 
 
-    //player interact can pass hand ref
+    
     public void Interact(Transform hand)
     {
         if (isPickedup) return;
@@ -33,7 +33,7 @@ public class Pickable : MonoBehaviour, IPickable
         rend.enabled = true;
         col.enabled = true;
         isPickedup = true;
-        StartCoroutine(PickupRoutine());  // it does both starts coroutine and saves it in var.
+        StartCoroutine(PickupRoutine());  
 
     }
 

@@ -133,4 +133,9 @@ public class ClosetController : MonoBehaviour, IInteractables
             
         }
     }
+
+    public void Drop()
+    {
+        
+    }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Drawer : MonoBehaviour, IInteractable
+public class Drawer : MonoBehaviour, IInteractables
 {
     [SerializeField] private Vector3 openOffset = new Vector3(0, 0, 0.5f);
     [SerializeField] private float moveSpeed = 3f;
@@ -9,7 +9,7 @@ public class Drawer : MonoBehaviour, IInteractable
 
     private Vector3 startLocalPos;
     private bool isOpen;
-    
+    public int Priority => 1;
 
     void Start()
     {

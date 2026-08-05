@@ -55,4 +55,9 @@ public class KeyPickup : MonoBehaviour ,IInteractables
         // Hide / destroy the 3D key
         gameObject.SetActive(false);
     }
+
+    public void Drop()
+    {
+        
+    }
 }

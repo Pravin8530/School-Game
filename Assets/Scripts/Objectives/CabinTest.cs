@@ -3,22 +3,12 @@ using UnityEngine;
 
 
 public class CabinTest : MonoBehaviour
-{
+{ 
+        public Color color = new Color(0, 1, 0, 0.3f);
 
    public FirstPersonController FirstPersonController;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+  
     
 
      private void OnTriggerEnter(Collider other)
@@ -32,4 +22,20 @@ public class CabinTest : MonoBehaviour
             this.GetComponent<Collider>().enabled= false;
         }
      }
+   
+
+    private void OnDrawGizmos()
+    {
+        BoxCollider box = GetComponent<BoxCollider>();
+
+        if (box != null)
+        {
+            Gizmos.color = color;
+
+            Gizmos.matrix = transform.localToWorldMatrix;
+
+            Gizmos.DrawCube(box.center, box.size);
+        }
+    }
+
 }

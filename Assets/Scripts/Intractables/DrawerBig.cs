@@ -29,7 +29,7 @@ public class DrawerBig : MonoBehaviour, IInteractables
 
     void Start()
     { 
-        offset = new Vector3(-1f,0f,0f);
+        //offset = new Vector3(0f,0f,0f);
         closeDrawer = transform.localPosition;
 
         openDrawer = closeDrawer + offset;
@@ -71,6 +71,11 @@ public class DrawerBig : MonoBehaviour, IInteractables
         }
 
 
+    }
+
+    public void Drop()
+    {
+        
     }
 
 }

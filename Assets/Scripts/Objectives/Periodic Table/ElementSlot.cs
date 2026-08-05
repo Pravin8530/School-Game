@@ -57,7 +57,7 @@ public class ElementSlot : MonoBehaviour, IInteractables
 
 
         ElementCube cube = PlayerInteract.instance.targetPickable as ElementCube;
-       
+
         if (cube == null)
         {
             Debug.Log("cube is null");
@@ -72,6 +72,9 @@ public class ElementSlot : MonoBehaviour, IInteractables
     }
 
 
+    public void Drop()
+    {
 
+    }
 
 }

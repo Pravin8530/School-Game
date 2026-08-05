@@ -100,5 +100,8 @@ public class DoorController : MonoBehaviour,IInteractables
     {
         isDoorLocked = locked;
     }
-
+    public void Drop()  // IInteractables function To Drop 
+    {
+        
+    }
 }

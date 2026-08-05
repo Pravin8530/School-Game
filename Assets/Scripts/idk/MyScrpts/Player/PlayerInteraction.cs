@@ -16,7 +16,7 @@ public class PlayerInteraction : MonoBehaviour
 
 
     [Header("ref to interface")]
-    [SerializeField] private IInteractable current;
+    [SerializeField] private IInteractables current;
     
      Inventory inventory;
 
@@ -53,7 +53,7 @@ public class PlayerInteraction : MonoBehaviour
         if (Physics.Raycast(ray, out hit, interactionDistance))
         {
 
-            current = hit.collider.GetComponentInParent<IInteractable>();
+            current = hit.collider.GetComponentInParent<IInteractables>();
         
             //currentObjective = hit.collider.GetComponentInParent<IObjective>();
 

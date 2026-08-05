@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Hideable : MonoBehaviour, IInteractable
+public class Hideable : MonoBehaviour, IInteractables
 {
     [Header("Hide Positions")]
     public Transform hidePosition;
@@ -16,7 +16,9 @@ public class Hideable : MonoBehaviour, IInteractable
 
     private Transform player;
     private bool isBusy;
-
+    
+   public int Priority => 1;
+  
     private void Start()
     {
        // player = PlayerStateManager.Instance.PlayerTransform;

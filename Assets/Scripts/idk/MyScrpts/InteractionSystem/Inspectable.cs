@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static PlayerStateManager;
 
-public class Inspectable : MonoBehaviour, IInteractable
+public class Inspectable : MonoBehaviour, IInteractables
 {
 
     // This script lets the player inspect an object. When `Interact()` is called, the object's current position and rotation should be saved,
@@ -29,6 +29,8 @@ public class Inspectable : MonoBehaviour, IInteractable
   
     PlayerState previousState;
     PlayerStateManager playerStateManager;
+
+    public int Priority => 1;
     private void Awake()
     {
         originPos = transform.position;

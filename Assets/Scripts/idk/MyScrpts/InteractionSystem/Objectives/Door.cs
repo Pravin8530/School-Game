@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable
+public class Door : MonoBehaviour, IInteractables
 {
     bool isOpen;
    [SerializeField] public Transform doorPivot;    
@@ -11,6 +11,7 @@ public class Door : MonoBehaviour, IInteractable
 
   [SerializeField] private bool isDoorLocked;   
   [SerializeField] private float lockedDoorAnimationSpeed = 1f;
+  public int Priority => 1;
     void Start()
     {
         isOpen = false;

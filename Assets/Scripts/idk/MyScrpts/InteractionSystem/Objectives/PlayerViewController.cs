@@ -78,7 +78,7 @@ public class PlayerViewController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactDistance, interactMask))
         {
-            IInteractable obj = hit.collider.GetComponent<IInteractable>();
+            IInteractables obj = hit.collider.GetComponent<IInteractables>();
 
             if (obj != null)
                 obj.Interact();
