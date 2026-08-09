@@ -126,7 +126,7 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Contrast: 2.28
-    - _Contrast_1: -5.19
+    - _Contrast_1: -6.3
     - _Contrast_V1: -2.69
     - _Cull: 2
     - _Cutoff: 0.5
@@ -171,11 +171,11 @@ Material:
     - _ZWrite: 1
     - _opacity: 0.122
     - _opacity_1: 0
-    - _opacity_2: 0.564
+    - _opacity_2: 0.484
     - _opacity_V1: 0.635
-    - _opacity_blend: 1
+    - _opacity_blend: 0.369
     - _tiling: 0
-    - _tint_opacity: 0
+    - _tint_opacity: 0.15
     - _tint_opacity_1: 0.44
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

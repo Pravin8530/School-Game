@@ -23,12 +23,12 @@ public class LockerDial : MonoBehaviour, IInteractables
         if (isRotating)
             RotateDial();
         
-
     }
 
     public void Interact()
     {  
         Debug.Log("Dial Interacted");
+        
         if(isRotating)
         {
             Drop();
@@ -42,7 +42,7 @@ public class LockerDial : MonoBehaviour, IInteractables
 
 
     private void RotateDial()
-    {
+    { 
         lockerDial.transform.Rotate(0f, 0f, speed * targetRotation * RotationDirection * Time.deltaTime );
 
     }

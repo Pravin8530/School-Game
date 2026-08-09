@@ -66,7 +66,7 @@ namespace StarterAssets
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
-       // private float _fallTimeoutDelta;
+        // private float _fallTimeoutDelta;
 
         [Tooltip("Absolute pitch angle to look at during the fall, e.g. -60 = looking mostly down")]
         public float FallTargetPitch = -60f;
@@ -299,8 +299,12 @@ namespace StarterAssets
                 float roll = Mathf.Lerp(0f, targetRoll, easedT);
 
                 // pitch stays exactly as the player's current look, only roll changes
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                //***************//
+                // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f,_cinemachineTargetPitch);
+
                 yield return null;
+               
             }
 
             StartCoroutine(FOVPunch());
@@ -311,12 +315,15 @@ namespace StarterAssets
                 shakeTimer += Time.deltaTime;
                 float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
                 float shake = GetShakeOffset(ShakeAmount * fade);
-
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll + shake);
+               //*****//
+              // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll + shake);
+                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
                 yield return null;
             }
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
+            //*****//
+           // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
 
+           CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
             // 3. Hold (settled, no shake)
             float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
             if (holdRemaining > 0f)
@@ -334,11 +341,15 @@ namespace StarterAssets
                 float easedT = lerpT * lerpT * (3f - 2f * lerpT);
 
                 float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                //*****//
+               // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
                 yield return null;
             }
+            //*****// 
+           // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0f, _cinemachineTargetPitch);
 
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
 
             _verticalVelocity = -2f;
             _isFalling = false;
