@@ -305,8 +305,8 @@ namespace StarterAssets
         {
             _isFalling = true;
 
-            float rollSign = (Random.value > 0.5f) ? 1f : -1f;
-            float targetRoll = FallTargetRoll * rollSign;
+           // float rollSign = (Random.value > 0.5f) ? 1f : -1f;
+            float targetRoll = FallTargetRoll ;//* rollSign;
 
             // 1. Tip over into the fall
             float t = 0f;
