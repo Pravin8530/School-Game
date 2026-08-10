@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "School Game.slnx",
+    "dotnet.defaultSolution": "School-Game.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }

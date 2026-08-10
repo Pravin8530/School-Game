@@ -39,8 +39,8 @@ public class InspectableObject : MonoBehaviour, IInteractables
     public float rotateSensitivity = 3f;
 
     // PlayerStateManager state;
-
-
+    
+ 
     // ── private state ──────────────────────────────────────────
     public bool _inspecting;
 
@@ -51,6 +51,8 @@ public class InspectableObject : MonoBehaviour, IInteractables
 
 
     private Rigidbody _rb;
+
+
 
     // ── IInteractables ──────────────────────────────────────────
     public void Interact()

@@ -11,7 +11,9 @@ namespace StarterAssets
     [RequireComponent(typeof(PlayerInput))]
 #endif
     public class FirstPersonController : MonoBehaviour
-    {
+    { 
+          PlayerStateManager playerStateManager;
+
         [Header("Player")]
         public float MoveSpeed = 4.0f;
         public float SprintSpeed = 6.0f;
@@ -49,6 +51,10 @@ namespace StarterAssets
         public float ShakeSpeed = 25f;
         public float ShakeDurationAfterDrop = 0.4f;
 
+        [Header("Crouch")]
+        
+
+
         private bool _isFalling = false;
         private float _pitchBeforeFall;
         private Vector3 _cameraTargetOriginalLocalPos;
@@ -78,6 +84,9 @@ namespace StarterAssets
 
         private float _normalFOV;
 
+
+       private PlayerStateManager playerManager;
+
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
 #endif
@@ -99,6 +108,8 @@ namespace StarterAssets
             }
         }
 
+        public PlayerStateManager PlayerManager { get => playerManager; set => playerManager = value; }
+
         private void Awake()
         {
             if (_mainCamera == null)
@@ -109,7 +120,7 @@ namespace StarterAssets
 
         private void Start()
         {
-
+    
 
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -160,7 +171,11 @@ namespace StarterAssets
         }
 
         private void CameraRotation()
-        {
+        { 
+              if( PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
+              return;
+
+        
             if (_input.look.sqrMagnitude >= _threshold)
             {
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
@@ -178,6 +193,9 @@ namespace StarterAssets
 
         private void Move()
         {
+                if( PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
+              return;
+
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
@@ -252,6 +270,8 @@ namespace StarterAssets
             if (lfAngle > 360f) lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
+
+
 
         // ---------- NEW: Fall Effect ----------
 

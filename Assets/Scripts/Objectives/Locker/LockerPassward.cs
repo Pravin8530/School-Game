@@ -26,14 +26,14 @@ public class LockerPassward : MonoBehaviour
         }
         lever.currentDigit = 0;
        GenrateRandomPassward();
-       Debug.Log("Correct Passward: " + string.Join(", ", correctPassward));
+      // Debug.Log("Correct Passward: " + string.Join(", ", correctPassward));
 
     }
  
     // Update is called once per frame
     void Update()
     {
-                CheckPassward();
+              //  CheckPassward();
     
                    HandleEnteredNumber(dialController.currentNumber, lever.currentDigit);
 
