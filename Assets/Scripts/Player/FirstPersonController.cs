@@ -11,8 +11,8 @@ namespace StarterAssets
     [RequireComponent(typeof(PlayerInput))]
 #endif
     public class FirstPersonController : MonoBehaviour
-    { 
-          PlayerStateManager playerStateManager;
+    {
+        PlayerStateManager playerStateManager;
 
         [Header("Player")]
         public float MoveSpeed = 4.0f;
@@ -52,8 +52,11 @@ namespace StarterAssets
         public float ShakeDurationAfterDrop = 0.4f;
 
         [Header("Crouch")]
-        
-
+        public float CrouchSpeed = 2f;
+        public float CrouchCameraHeight = 0.9f;
+        public float CrouchTransitionSpeed = 5f;
+        public bool _isCrouching;
+        public float _standingCameraHeight;
 
         private bool _isFalling = false;
         private float _pitchBeforeFall;
@@ -85,7 +88,7 @@ namespace StarterAssets
         private float _normalFOV;
 
 
-       private PlayerStateManager playerManager;
+        private PlayerStateManager playerManager;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -103,7 +106,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -120,14 +123,14 @@ namespace StarterAssets
 
         private void Start()
         {
-    
+
 
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+            Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
             _jumpTimeoutDelta = JumpTimeout;
@@ -137,22 +140,24 @@ namespace StarterAssets
             _normalFOV = playerCamera.fieldOfView;
             // NEW: remember the camera target's resting position
             _cameraTargetOriginalLocalPos = CinemachineCameraTarget.transform.localPosition;
+            _standingCameraHeight = CinemachineCameraTarget.transform.localPosition.y;
 
         }
 
         private void Update()
         {
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                TriggerFall();
-            }
+            // if (Input.GetKeyDown(KeyCode.Space))
+            // {
+            //     TriggerFall();
+            // }
 
             // NEW: while falling, skip normal jump/gravity/move logic entirely
             if (_isFalling) return;
 
             JumpAndGravity();
             GroundedCheck();
+            Crouch();
             Move();
         }
 
@@ -171,11 +176,11 @@ namespace StarterAssets
         }
 
         private void CameraRotation()
-        { 
-              if( PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
-              return;
+        {
+            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
+                return;
 
-        
+
             if (_input.look.sqrMagnitude >= _threshold)
             {
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
@@ -193,10 +198,18 @@ namespace StarterAssets
 
         private void Move()
         {
-                if( PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
-              return;
+            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
+                return;
 
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed;
+            if(_isCrouching)
+            {
+                targetSpeed = CrouchSpeed;
+            }
+            else
+            {
+                targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            }
 
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
@@ -305,8 +318,8 @@ namespace StarterAssets
         {
             _isFalling = true;
 
-           // float rollSign = (Random.value > 0.5f) ? 1f : -1f;
-            float targetRoll = FallTargetRoll ;//* rollSign;
+            // float rollSign = (Random.value > 0.5f) ? 1f : -1f;
+            float targetRoll = FallTargetRoll;//* rollSign;
 
             // 1. Tip over into the fall
             float t = 0f;
@@ -321,10 +334,10 @@ namespace StarterAssets
                 // pitch stays exactly as the player's current look, only roll changes
                 //***************//
                 // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
-                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f,_cinemachineTargetPitch);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
 
                 yield return null;
-               
+
             }
 
             StartCoroutine(FOVPunch());
@@ -335,15 +348,15 @@ namespace StarterAssets
                 shakeTimer += Time.deltaTime;
                 float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
                 float shake = GetShakeOffset(ShakeAmount * fade);
-               //*****//
-              // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll + shake);
-                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
+                //*****//
+                // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll + shake);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
                 yield return null;
             }
             //*****//
-           // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
+            // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
 
-           CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
             // 3. Hold (settled, no shake)
             float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
             if (holdRemaining > 0f)
@@ -362,12 +375,12 @@ namespace StarterAssets
 
                 float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
                 //*****//
-               // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
                 yield return null;
             }
             //*****// 
-           // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
+            // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
             CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0f, _cinemachineTargetPitch);
 
 
@@ -380,6 +393,29 @@ namespace StarterAssets
             return (Mathf.PerlinNoise(Time.time * ShakeSpeed, 0f) - 0.5f) * 2f * amount;
         }
         // ---------------------------------------
+
+        private void Crouch()
+        {
+            _isCrouching = _input.crouch;
+
+            float targetSpeed = _isCrouching ? CrouchSpeed : MoveSpeed;
+
+            // Smoothly move camera down/up
+            Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+
+            float targetHeight = _isCrouching
+                ? CrouchCameraHeight
+                : _standingCameraHeight;
+
+            cameraPos.y = Mathf.Lerp(
+                cameraPos.y,
+                targetHeight,
+                Time.deltaTime * CrouchTransitionSpeed
+            );
+
+            CinemachineCameraTarget.transform.localPosition = cameraPos;
+        }
+
 
         private void OnDrawGizmosSelected()
         {
