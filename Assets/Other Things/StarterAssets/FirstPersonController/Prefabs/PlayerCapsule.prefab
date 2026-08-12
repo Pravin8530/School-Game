@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 8616685848737228376}
   - component: {fileID: 2286061238570557904}
   - component: {fileID: 811478603360858799}
+  - component: {fileID: 7841691566692763513}
   m_Layer: 8
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -271,6 +272,22 @@ MonoBehaviour:
   CinemachineCameraTarget: {fileID: 4135013735270702863}
   TopClamp: 89
   BottomClamp: -89
+  FallTargetRoll: 70
+  FallTiltDuration: 0.4
+  FallHoldDuration: 1.2
+  FallRecoverDuration: 0.6
+  ShakeAmount: 2
+  ShakeSpeed: 25
+  ShakeDurationAfterDrop: 0.4
+  CrouchSpeed: 2
+  CrouchCameraHeight: 0.9
+  CrouchTransitionSpeed: 5
+  _isCrouching: 0
+  _standingCameraHeight: 0
+  FallTargetPitch: -60
+  playerCamera: {fileID: 0}
+  FallFOVPunch: 15
+  FOVPunchDuration: 0.3
 --- !u!114 &1978471637655604388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,6 +321,7 @@ MonoBehaviour:
   look: {x: 0, y: 0}
   jump: 0
   sprint: 0
+  crouch: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -518,3 +536,23 @@ MonoBehaviour:
   items: []
   hand: {fileID: 34959095116326359}
   currentHeldPrefab: {fileID: 0}
+  dropForce: 100
+--- !u!114 &7841691566692763513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8616685848737228372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0540017549fba904bb6059ebebc1e7f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryNew
+  slots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

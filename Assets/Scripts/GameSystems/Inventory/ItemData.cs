@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
-[CreateAssetMenu]
+[CreateAssetMenu(menuName ="Inventory/Item")]
 public class ItemData : ScriptableObject
 {
  public int id;   

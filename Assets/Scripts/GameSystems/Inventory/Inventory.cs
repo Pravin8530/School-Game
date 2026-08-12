@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
             return;
 
         Instantiate(
-            equippedItem.worldPrefab,
+           equippedItem.worldPrefab,
             hand.position + hand.forward * 3f,
             Quaternion.identity
         );

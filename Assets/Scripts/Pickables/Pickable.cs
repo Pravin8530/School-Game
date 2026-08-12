@@ -60,12 +60,15 @@ public class Pickable : MonoBehaviour, IPickable
 
         WorldItem worldItem = GetComponent<WorldItem>();
 
-        Inventory inventory = playerHand.GetComponentInParent<Inventory>();
+       Inventory inventory = playerHand.GetComponentInParent<Inventory>();
+        
+       InventoryNew inventoryNew = playerHand.GetComponentInParent<InventoryNew>();
 
+       inventory.AddItem(worldItem.itemData);
+ 
+       inventoryNew.AddItem(worldItem.itemData); 
 
-        inventory.AddItem(worldItem.itemData);
-
-        inventory.Equip(inventory.items.Count - 1);
+       inventory.Equip(inventory.items.Count - 1);
 
         Destroy(gameObject);
     }

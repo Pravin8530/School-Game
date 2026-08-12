@@ -19,7 +19,8 @@ public class PlayerInteract : MonoBehaviour
     [Header("Interactable")]
     private IInteractables currentInteractable = null;
 
-    private Inventory inventory;
+   private Inventory inventory;
+    
 
     private WorldItem targetWorldItem; // stores worlditem ur looking at
 
@@ -29,7 +30,7 @@ public class PlayerInteract : MonoBehaviour
 
     public void Awake()
     {
-        inventory = GetComponentInParent<Inventory>();
+       inventory = GetComponentInParent<Inventory>();
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -127,7 +128,7 @@ public class PlayerInteract : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            inventory.Drop(transform);
+           inventory.Drop(transform);
             return;
         }
        
@@ -148,7 +149,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (targetPickable == null)
             return false;
-        targetPickable.Interact(inventory.hand);
+       targetPickable.Interact(inventory.hand);
         return true;
     }
 

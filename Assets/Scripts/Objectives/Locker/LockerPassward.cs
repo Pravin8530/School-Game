@@ -10,14 +10,14 @@ public class LockerPassward : MonoBehaviour
      public GameObject Lever;
      public Lever lever;
   
-    public DialController dialController;
+    //public DialController dialController;
 
     public LockerDial lockerDial;
 
     public void Awake()
     { 
         enteredNumbers = new int[4];
-        dialController = GetComponent<DialController>();
+       // dialController = GetComponent<DialController>();
         lockerDial = GetComponent<LockerDial>();
         lever = Lever. GetComponent<Lever>();
         if(lever == null)
@@ -35,7 +35,7 @@ public class LockerPassward : MonoBehaviour
     {
               //  CheckPassward();
     
-                   HandleEnteredNumber(dialController.currentNumber, lever.currentDigit);
+                   HandleEnteredNumber(lockerDial.currentNumber, lever.currentDigit);
 
     }
   
