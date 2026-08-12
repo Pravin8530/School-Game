@@ -56,25 +56,28 @@ public class ElementSlot : MonoBehaviour, IInteractables
         }
 
 
-        ElementCube cube = PlayerInteract.instance.targetPickable as ElementCube;
-
+        // ElementCube cube = PlayerInteract.instance.targetPickable as ElementCube;
+        ElementCube cube = PlayerInteract.instance.heldElement;
         if (cube == null)
         {
             Debug.Log("cube is null");
 
         }
 
+        // if (cube != null && cube.element == requiredElement)
+        // {
+
+        //     PlaceElementIntoDedicatedPosition(cube);
+        // }
+
         if (cube != null && cube.element == requiredElement)
         {
-
             PlaceElementIntoDedicatedPosition(cube);
+            PlayerInteract.instance.heldElement = null;
         }
     }
 
 
-    public void Drop()
-    {
 
-    }
 
 }

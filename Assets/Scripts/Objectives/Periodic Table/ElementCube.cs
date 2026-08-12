@@ -33,7 +33,7 @@ public class ElementCube : MonoBehaviour, IPickable
    
     public void Interact(Transform hand)
     {
-
+        PlayerInteract.instance.heldElement = this;
         originalScale = transform.localScale;
         col.enabled = false;
         rb.useGravity = false;

@@ -25,6 +25,8 @@ public class PlayerInteract : MonoBehaviour
 
     public Transform hand;
 
+    public ElementCube heldElement;
+
     public void Awake()
     {
         inventory = GetComponentInParent<Inventory>();
