@@ -26,64 +26,64 @@ public class Inventory : MonoBehaviour
 
 
 
-    private void SetupHeldObject(GameObject obj)
-    {
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
+    // private void SetupHeldObject(GameObject obj)
+    // {
+    //     Rigidbody rb = obj.GetComponent<Rigidbody>();
 
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-            rb.useGravity = false;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
+    //     if (rb != null)
+    //     {
+    //         rb.isKinematic = true;
+    //         rb.useGravity = false;
+    //         rb.linearVelocity = Vector3.zero;
+    //         rb.angularVelocity = Vector3.zero;
+    //     }
 
-    }
+    // }
  
   // toggle logic
-    public void Equip(int index)
-    {
-        if (index < 0 || index >= items.Count)
-            return;
-        Unequip();
-        equippedItem = items[index];
+    // public void Equip(int index)
+    // {
+    //     if (index < 0 || index >= items.Count)
+    //         return;
+    //     Unequip();
+    //     equippedItem = items[index];
        
-        currentHeldPrefab = Instantiate(
-            equippedItem.heldPrefab,
-            hand.position,
-            hand.rotation,
-            hand
-        );
+    //     currentHeldPrefab = Instantiate(
+    //         equippedItem.heldPrefab,
+    //         hand.position,
+    //         hand.rotation,
+    //         hand
+    //     );
         
-        SetupHeldObject(currentHeldPrefab);
-    }
+    //     SetupHeldObject(currentHeldPrefab);
+    // }
 
-    private void Unequip()
-    {
-        if (currentHeldPrefab == null)
-            return;
-        Destroy(currentHeldPrefab);
-        currentHeldPrefab = null;
-    }
-
+    // private void Unequip()
+    // {
+    //     if (currentHeldPrefab == null)
+    //         return;
+    //     Destroy(currentHeldPrefab);
+    //     currentHeldPrefab = null;
+    // }
+ 
     
-    public void Drop(Transform hand)
-    {
-        if (equippedItem == null)
-            return;
+    // public void Drop(Transform hand)
+    // {
+    //     if (equippedItem == null)
+    //         return;
 
-        Instantiate(
-           equippedItem.worldPrefab,
-            hand.position + hand.forward * 3f,
-            Quaternion.identity
-        );
+    //     Instantiate(
+    //        equippedItem.worldPrefab,
+    //         hand.position + hand.forward * 3f,
+    //         Quaternion.identity
+    //     );
 
-        RemoveItem(equippedItem);
+    //     RemoveItem(equippedItem);
 
-        Unequip();
+    //     Unequip();
 
-        equippedItem = null;
-    } 
+    //     equippedItem = null;
+    // } 
 
 
 

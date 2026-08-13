@@ -14,7 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   id: 3
   itemName: Ink
-  worldPrefab: {fileID: 4652868715617933762, guid: c664dbbef32210e44b52336977aee749,
-    type: 3}
-  heldPrefab: {fileID: 4652868715617933762, guid: c664dbbef32210e44b52336977aee749,
-    type: 3}
+  icon: {fileID: 7482667652216324306, guid: c7ad0cbda14784949a21f4a9da0947e3, type: 3}
+  prefab: {fileID: 4652868715617933762, guid: c664dbbef32210e44b52336977aee749, type: 3}

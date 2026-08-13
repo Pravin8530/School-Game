@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pickable : MonoBehaviour, IPickable
 {
-  //cheaking
+    //cheaking
     private Transform playerHand;
     [SerializeField] private float pickUpSpeed = 20f;
     private Rigidbody rb;
@@ -24,7 +24,7 @@ public class Pickable : MonoBehaviour, IPickable
 
 
 
-    
+
     public void Interact(Transform hand)
     {
         if (isPickedup) return;
@@ -33,67 +33,55 @@ public class Pickable : MonoBehaviour, IPickable
         rend.enabled = true;
         col.enabled = true;
         isPickedup = true;
-        StartCoroutine(PickupRoutine());  
+        StartCoroutine(PickupRoutine());
 
     }
+
+   
 
     private IEnumerator PickupRoutine()
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
         rb.isKinematic = true;
         rb.useGravity = false;
 
         while (Vector3.Distance(transform.position, playerHand.position) > 0.05f)
         {
+            transform.position = Vector3.Lerp(
+                transform.position,
+                playerHand.position,
+                pickUpSpeed * Time.deltaTime
+            );
 
-            transform.position = Vector3.Lerp(transform.position, playerHand.position, pickUpSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Slerp(transform.rotation, playerHand.rotation, pickUpSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                playerHand.rotation,
+                pickUpSpeed * Time.deltaTime
+            );
 
             yield return null;
-
         }
 
         transform.position = playerHand.position;
         transform.rotation = playerHand.rotation;
+
         transform.SetParent(playerHand);
 
         WorldItem worldItem = GetComponent<WorldItem>();
 
-       Inventory inventory = playerHand.GetComponentInParent<Inventory>();
-        
-       InventoryNew inventoryNew = playerHand.GetComponentInParent<InventoryNew>();
+        InventoryNew inventoryNew =
+            playerHand.GetComponentInParent<InventoryNew>();
 
-       inventory.AddItem(worldItem.itemData);
- 
-       inventoryNew.AddItem(worldItem.itemData); 
-
-       inventory.Equip(inventory.items.Count - 1);
-
-        Destroy(gameObject);
+        inventoryNew.AddItem(worldItem.itemData, gameObject);
     }
 
-    // public void Drop()
-    // {
-    //     GetComponent<Renderer>().enabled = true;
-    //     GetComponent<Collider>().enabled = true;
-    //     isPickedup = false;
+   
 
-    //     if (pickupRoutine != null)
-    //     {
-    //         StopCoroutine(pickupRoutine);
-    //     }
+    public void ResetPickup()
+    {
+        isPickedup = false;
 
-    //     transform.SetParent(null);
-    //     rb.isKinematic = false;
-    //     rb.useGravity = true;
-
-    //     rb.linearVelocity = Vector3.zero;
-    //     rb.angularVelocity = Vector3.zero;
-    //     rb.AddForce(transform.right * forceSpeed, ForceMode.Impulse);
-
-
-    // }
-
-
+    }
 }

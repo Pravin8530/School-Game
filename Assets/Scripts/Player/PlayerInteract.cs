@@ -19,18 +19,17 @@ public class PlayerInteract : MonoBehaviour
     [Header("Interactable")]
     private IInteractables currentInteractable = null;
 
-   private Inventory inventory;
-    
+    private Inventory inventory;
+    private InventoryNew inventoryNew;
 
     private WorldItem targetWorldItem; // stores worlditem ur looking at
-
-    public Transform hand;
 
     public ElementCube heldElement;
 
     public void Awake()
     {
-       inventory = GetComponentInParent<Inventory>();
+        inventory = GetComponentInParent<Inventory>();
+        inventoryNew = GetComponentInParent<InventoryNew>();
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -53,8 +52,8 @@ public class PlayerInteract : MonoBehaviour
     public void DetectTargets()
     {
         targetWorldItem = null;
-        targetPickable = null;  
-        currentInteractable = null; 
+        targetPickable = null;
+        currentInteractable = null;
         Ray ray = new Ray(transform.position, transform.forward);
 
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
@@ -91,7 +90,7 @@ public class PlayerInteract : MonoBehaviour
 
     public void DetectPickable(RaycastHit hit)
     {
-        
+
         IPickable pickable =
                hit.collider.GetComponent<IPickable>();
 
@@ -111,27 +110,50 @@ public class PlayerInteract : MonoBehaviour
 
     public void HandleInput()
     {
-           // may need to change this 
+
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log($"Items before Equip: {inventory.items.Count}");
-            inventory.Equip(0);
+
+            inventoryNew.SelectSlot(0);
             return;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            inventory.Equip(1);
+
+            inventoryNew.SelectSlot(1);
             return;
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            inventoryNew.SelectSlot(2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            inventoryNew.SelectSlot(3);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            inventoryNew.SelectSlot(4);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            inventoryNew.SelectSlot(5);
+        }
+
+
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-           inventory.Drop(transform);
+
+            inventoryNew.Drop();
             return;
         }
-       
+
 
         if (!Input.GetKeyDown(KeyCode.E))
             return;
@@ -149,7 +171,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (targetPickable == null)
             return false;
-       targetPickable.Interact(inventory.hand);
+        targetPickable.Interact(inventoryNew.hand);
         return true;
     }
 
@@ -159,7 +181,6 @@ public class PlayerInteract : MonoBehaviour
     {
         currentInteractable?.Interact();
     }
-
 
 
 
