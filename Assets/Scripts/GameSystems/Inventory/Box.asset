@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   id: 1
   itemName: Box2
-  icon: {fileID: 7482667652216324306, guid: b376b9679ffa1b44d8188a2856b992f4, type: 3}
+  icon: {fileID: 21300000, guid: af0ae2dbf3d1efb4f82af377950704a2, type: 3}
   prefab: {fileID: 3176797073141724127, guid: 90dabded5e94ad646a1f5e40a8eb4989, type: 3}
