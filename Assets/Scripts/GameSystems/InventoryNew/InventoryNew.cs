@@ -1,3 +1,4 @@
+//using System.Numerics;
 using UnityEngine;
 
 public class InventoryNew : MonoBehaviour
@@ -8,7 +9,7 @@ public class InventoryNew : MonoBehaviour
     public Camera cam;
     public Transform hand;
 
-    public float throwForce = 15f;
+    public float throwForce = 500f;
 
     public int selectedSlot = -1;
 
@@ -144,15 +145,23 @@ public class InventoryNew : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-            // Shoot toward crosshair
-            Ray ray = cam.ViewportPointToRay(
-                new Vector3(0.5f, 0.5f, 0f)
-            );
 
-            rb.AddForce(
-                ray.direction * throwForce,
-                ForceMode.Impulse
-            );
+
+           
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+            Vector3 targetPoint;
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+                targetPoint = hit.point;
+            else
+                targetPoint = ray.origin + ray.direction * 100f;
+
+            Vector3 throwDirection =
+                (targetPoint - item.transform.position).normalized;
+
+            //rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+            rb.linearVelocity = throwDirection * throwForce;
         }
 
 
@@ -162,4 +171,4 @@ public class InventoryNew : MonoBehaviour
 
         selectedSlot = -1;
     }
-} 
+}

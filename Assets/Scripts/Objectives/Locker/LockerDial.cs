@@ -5,7 +5,7 @@ public class LockerDial : MonoBehaviour, IInteractables
     // Settings
 
     [Header("Dial Rotation")]
-    [SerializeField] private float timeBetweenRotations = 1f;
+    [SerializeField] private float timeBetweenRotations = 0.1f;
     [SerializeField] private int rotationDirection = 1;
 
     [Header("Dial Numbers")]
