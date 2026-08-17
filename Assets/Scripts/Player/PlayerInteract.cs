@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine.UI;
 using UnityEngine.XR;
 //***
 // detect if (found) callmethods
@@ -56,7 +56,7 @@ public class PlayerInteract : MonoBehaviour
         currentInteractable = null;
         Ray ray = new Ray(transform.position, transform.forward);
 
-        //Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
+        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
         RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance);
 

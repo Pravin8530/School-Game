@@ -147,7 +147,7 @@ public class InventoryNew : MonoBehaviour
 
 
 
-           
+
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
             Vector3 targetPoint;
@@ -165,10 +165,36 @@ public class InventoryNew : MonoBehaviour
         }
 
 
+
         // Remove from inventory
         slots[selectedSlot] = null;
         heldObjects[selectedSlot] = null;
 
         selectedSlot = -1;
     }
+
+    public GameObject RemoveHeldItem(GameObject item)
+    {
+        for (int i = 0; i < heldObjects.Length; i++)
+        {
+            if (heldObjects[i] == item)
+            {
+                // Remove from inventory
+                slots[i] = null;
+                heldObjects[i] = null;
+
+                // If this was selected item
+                if (selectedSlot == i)
+                {
+                    selectedSlot = -1;
+                }
+
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+
 }
