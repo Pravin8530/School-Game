@@ -38,7 +38,7 @@ public class InspectableObject : MonoBehaviour, IInteractables
     [Tooltip("Mouse drag sensitivity for rotating the object.")]
     public float rotateSensitivity = 3f;
 
-    // PlayerStateManager state;
+    
     
  
     // ── private state ──────────────────────────────────────────
@@ -137,10 +137,7 @@ public class InspectableObject : MonoBehaviour, IInteractables
 
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Inspecting);
         Debug.Log(PlayerStateManager.Instance.currentState);
-        // Disable player look so the camera stays still             ______noi onon
-        // if (playerLookScript != null)
-        //     playerLookScript.enabled = false;
-
+       
          Cursor.lockState = CursorLockMode.None;
          Cursor.visible = true;
 
@@ -151,19 +148,7 @@ public class InspectableObject : MonoBehaviour, IInteractables
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
         _inspecting = false;
         isreturning = true;
-        // Restore parent and transform
-
-        //  transform.SetParent(_originalParent);
-        // transform.position = Vector3.MoveTowards(transform.position,_originalPosition,1f);
-        // transform.rotation = Quaternion.RotateTowards(transform.rotation,_originalRotation,1f); 
-
-        // Re-enable physics
-        // if (_rb != null)
-        //     _rb.isKinematic = false;
-
-        // Re-enable player look
-        // if (playerLookScript != null)
-        //     playerLookScript.enabled = true;
+      
 
         // Restore cursor to whatever your game normally uses
         Cursor.lockState = CursorLockMode.Locked;

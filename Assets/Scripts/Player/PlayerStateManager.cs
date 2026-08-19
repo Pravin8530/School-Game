@@ -12,7 +12,10 @@ public class PlayerStateManager : MonoBehaviour
         Normal,
         Inspecting,
         Crouching,
-        Hiding
+        Hiding,
+        BookInteract
+        
+
     }
 
     

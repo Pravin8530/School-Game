@@ -73,11 +73,7 @@ public class CabinWindow : MonoBehaviour, IInteractables
        }
    }
 
-   public void Drop()
-    {
-        
-    }
-
+  
     private void OnDrawGizmos()
     {
         BoxCollider box = GetComponent<BoxCollider>();

@@ -198,11 +198,11 @@ namespace StarterAssets
 
         private void Move()
         {
-            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
+            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.BookInteract)
                 return;
 
             float targetSpeed;
-            if(_isCrouching)
+            if (_isCrouching)
             {
                 targetSpeed = CrouchSpeed;
             }

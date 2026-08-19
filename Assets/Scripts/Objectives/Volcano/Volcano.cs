@@ -59,7 +59,7 @@ public class Volcano : MonoBehaviour, IInteractables
 
             // Volcano element launches
             rb.isKinematic = false;
-            rb.AddForce(Vector3.up * 12f, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * 11f, ForceMode.Impulse);
         }
     }
 }

@@ -4,11 +4,11 @@
 - Active scene:
   - Name: Gym
   - Tags:
-    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, CinemachineTarget
+    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, CinemachineTarget, book
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books
 - Active game object:
-  - Name: magnet
+  - Name: Gym_Room
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

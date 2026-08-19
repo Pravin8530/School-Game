@@ -26,9 +26,10 @@ public class PlayerInteract : MonoBehaviour
 
     public ElementCube heldElement;
 
+   private Book heldBook;
+
     public void Awake()
     {
-        inventory = GetComponentInParent<Inventory>();
         inventoryNew = GetComponentInParent<InventoryNew>();
         if (instance != null && instance != this)
         {
@@ -54,6 +55,7 @@ public class PlayerInteract : MonoBehaviour
         targetWorldItem = null;
         targetPickable = null;
         currentInteractable = null;
+
         Ray ray = new Ray(transform.position, transform.forward);
 
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
@@ -68,6 +70,29 @@ public class PlayerInteract : MonoBehaviour
             DetectInteraction(hit, ref highestPriority);
             DetectPickable(hit);
 
+        }
+
+
+        // if (heldBook != null)
+        // {
+        //     Vector3 target = ray.origin + ray.direction * heldBook.distanceFromCamera ;
+        //     heldBook.MoveWithRay(target);
+        // }
+
+
+        if (heldBook != null)
+        {
+            if (heldBook.isHolding)
+            {
+                Vector3 target = ray.origin +
+                                ( ray.direction * heldBook.distanceFromCamera) ;
+
+                heldBook.MoveWithRay(target);
+            }
+            else
+            {
+                heldBook = null;
+            }
         }
 
     }
@@ -177,11 +202,52 @@ public class PlayerInteract : MonoBehaviour
 
 
 
+    // void TryInteract()
+    // {
+    //     currentInteractable?.Interact();
+    // }
+
+    // void TryInteract()
+    // {
+    //     if (currentInteractable == null)
+    //         return;
+
+    //     Book book = currentInteractable as Book;
+
+    //     if (book != null)
+    //     {
+    //         heldBook = book;
+    //     }
+    //    else if(heldBook==book)
+    //    {
+    //         heldBook=null;
+    //     }
+
+    //     currentInteractable.Interact();
+    // }
+
     void TryInteract()
     {
-        currentInteractable?.Interact();
+        // SAFEGUARD 1: If we are already holding a book, pressing E should DROP it
+        if (heldBook != null)
+        {
+            heldBook.Interact(); // Toggles isHolding to false & drops onto shelf
+            heldBook = null;
+            return;
+        }
+
+        if (currentInteractable == null)
+            return;
+
+        // SAFEGUARD 2: Only pick up a new book if we aren't holding anything
+        Book book = currentInteractable as Book;
+
+        if (book != null)
+        {
+            heldBook = book;
+        }
+
+        currentInteractable.Interact();
     }
-
-
 
 }

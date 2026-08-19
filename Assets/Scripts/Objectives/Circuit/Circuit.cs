@@ -11,8 +11,7 @@ public class Circuit : MonoBehaviour, IInteractables
     public Transform drawer;
     public bool hasCell;
 
-   // public Vector3 openDrawerPos;
-   // public Vector3 closeDrawerPos;
+   
  
   public Transform openDrawerPos;
 
@@ -59,7 +58,7 @@ public class Circuit : MonoBehaviour, IInteractables
   );
 
         Debug.Log("OpenDrawer");
-        drawer.position = Vector3.Lerp(drawer.position, openDrawerPos.position, 5f * Time.deltaTime);
+        drawer.position = Vector3.Lerp(drawer.position, openDrawerPos.position, 3f * Time.deltaTime);
 
     }
 
