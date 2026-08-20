@@ -37,9 +37,9 @@ public class InventoryNew : MonoBehaviour
 
                 // Put new item in hand
                 objectToStore.transform.SetParent(hand);
-                objectToStore.transform.localPosition = Vector3.zero;
-                objectToStore.transform.localRotation = Quaternion.identity;
-
+               // objectToStore.transform.localPosition = Vector3.zero;
+               // objectToStore.transform.localRotation = Quaternion.identity;
+                  ApplyHoldOffsets(objectToStore);         
                 objectToStore.SetActive(true);
 
                 // Disable physics
@@ -90,9 +90,9 @@ public class InventoryNew : MonoBehaviour
 
         // Put selected object in hand
         item.transform.SetParent(hand);
-        item.transform.localPosition = Vector3.zero;
-        item.transform.localRotation = Quaternion.identity;
-
+       // item.transform.localPosition = Vector3.zero;
+       // item.transform.localRotation = Quaternion.identity;
+        ApplyHoldOffsets(item); 
 
         // Physics off while holding
         Rigidbody rb = item.GetComponent<Rigidbody>();
@@ -110,7 +110,8 @@ public class InventoryNew : MonoBehaviour
 
 
     public void Drop()
-    {
+    { 
+        Debug.Log("Drop"); 
         if (selectedSlot == -1)
             return;
 
@@ -195,6 +196,22 @@ public class InventoryNew : MonoBehaviour
 
         return null;
     }
+    
+     // --- ADDED NEW HELPER METHOD ---
+    private void ApplyHoldOffsets(GameObject itemObj)
+    {
+        Pickable pickable = itemObj.GetComponent<Pickable>();
 
+        if (pickable != null)
+        {
+            itemObj.transform.localPosition = pickable.HoldPositionOffset;
+            itemObj.transform.localRotation = Quaternion.Euler(pickable.HoldRotationOffset);
+        }
+        else
+        {
+            itemObj.transform.localPosition = Vector3.zero;
+            itemObj.transform.localRotation = Quaternion.identity;
+        }
+    }
 
 }
