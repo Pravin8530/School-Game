@@ -15,7 +15,9 @@ public class Book : MonoBehaviour, IInteractables
     public bool IsHolding => isHolding;
 
     private Transform targetSlot;
-
+   
+    public string bookColor;
+   
     public void Interact()
     {
         isHolding = !isHolding;

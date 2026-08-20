@@ -7,13 +7,87 @@ public class BookShelf : MonoBehaviour
     public Transform[] bookSlots;
     public List<Book> currentBooks = new List<Book>();
 
+    [Header("Passward relarted shit")]
+    public List<Book> currentBookSequence;
+    private bool isSolved = false;
+
+
     private int lastHoverIndex = -1;
 
     private void Start()
     {
+        ShuffleBooks();
+        GenrateRandomPassward();
         // Align starting books to initial slots
         UpdateBookPositions(currentBooks);
+
     }
+
+    // we create new book list 
+    //we sort bookIds 
+    // genrate random sequnce out of it  like suffle shit 
+
+    private void GenrateRandomPassward()
+    {
+        currentBookSequence = new List<Book>(currentBooks);
+
+        for (int i = 0; i < currentBookSequence.Count; i++)
+        {
+            Book temp = currentBookSequence[i];
+            int randomNum = Random.Range(i, currentBookSequence.Count);
+
+            currentBookSequence[i] = currentBookSequence[randomNum];
+            currentBookSequence[randomNum] = temp;
+
+
+        }
+        string solution = "solution is ";
+
+        foreach (Book book in currentBookSequence)
+        {
+            solution += book.bookColor + "-> ";
+        }
+          Debug.Log(solution); 
+
+    }
+
+
+    public void ShuffleBooks()
+    {
+        for (int i = 0; i < currentBooks.Count; i++)
+        {
+
+            Book temp = currentBooks[i];
+            Debug.Log(temp);
+            int randomNum = Random.Range(i, currentBooks.Count);
+            Debug.Log(randomNum);
+            currentBooks[i] = currentBooks[randomNum];
+            currentBooks[randomNum] = temp;
+
+
+        }
+
+    }
+
+    private void CheackPassward()
+    {
+        if (isSolved)
+            return;
+
+        for (int i = 0; i < currentBooks.Count; i++)
+        {
+            if (currentBooks[i] != currentBookSequence[i])
+                return;
+
+        }
+
+        isSolved = true;
+        Debug.Log("ye We won");
+
+
+    }
+
+
 
     /// <summary>
     /// Called when the player picks up a book off the shelf.
@@ -67,6 +141,9 @@ public class BookShelf : MonoBehaviour
 
         // Lock all books to their final slot assignments
         UpdateBookPositions(currentBooks);
+
+        //cheking passward after 
+        CheackPassward();
     }
 
     /// <summary>
@@ -103,4 +180,10 @@ public class BookShelf : MonoBehaviour
 
         return closestIndex;
     }
+
+
+
+
+
+
 }
