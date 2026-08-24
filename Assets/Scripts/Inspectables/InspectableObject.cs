@@ -163,10 +163,6 @@ public class InspectableObject : MonoBehaviour, IInteractables
         transform.Rotate(inspectCamera.transform.right, mouseDelta.y * rotateSensitivity, Space.World);
     }
  
-    public void Drop()
-    {
-        
-
-    }
+ 
 
 }

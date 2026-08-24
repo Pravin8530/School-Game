@@ -9,7 +9,7 @@ public class InventoryNew : MonoBehaviour
     public Camera cam;
     public Transform hand;
 
-    public float throwForce = 500f;
+    public float throwForce = 50f;
 
     public int selectedSlot = -1;
 

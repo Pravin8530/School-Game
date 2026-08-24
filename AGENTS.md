@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books
 - Active game object:
-  - Name: magnet
-  - Tag: Untagged
-  - Layer: Default
+  - Name: PlayerCapsule
+  - Tag: Player
+  - Layer: 8
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
