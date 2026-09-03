@@ -6,6 +6,8 @@ TagManager:
   tags:
   - CinemachineTarget
   - book
+  - ChillSpots
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,7 +17,7 @@ TagManager:
   - UI
   - PP
   - Books
-  - 
+  - Player
   - 
   - 
   - 

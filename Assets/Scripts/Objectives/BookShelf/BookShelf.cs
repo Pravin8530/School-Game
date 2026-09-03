@@ -47,7 +47,7 @@ public class BookShelf : MonoBehaviour
         {
             solution += book.bookColor + "-> ";
         }
-          Debug.Log(solution); 
+         // Debug.Log(solution); 
 
     }
 
@@ -58,9 +58,9 @@ public class BookShelf : MonoBehaviour
         {
 
             Book temp = currentBooks[i];
-            Debug.Log(temp);
+        //    Debug.Log(temp);
             int randomNum = Random.Range(i, currentBooks.Count);
-            Debug.Log(randomNum);
+           // Debug.Log(randomNum);
             currentBooks[i] = currentBooks[randomNum];
             currentBooks[randomNum] = temp;
 

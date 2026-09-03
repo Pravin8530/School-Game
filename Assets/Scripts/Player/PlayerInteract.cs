@@ -19,7 +19,7 @@ public class PlayerInteract : MonoBehaviour
     [Header("Interactable")]
     private IInteractables currentInteractable = null;
 
-    private Inventory inventory;
+    
     private InventoryNew inventoryNew;
 
     private WorldItem targetWorldItem; // stores worlditem ur looking at
@@ -73,11 +73,6 @@ public class PlayerInteract : MonoBehaviour
         }
 
 
-        // if (heldBook != null)
-        // {
-        //     Vector3 target = ray.origin + ray.direction * heldBook.distanceFromCamera ;
-        //     heldBook.MoveWithRay(target);
-        // }
 
 
         if (heldBook != null)
@@ -202,29 +197,6 @@ public class PlayerInteract : MonoBehaviour
 
 
 
-    // void TryInteract()
-    // {
-    //     currentInteractable?.Interact();
-    // }
-
-    // void TryInteract()
-    // {
-    //     if (currentInteractable == null)
-    //         return;
-
-    //     Book book = currentInteractable as Book;
-
-    //     if (book != null)
-    //     {
-    //         heldBook = book;
-    //     }
-    //    else if(heldBook==book)
-    //    {
-    //         heldBook=null;
-    //     }
-
-    //     currentInteractable.Interact();
-    // }
 
     void TryInteract()
     {

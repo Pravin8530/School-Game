@@ -127,10 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f95292e072006544bd078a104b71a80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pickable
-  playerHand: {fileID: 0}
+  holdPositionOffset: {x: 0, y: 0, z: 0}
+  holdRotationOffset: {x: 0, y: 0, z: 0}
   pickUpSpeed: 20
   isPickedup: 0
-  forceSpeed: 5
 --- !u!54 &5207123838266078291
 Rigidbody:
   m_ObjectHideFlags: 0

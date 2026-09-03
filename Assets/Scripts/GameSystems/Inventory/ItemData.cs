@@ -1,4 +1,4 @@
-using GLTFast.Schema;
+//using GLTFast.Schema;
 using Unity.VisualScripting;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Inventory/Item")]

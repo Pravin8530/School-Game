@@ -4,11 +4,11 @@
 - Active scene:
   - Name: Gym
   - Tags:
-    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, CinemachineTarget, book
+    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, CinemachineTarget, book, ChillSpots, Enemy
   - Layers:
-    - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books
+    - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player
 - Active game object:
-  - Name: PlayerCapsule
-  - Tag: Player
-  - Layer: 8
+  - Name: Enemy
+  - Tag: Enemy
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

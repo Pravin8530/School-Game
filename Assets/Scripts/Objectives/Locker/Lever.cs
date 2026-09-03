@@ -34,9 +34,5 @@ public class Lever : MonoBehaviour, IInteractables
 
     }
 
-    public void Drop()
-    {
-        
-
-    }
+   
 }

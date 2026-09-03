@@ -65,6 +65,14 @@ namespace StarterAssets
 
         // cinemachine
         private float _cinemachineTargetPitch;
+    
+       //sound related
+
+       public int maxNoiseRadius = 12; // Maximum noise radius for running
+       public int minNoiseRadius = 4;  // Minimum noise radius for walking
+       
+
+
 
         // player
         private float _speed;
@@ -159,6 +167,25 @@ namespace StarterAssets
             GroundedCheck();
             Crouch();
             Move();
+
+            // Inside Player script Update(): for sound()()()()
+
+            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+            
+            
+            if (isMoving)
+            {
+                float noiseRadius = isRunning ? 12f : 4f; // Running is loud (12m), walking is quiet (4m)
+
+                // Send noise event every frame or on step intervals
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
+                }
+            }
+
+
         }
 
         private void LateUpdate()
