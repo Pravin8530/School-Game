@@ -72,8 +72,10 @@ public class PetrolState : ITeacherState
 
                 currentPetrolIndex = 0;
             }
-
+        
+           // based on chances 
             SetNextTarget();
+          //  teacher.ChangeState(new ChillState(teacher));   
 
 
         }

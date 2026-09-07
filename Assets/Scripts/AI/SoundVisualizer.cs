@@ -4,8 +4,8 @@ public class SoundVisualizer : MonoBehaviour
 {
     private float maxRadius;
     private float currentRadius = 0f;
-    private float expandSpeed = 15f; // How fast the ring grows
-    private float fadeSpeed = 2f;    // How fast it fades out
+    private float expandSpeed = 15f; 
+    private float fadeSpeed = 2f;    
 
     private LineRenderer lineRenderer;
     private Material lineMaterial;
@@ -15,20 +15,21 @@ public class SoundVisualizer : MonoBehaviour
     {
         maxRadius = radius;
 
-        // Set up line renderer programmatically so no Inspector setup is needed
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.useWorldSpace = true;
         lineRenderer.startWidth = 0.15f;
         lineRenderer.endWidth = 0.15f;
-        lineRenderer.positionCount = 40; // Dots to make a smooth circle
+        lineRenderer.positionCount = 40; 
 
-        // Create a basic transparent material
         lineMaterial = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.material = lineMaterial;
     }
 
     void Update()
     {
+        // FIX: Exit early if Setup() hasn't been called yet
+        if (lineRenderer == null) return;
+
         // 1. Expand the ring up to max radius
         if (currentRadius < maxRadius)
         {
@@ -52,7 +53,7 @@ public class SoundVisualizer : MonoBehaviour
 
     private void DrawCircle(float radius)
     {
-        float angleStep = 360f / 39; // 40 points total
+        float angleStep = 360f / 39; 
 
         for (int i = 0; i < 40; i++)
         {

@@ -138,6 +138,11 @@ public class SearchState : ITeacherState
         agent.isStopped = false;
         agent.stoppingDistance = 0.5f; // Keep this low so teacher gets close to noise
         agent.SetDestination(teacher.investigationPoint); // Walk to noise location
+
+        teacher.hasHeardSound = true; // Reset the sound flag when entering the state
+        teacher.HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound; // Update UI for sound state
+
+        
     }
 
     public void Update()
@@ -197,5 +202,14 @@ public class SearchState : ITeacherState
     public void Exit()
     {
         Debug.Log("Exiting Search State");
+
+        teacher.hasHeardSound = false; // Reset the sound flag when leaving the state
+
+        teacher.HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound; // Update UI for sound state
+
+          
+        teacher.isStunned = false;
+         teacher.stunedText.text = "Stunned: " + teacher.isStunned;
+
     }
 }

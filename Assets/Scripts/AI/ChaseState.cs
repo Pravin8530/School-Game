@@ -18,7 +18,8 @@ public class ChaseState : ITeacherState
 
     public void Enter()
     {
-        Debug.Log("Spotted Player!");
+        //playing animation before chasing.
+
 
         // Stop moving while reacting
         agent.isStopped = true;
@@ -38,49 +39,7 @@ public class ChaseState : ITeacherState
         teacher.lastSeenTimer = Time.time;
     }
 
-    // public void Update()
-    // {
-    //     // Step 1: Wait for reaction delay
-    //     if (!isDoneWaiting)
-    //     {
-    //         timer += Time.deltaTime;
-    //         if (timer >= delay)
-    //         {
-    //             isDoneWaiting = true;
-    //             agent.isStopped = false; // Start moving again
-    //         }
-    //         return; // Don't move until timer finishes
-    //     }
-
-    //     // Step 2: Chase or Go to Last Known Position
-    //     if (teacher.CanSeePlayer())
-    //     {
-    //         float distanceToPlayer = Vector3.Distance(teacher.transform.position, teacher.player.transform.position);
-
-    //         // If teacher gets very close to player (e.g. within 1.5 units), trigger catch
-    //         if (distanceToPlayer <= 2.5f)
-    //         {
-    //             teacher.ChangeState(new CatchState(teacher));
-    //             return;
-    //         }
-
-
-    //         teacher.lastSeenTimer = Time.time;
-    //         agent.SetDestination(teacher.player.transform.position);
-    //     }
-    //     else
-    //     {
-    //         // Walk to last known position
-    //         agent.SetDestination(teacher.lastKnownPosition);
-
-    //         // Reached last position? Go to Search state
-    //         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-    //         {
-    //             teacher.ChangeState(new SearchState(teacher));
-    //         }
-    //     }
-    // }
-
+   
     public void Update()
     {
         // Step 1: Wait for reaction delay
@@ -112,12 +71,9 @@ public class ChaseState : ITeacherState
         }
         else
         {
-            agent.SetDestination(teacher.lastKnownPosition);
-
-            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-            {
-                teacher.ChangeState(new SearchState(teacher));
-            }
+            
+            teacher.investigationPoint = teacher.lastKnownPosition;
+            teacher.ChangeState(new SearchState(teacher));
         }
     }
 

@@ -18,7 +18,7 @@ public class CatchState : ITeacherState
 
     public void Enter()
     {
-        Debug.Log("Player Caught!");
+        Debug.Log("Die Motherfucker!");
 
         // 1. Freeze movement completely
         agent.isStopped = true;
@@ -34,20 +34,20 @@ public class CatchState : ITeacherState
     public void Update()
     {
         // 3. Smoothly rotate toward the player during the animation
-        if (teacher.player != null)
-        {
-            Vector3 direction = (teacher.player.transform.position - teacher.transform.position).normalized;
-            direction.y = 0; // Prevent tilting up or down
+        // if (teacher.player != null)
+        // {
+        //     Vector3 direction = (teacher.player.transform.position - teacher.transform.position).normalized;
+        //     direction.y = 0; // Prevent tilting up or down
 
-            if (direction != Vector3.zero)
-            {
-                teacher.transform.rotation = Quaternion.Slerp(
-                    teacher.transform.rotation,
-                    Quaternion.LookRotation(direction),
-                    Time.deltaTime * 10f
-                );
-            }
-        }
+        //     if (direction != Vector3.zero)
+        //     {
+        //         teacher.transform.rotation = Quaternion.Slerp(
+        //             teacher.transform.rotation,
+        //             Quaternion.LookRotation(direction),
+        //             Time.deltaTime * 10f
+        //         );
+        //     }
+        // }
 
         // 4. Count down animation time
         timer += Time.deltaTime;
