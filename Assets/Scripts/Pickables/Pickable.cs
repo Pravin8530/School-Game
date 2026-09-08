@@ -1,5 +1,5 @@
 using System.Collections;
-using Unity.Mathematics;
+//using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ public class Pickable : MonoBehaviour, IPickable
     private Renderer rend;
     private Collider col;
 
-    [SerializeField] bool isPickedup = false;
+    [SerializeField] public bool isPickedup = false;
     private Coroutine pickupRoutine;
 
 
@@ -28,8 +28,6 @@ public class Pickable : MonoBehaviour, IPickable
     }
 
 
-
-
     public void Interact(Transform hand)
     {
         if (isPickedup) return;
@@ -38,53 +36,14 @@ public class Pickable : MonoBehaviour, IPickable
         rend.enabled = true;
         col.enabled = true;
         isPickedup = true;
+       // Debug.Log("Interacting with "  + isPickedup);
         StartCoroutine(PickupRoutine());
 
     }
 
 
 
-    // private IEnumerator PickupRoutine()
-    // {
-    //     rb.linearVelocity = Vector3.zero;
-    //     rb.angularVelocity = Vector3.zero;
-
-    //     rb.isKinematic = true;
-    //     rb.useGravity = false;
-
-    //     while (Vector3.Distance(transform.position, playerHand.position) > 0.05f)
-    //     {
-    //            transform.position = Vector3.Lerp(
-    //             transform.position,
-    //            /* playerHand.position*/
-    //             TargetHoldPosition(),
-    //             pickUpSpeed * Time.deltaTime
-    //         );
-
-    //          transform.rotation = Quaternion.Slerp(
-    //             transform.rotation,
-    //             /*playerHand.rotation*/
-    //             TargetHoldRotation(),
-    //             pickUpSpeed * Time.deltaTime
-    //         );
-
-    //         yield return null;
-    //     }
-
-
-
-    //      transform.SetParent(playerHand);
-    //      //transform.position = playerHand.position;
-    //     //transform.rotation = playerHand.rotation;
-    //     transform.position = TargetHoldPosition();
-    //     transform.rotation = TargetHoldRotation();
-
-    //     WorldItem worldItem = GetComponent<WorldItem>();
-
-    //     InventoryNew inventoryNew = playerHand.GetComponentInParent<InventoryNew>();
-
-    //     inventoryNew.AddItem(worldItem.itemData, gameObject);
-    // }
+   
 
     private IEnumerator PickupRoutine()
     {
@@ -103,7 +62,7 @@ public class Pickable : MonoBehaviour, IPickable
         Quaternion startRot = transform.localRotation;
         Quaternion targetRot = Quaternion.Euler(holdRotationOffset);
 
-        // Smoothly lerp using a timed loop (100% guaranteed to finish!)
+        // Smoothly lerp using a timed loop 
         while (timer < duration)
         {
             timer += Time.deltaTime;

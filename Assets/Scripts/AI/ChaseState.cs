@@ -18,15 +18,13 @@ public class ChaseState : ITeacherState
 
     public void Enter()
     {
-        //playing animation before chasing.
+        teacher.PlayAnimation(teacher.supriseClip, 0.15f);
 
 
-        // Stop moving while reacting
         agent.isStopped = true;
         timer = 0f;
         isDoneWaiting = false;
 
-        // Check if player was seen recently
         if (Time.time - teacher.lastSeenTimer < teacher.memoryTime)
         {
             delay = teacher.quickNoticeTime; // 0.2 seconds
@@ -42,7 +40,6 @@ public class ChaseState : ITeacherState
    
     public void Update()
     {
-        // Step 1: Wait for reaction delay
         if (!isDoneWaiting)
         {
             timer += Time.deltaTime;
@@ -50,11 +47,12 @@ public class ChaseState : ITeacherState
             {
                 isDoneWaiting = true;
                 agent.isStopped = false;
+
+                teacher.PlayAnimation(teacher.chaseClip, 0.15f);
             }
             return;
         }
 
-        // Catch check (works 360 degrees if touched)
         float distanceToPlayer = Vector3.Distance(teacher.transform.position, teacher.player.transform.position);
         if (distanceToPlayer <= 2.5f)
         {

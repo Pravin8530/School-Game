@@ -131,7 +131,8 @@ public class InventoryNew : MonoBehaviour
         // Remove from hand
         item.transform.SetParent(null);
         item.SetActive(true);
-
+        pickable.isPickedup = false;
+        Debug.Log("Dropping " + pickable.isPickedup);
 
         // Turn physics back on
         Rigidbody rb = item.GetComponent<Rigidbody>();
@@ -144,7 +145,7 @@ public class InventoryNew : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-
+        
 
 
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));

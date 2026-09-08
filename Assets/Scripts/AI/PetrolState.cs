@@ -28,8 +28,10 @@ public class PetrolState : ITeacherState
     public void Enter()
     {
         Debug.Log("entering Petrol State");
-         teacherAI.isStopped = false; // Ensure the agent is active
+         teacherAI.isStopped = false; 
         SetNextTarget();
+
+        teacher.PlayAnimation(teacher.patrolClip,0.15f);
     }
 
     public void Update()
@@ -50,6 +52,7 @@ public class PetrolState : ITeacherState
     {
         Debug.Log("Exioting Petrol");
         teacherAI.ResetPath();
+        
     }
 
 
@@ -73,7 +76,7 @@ public class PetrolState : ITeacherState
                 currentPetrolIndex = 0;
             }
         
-           // based on chances 
+          /// based on chances like bara
             SetNextTarget();
           //  teacher.ChangeState(new ChillState(teacher));   
 
@@ -101,6 +104,7 @@ public class PetrolState : ITeacherState
         }
 
         teacherAI.SetDestination(currentTarget.position);
+
     }
 
 }

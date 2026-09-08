@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player
 - Active game object:
-  - Name: Enemy
-  - Tag: Enemy
+  - Name: PetrolPoint3
+  - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
