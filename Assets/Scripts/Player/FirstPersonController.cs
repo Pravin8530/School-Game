@@ -61,6 +61,22 @@ namespace StarterAssets
         private bool _isFalling = false;
         private float _pitchBeforeFall;
         private Vector3 _cameraTargetOriginalLocalPos;
+
+
+        [Header("Climbing")]
+        [SerializeField]private bool IsClimbing= false;
+         private float climbSpeed = 3f;
+
+        [Header("Window Jump")]
+       private float windowCheakdistance = 1.5f;
+        public LayerMask windowLayer;
+        public float jumpDuration;
+        public float goinDownDuriation = 0.20f;
+        private bool isWindowJumping = false;
+
+        [Header("chair")]
+        private RollingChair ridingChair;
+
         // ---------------------------------------
 
         // cinemachine
@@ -161,7 +177,14 @@ namespace StarterAssets
             // }
 
             // NEW: while falling, skip normal jump/gravity/move logic entirely
-            if (_isFalling) return;
+            if (_isFalling || isWindowJumping) return;
+
+
+            if (IsClimbing)
+            {
+                Climb();
+                return;
+            }
 
             JumpAndGravity();
             GroundedCheck();
@@ -186,12 +209,13 @@ namespace StarterAssets
             }
 
 
+
         }
 
         private void LateUpdate()
         {
             // NEW: skip normal look-rotation while falling so the fall coroutine owns the camera
-            if (_isFalling) return;
+            if (_isFalling || isWindowJumping) return;
 
             CameraRotation();
         }
@@ -203,7 +227,10 @@ namespace StarterAssets
         }
 
         private void CameraRotation()
-        {
+
+        {    //if (ridingChair != null)
+              // return;
+
             if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
                 return;
 
@@ -222,10 +249,24 @@ namespace StarterAssets
                 transform.Rotate(Vector3.up * _rotationVelocity);
             }
         }
+        public void SetRidingChair(RollingChair chair)
+        {
+            ridingChair = chair;
+        }
 
+        public Vector2 GetMoveInput()
+        {
+            return _input.move;
+        }
         private void Move()
         {
+            if (ridingChair != null)
+                return;
+
             if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.BookInteract)
+                return;
+
+            if(!_controller.enabled)
                 return;
 
             float targetSpeed;
@@ -278,6 +319,16 @@ namespace StarterAssets
 
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
+                    if (CheckWindow())
+                    {
+                        
+                        Debug.Log(CheckWindow());
+                        _input.jump = false;
+                        StartCoroutine(JumpRoutine());
+                        return;
+                    }
+
+
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                 }
 
@@ -421,6 +472,8 @@ namespace StarterAssets
         }
         // ---------------------------------------
 
+        //Crouch----
+
         private void Crouch()
         {
             _isCrouching = _input.crouch;
@@ -443,6 +496,132 @@ namespace StarterAssets
             CinemachineCameraTarget.transform.localPosition = cameraPos;
         }
 
+        // Climbing------
+
+        //private void Climb()
+        //{
+        //    float verticalInput = _input.move.y;
+
+        //    _verticalVelocity = verticalInput * climbSpeed;
+
+        //    Vector3 movement = Vector3.up * _verticalVelocity;
+
+        //    _controller.Move(movement * Time.deltaTime);
+        //}
+
+        //private void Climb()
+        //{
+        //    float input = _input.move.y;
+
+        //    Vector3 movement = Vector3.up * input * climbSpeed;
+
+        //    _controller.Move(movement * Time.deltaTime);
+        //}
+
+        private void Climb()
+        {
+            float input = _input.move.y;
+            if (input < 0f)
+            {
+                IsClimbing = false;
+                return;
+            }
+
+
+            _controller.Move(Vector3.up * input * climbSpeed * Time.deltaTime);
+        }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Ladder"))
+            { 
+                IsClimbing = true;
+                //_verticalVelocity = 0f;
+
+
+            }
+
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Ladder"))
+            {
+                IsClimbing = false;
+               _verticalVelocity = -2f;
+            }
+
+
+        }
+
+       // -------------
+
+        //Detecting window
+        private bool CheckWindow()
+        {
+            Vector3 origin = transform.position + Vector3.up * 1.0f;
+
+            if(Physics.Raycast(origin,
+                               transform.forward,
+                               out RaycastHit hit,
+                               windowCheakdistance,
+                               windowLayer
+                               ))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private IEnumerator JumpRoutine()
+        {
+            isWindowJumping = true;
+
+            Debug.Log("JumpRoutine");
+            Vector3 start = transform.position;
+            Vector3 down = start - transform.up * 0.3f;
+            Vector3 end = transform.position + transform.forward * 2f + Vector3.up * 1f;
+            _controller.enabled = false;
+
+
+            float t = 0f;
+
+            // goin down
+            while (t < goinDownDuriation )
+            {
+                t += Time.deltaTime;
+
+                float normalized = Mathf.Clamp01(t / goinDownDuriation);
+
+                Vector3 position = Vector3.Lerp(start, down, normalized);
+
+                transform.position = position;
+
+                yield return null;
+
+            }
+
+             t = 0f;
+            // goingup and forward
+          while(t < jumpDuration){
+
+                t += Time.deltaTime;
+
+              float normalized = Mathf.Clamp01(t / jumpDuration);
+
+              Vector3 position = Vector3.Lerp(down, end, normalized);
+
+                transform.position = position; 
+
+            yield return null;
+
+            }
+
+            transform.position = end;
+            _controller.enabled = true;
+            isWindowJumping = false;
+        }
 
         private void OnDrawGizmosSelected()
         {

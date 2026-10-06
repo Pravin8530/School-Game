@@ -1,17 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-/// <summary>
-/// Attach to any GameObject you want the player to inspect.
-/// Implements IIntractables so PlayerInteract picks it up automatically.
-/// 
-/// Setup:
-///   1. Add this component to your inspectable object.
-///   2. Assign the player's Camera to 'inspectCamera' in the Inspector.
-///   3. Tweak inspectDistance, inspectSpeed, and rotateSensitivity as needed.
-///   4. Optionally disable your PlayerLook / camera controller script
-///      by dragging it into 'playerLookScript'.
-/// </summary>
 public class InspectableObject : MonoBehaviour, IInteractables
 {
     [Header("Interact Priority")]
@@ -39,7 +28,6 @@ public class InspectableObject : MonoBehaviour, IInteractables
     public float rotateSensitivity = 3f;
 
     
-    
  
     // ── private state ──────────────────────────────────────────
     public bool _inspecting;
@@ -53,8 +41,22 @@ public class InspectableObject : MonoBehaviour, IInteractables
     private Rigidbody _rb;
 
 
-
     // ── IInteractables ──────────────────────────────────────────
+    //public void Interact()
+    //{
+
+
+    //    if (_inspecting)
+    //    {
+    //        EndInspect();
+    //    }
+    //    else
+    //    {
+    //        BeginInspect();
+    //    }
+    //}
+    public float minimumInspectDistance = 0.6f;
+
     public void Interact()
     {
         if (_inspecting)
@@ -63,6 +65,17 @@ public class InspectableObject : MonoBehaviour, IInteractables
         }
         else
         {
+            float distance = Vector3.Distance(
+                transform.position,
+                inspectCamera.transform.position
+            );
+
+            if (distance < minimumInspectDistance)
+            {
+                Debug.Log("Too close to inspect!");
+                return;
+            }
+
             BeginInspect();
         }
     }
@@ -82,6 +95,9 @@ public class InspectableObject : MonoBehaviour, IInteractables
     {
         // if (!_inspecting)
         //     return;
+
+      
+
 
         if (_inspecting)
         {

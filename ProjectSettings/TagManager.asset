@@ -8,6 +8,7 @@ TagManager:
   - book
   - ChillSpots
   - Enemy
+  - Ladder
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - PP
   - Books
   - Player
-  - 
+  - Window
   - 
   - 
   - 

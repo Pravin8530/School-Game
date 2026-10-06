@@ -4,8 +4,8 @@ public class SoundVisualizer : MonoBehaviour
 {
     private float maxRadius;
     private float currentRadius = 0f;
-    private float expandSpeed = 15f; 
-    private float fadeSpeed = 2f;    
+    private float expandSpeed = 15f;
+    private float fadeSpeed = 2f;
 
     private LineRenderer lineRenderer;
     private Material lineMaterial;
@@ -17,9 +17,9 @@ public class SoundVisualizer : MonoBehaviour
 
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.useWorldSpace = true;
-        lineRenderer.startWidth = 0.15f;
-        lineRenderer.endWidth = 0.15f;
-        lineRenderer.positionCount = 40; 
+        lineRenderer.startWidth = 0.015f;
+        lineRenderer.endWidth = 0.015f;
+        lineRenderer.positionCount = 40;
 
         lineMaterial = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.material = lineMaterial;
@@ -53,7 +53,7 @@ public class SoundVisualizer : MonoBehaviour
 
     private void DrawCircle(float radius)
     {
-        float angleStep = 360f / 39; 
+        float angleStep = 360f / 39;
 
         for (int i = 0; i < 40; i++)
         {
