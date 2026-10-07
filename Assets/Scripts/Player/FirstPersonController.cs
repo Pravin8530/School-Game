@@ -62,7 +62,7 @@ namespace StarterAssets
         private float _pitchBeforeFall;
         private Vector3 _cameraTargetOriginalLocalPos;
 
-
+     
         [Header("Climbing")]
         [SerializeField]private bool IsClimbing= false;
          private float climbSpeed = 3f;
@@ -71,7 +71,7 @@ namespace StarterAssets
        private float windowCheakdistance = 1.5f;
         public LayerMask windowLayer;
         public float jumpDuration;
-        public float goinDownDuriation = 0.20f;
+        public float goinDownDuriation = 0.05f;
         private bool isWindowJumping = false;
 
         [Header("chair")]
@@ -139,6 +139,7 @@ namespace StarterAssets
 
         private void Awake()
         {
+
             if (_mainCamera == null)
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -176,7 +177,6 @@ namespace StarterAssets
             //     TriggerFall();
             // }
 
-            // NEW: while falling, skip normal jump/gravity/move logic entirely
             if (_isFalling || isWindowJumping) return;
 
 
@@ -191,7 +191,7 @@ namespace StarterAssets
             Crouch();
             Move();
 
-            // Inside Player script Update(): for sound()()()()
+            // Inside Player script Update() for sound()()()()
 
             bool isRunning = Input.GetKey(KeyCode.LeftShift);
             bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
@@ -204,6 +204,8 @@ namespace StarterAssets
                 // Send noise event every frame or on step intervals
                 if (SoundManager.Instance != null)
                 {
+                    if (_isCrouching)
+                        return;
                     SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
                 }
             }
@@ -214,7 +216,6 @@ namespace StarterAssets
 
         private void LateUpdate()
         {
-            // NEW: skip normal look-rotation while falling so the fall coroutine owns the camera
             if (_isFalling || isWindowJumping) return;
 
             CameraRotation();
@@ -228,8 +229,7 @@ namespace StarterAssets
 
         private void CameraRotation()
 
-        {    //if (ridingChair != null)
-              // return;
+        {    
 
             if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
                 return;
@@ -324,6 +324,7 @@ namespace StarterAssets
                         
                         Debug.Log(CheckWindow());
                         _input.jump = false;
+                      
                         StartCoroutine(JumpRoutine());
                         return;
                     }
@@ -496,27 +497,7 @@ namespace StarterAssets
             CinemachineCameraTarget.transform.localPosition = cameraPos;
         }
 
-        // Climbing------
-
-        //private void Climb()
-        //{
-        //    float verticalInput = _input.move.y;
-
-        //    _verticalVelocity = verticalInput * climbSpeed;
-
-        //    Vector3 movement = Vector3.up * _verticalVelocity;
-
-        //    _controller.Move(movement * Time.deltaTime);
-        //}
-
-        //private void Climb()
-        //{
-        //    float input = _input.move.y;
-
-        //    Vector3 movement = Vector3.up * input * climbSpeed;
-
-        //    _controller.Move(movement * Time.deltaTime);
-        //}
+        
 
         private void Climb()
         {
@@ -569,14 +550,23 @@ namespace StarterAssets
                                windowLayer
                                ))
             {
-                return true;
+                Window window = hit.collider.GetComponentInParent<Window>();
+
+    
+
+                if (window != null && window.isWindowBroken)
+                {
+                    return true;
+                }
             }
             return false;
         }
 
         private IEnumerator JumpRoutine()
         {
+           
             isWindowJumping = true;
+           
 
             Debug.Log("JumpRoutine");
             Vector3 start = transform.position;
@@ -622,6 +612,8 @@ namespace StarterAssets
             _controller.enabled = true;
             isWindowJumping = false;
         }
+
+       
 
         private void OnDrawGizmosSelected()
         {

@@ -25,11 +25,7 @@ public class DoorController : MonoBehaviour,IInteractables
     public int Priority => 1;
 
 
-    // IMP TIP - you cant set isOpen And isDoorLocked bool True cuz either  door is locked or door is open ; 
-
-    // if you want to set door locked then set isDoorLocked = true and isOpen = false ;
-
-    // if you want door intial open the set isOpen = true and isDoorLocked = false ;
+    
 
 
     void Start()
@@ -100,8 +96,5 @@ public class DoorController : MonoBehaviour,IInteractables
     {
         isDoorLocked = locked;
     }
-    public void Drop()  // IInteractables function To Drop 
-    {
-        
-    }
+    
 }

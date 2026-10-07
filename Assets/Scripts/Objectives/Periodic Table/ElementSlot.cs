@@ -31,7 +31,6 @@ public class ElementSlot : MonoBehaviour, IInteractables
         cube.transform.localRotation = Quaternion.identity;
         cube.transform.localScale = Vector3.one; // adjust if cube needs to be smaller/larger than the slot
         cube.transform.localPosition = new Vector3(zOffset, 0f, 0f);
-        //cube.transform.position = new Vector3(cube.transform.position.x + zOffset, cube.transform.position.y, cube.transform.position.z );
 
         Rigidbody rb = cube.GetComponent<Rigidbody>();
         if (rb != null)
@@ -64,17 +63,17 @@ public class ElementSlot : MonoBehaviour, IInteractables
 
         }
 
-        // if (cube != null && cube.element == requiredElement)
-        // {
-
-        //     PlaceElementIntoDedicatedPosition(cube);
-        // }
+      
 
         if (cube != null && cube.element == requiredElement)
         {
             PlaceElementIntoDedicatedPosition(cube);
             PlayerInteract.instance.heldElement = null;
+            PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
+
         }
+
+
     }
 
 

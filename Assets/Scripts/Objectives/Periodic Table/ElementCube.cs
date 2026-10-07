@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -33,6 +34,16 @@ public class ElementCube : MonoBehaviour, IPickable
    
     public void Interact(Transform hand)
     {
+        PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HasImportantItem);
+
+        InventoryNew inventory = hand.GetComponentInParent<InventoryNew>();
+
+        if (inventory != null)
+        {
+            inventory.HideEveryObject();
+        }
+
+
         PlayerInteract.instance.heldElement = this;
         originalScale = transform.localScale;
         col.enabled = false;
@@ -44,7 +55,7 @@ public class ElementCube : MonoBehaviour, IPickable
 
     }
  
-   
+  
    
 }
 

@@ -19,6 +19,8 @@ public class Pickable : MonoBehaviour, IPickable
     [SerializeField] public bool isPickedup = false;
     private Coroutine pickupRoutine;
 
+    PlayerStateManager playerState;
+
 
     void Awake()
     {
@@ -29,14 +31,18 @@ public class Pickable : MonoBehaviour, IPickable
 
 
     public void Interact(Transform hand)
-    {
+    { 
         if (isPickedup) return;
+
+        if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasImportantItem)
+            return;
+
+        PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HoldingItem);
 
         playerHand = hand;
         rend.enabled = true;
         col.enabled = true;
         isPickedup = true;
-       // Debug.Log("Interacting with "  + isPickedup);
         StartCoroutine(PickupRoutine());
 
     }
@@ -88,19 +94,7 @@ public class Pickable : MonoBehaviour, IPickable
         }
     }
 
-    // private Vector3 TargetHoldPosition()
-    // {
-    //     if(playerHand==null)return transform.position;
-    //     return playerHand.TransformPoint(holdPositionOffset);
 
-    // }
-
-    // private Quaternion TargetHoldRotation()
-    // {
-    //     if(playerHand==null)return transform.rotation;
-    //     return playerHand.rotation * Quaternion.Euler(holdRotationOffset);
-
-    // }
 
     public void ResetPickup()
     {

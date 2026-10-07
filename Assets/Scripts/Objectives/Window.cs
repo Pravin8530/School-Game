@@ -5,8 +5,8 @@ public class Window : MonoBehaviour
     public Rigidbody[] shards;
 
     float breakThreshold = 3f;
-    
 
+    public bool isWindowBroken = false;
 
     void OnCollisionEnter(Collision other)
     {
@@ -24,6 +24,9 @@ public class Window : MonoBehaviour
 
     public void WindowBreak()
     {
+        if(isWindowBroken)
+             return;
+        isWindowBroken = true;
         Debug.Log("broked those dumbass window glasses");
         foreach (Rigidbody shard in shards)
         {

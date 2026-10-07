@@ -41,24 +41,16 @@ public class InspectableObject : MonoBehaviour, IInteractables
     private Rigidbody _rb;
 
 
-    // ── IInteractables ──────────────────────────────────────────
-    //public void Interact()
-    //{
-
-
-    //    if (_inspecting)
-    //    {
-    //        EndInspect();
-    //    }
-    //    else
-    //    {
-    //        BeginInspect();
-    //    }
-    //}
+   
     public float minimumInspectDistance = 0.6f;
 
     public void Interact()
     {
+        if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HoldingItem) {
+
+            return;
+                };
+
         if (_inspecting)
         {
             EndInspect();
@@ -96,9 +88,7 @@ public class InspectableObject : MonoBehaviour, IInteractables
         // if (!_inspecting)
         //     return;
 
-      
-
-
+     
         if (_inspecting)
         {
             Vector3 targetPos = inspectCamera.transform.position + inspectCamera.transform.forward * inspectDistance;//, transform.position, Time.deltaTime * inspectSpeed;

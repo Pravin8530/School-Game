@@ -70,15 +70,11 @@ public class InventoryNew : MonoBehaviour
         if (slots[slot] == null || heldObjects[slot] == null)
             return;
 
+        //hiding all items
 
-        // Hide every object
-        for (int i = 0; i < heldObjects.Length; i++)
-        {
-            if (heldObjects[i] != null)
-            {
-                heldObjects[i].SetActive(false);
-            }
-        }
+        HideEveryObject();
+
+
 
 
         // Get selected object
@@ -104,6 +100,18 @@ public class InventoryNew : MonoBehaviour
         }
 
         selectedSlot = slot;
+    }
+
+    public void HideEveryObject()
+    {
+        Debug.Log("Hiding objects");
+        for (int i = 0; i < heldObjects.Length; i++)
+        {
+            if (heldObjects[i] != null)
+            {
+                heldObjects[i].SetActive(false);
+            }
+        }
     }
 
 
@@ -133,6 +141,8 @@ public class InventoryNew : MonoBehaviour
         item.SetActive(true);
         pickable.isPickedup = false;
         Debug.Log("Dropping " + pickable.isPickedup);
+        PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
+
 
         // Turn physics back on
         Rigidbody rb = item.GetComponent<Rigidbody>();
@@ -195,7 +205,7 @@ public class InventoryNew : MonoBehaviour
         return null;
     }
 
-    // --- ADDED NEW HELPER METHOD ---
+   // Helper for offset 
     private void ApplyHoldOffsets(GameObject itemObj)
     {
         Pickable pickable = itemObj.GetComponent<Pickable>();

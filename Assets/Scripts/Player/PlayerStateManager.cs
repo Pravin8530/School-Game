@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Purchasing;
 
 public class PlayerStateManager : MonoBehaviour
 { 
     public static PlayerStateManager Instance;
 
+   
    
     public PlayerState currentState { get; private set; }
 
@@ -13,9 +15,10 @@ public class PlayerStateManager : MonoBehaviour
         Inspecting,
         Crouching,
         Hiding,
-        BookInteract
-        
-
+        BookInteract,
+        HasImportantItem, 
+        HoldingItem
+   
     }
 
     
