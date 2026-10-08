@@ -91,7 +91,7 @@ public class InspectableObject : MonoBehaviour, IInteractables
      
         if (_inspecting)
         {
-            Vector3 targetPos = inspectCamera.transform.position + inspectCamera.transform.forward * inspectDistance;//, transform.position, Time.deltaTime * inspectSpeed;
+            Vector3 targetPos = inspectCamera.transform.position + inspectCamera.transform.forward * inspectDistance;
 
             transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * inspectSpeed);
 

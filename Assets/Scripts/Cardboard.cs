@@ -1,77 +1,64 @@
-
 using System.Collections;
 using UnityEngine;
 
 public class Cardboard : MonoBehaviour, IInteractables
 {
-    [Header("Player")]
-    [SerializeField] Transform player;
+    [Header("Player Tracking")]
+    [SerializeField] private Transform player;
+    [SerializeField] private GameObject playerVisualMesh; // Drag your capsule mesh graphics here
 
-    [Header("Cardboard Doors")]
-    [SerializeField] Transform leftDoor;
-    [SerializeField] Transform rightDoor;
+    [Header("Hiding Points")]
+    [SerializeField] private Transform insidePoint;
+    [SerializeField] private Transform outsidePoint;
+    [SerializeField] private float moveSpeed = 5f;
 
-    [Header("Player Positions")]
-    [SerializeField] Transform insidePoint;
-    [SerializeField] Transform outsidePoint;
-
-    [Header("Door Rotation")]
-    [SerializeField] float openAngle = 90f;
-
-    [Header("Movement")]
-    [SerializeField] float doorSpeed = 5f;
-    [SerializeField] float moveSpeed = 3f;
     public int Priority => 1;
 
-    bool isInside;
-    bool busy;
+    private bool isInside;
+    private bool busy;
 
-    Quaternion leftClosed;
-    Quaternion rightClosed;
-
-    Quaternion leftOpen;
-    Quaternion rightOpen;
+    [Header("Box Settings")]
+    public Transform DropPoint;
+    private Rigidbody boxRigidbody;
 
     void Awake()
     {
-        leftClosed = leftDoor.localRotation;
-        rightClosed = rightDoor.localRotation;
-
-        // Opposite rotations
-        leftOpen =
-            leftClosed * Quaternion.Euler(-openAngle, 0f,0f);
-
-        rightOpen =
-            rightClosed * Quaternion.Euler(openAngle,0f,0f);
+        boxRigidbody = GetComponent<Rigidbody>();
+        if (boxRigidbody != null)
+        {
+            boxRigidbody.isKinematic = true;
+        }
     }
 
-    public  void Interact()
+    public void Interact()
     {
-        if (busy)
-            return;
-
-        StartCoroutine(
-            isInside ? Exit() : Enter()
-        );
+        if (busy) return;
+        StartCoroutine(isInside ? Exit() : Enter());
     }
 
     IEnumerator Enter()
     {
         busy = true;
 
-        // Open BOTH cardboard flaps
-        yield return OpenDoors();
+        PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Hiding);
 
-        // Move capsule inside
-        yield return MovePlayer(
-            insidePoint.position
-        );
+        // 1. Reset Box Position up into the air
+        transform.position = DropPoint.position;
+        transform.rotation = DropPoint.rotation;
+
+        // 2. Disable your custom mouse look/movement scripts here if needed 
+        // so the player can't walk away while hiding!
+
+        // 3. Move the ENTIRE player capsule into the box
+        yield return MovePlayer(insidePoint.position);
+
+        // 4. HIDE the capsule graphics completely so it doesn't poke out of the box
+        if (playerVisualMesh != null) playerVisualMesh.SetActive(false);
+
+        // 5. Drop the box over the player!
+        if (boxRigidbody != null) boxRigidbody.isKinematic = false;
 
         isInside = true;
-
-        // Close BOTH flaps
-        yield return CloseDoors();
-
         busy = false;
     }
 
@@ -79,90 +66,32 @@ public class Cardboard : MonoBehaviour, IInteractables
     {
         busy = true;
 
-        // Open BOTH cardboard flaps
-        yield return OpenDoors();
+        // 1. Pick the box back up into the ceiling
+        if (boxRigidbody != null) boxRigidbody.isKinematic = true;
+        transform.position = DropPoint.position;
+        transform.rotation = DropPoint.rotation;
 
-        // Move capsule outside
-        yield return MovePlayer(
-            outsidePoint.position
-        );
+        // 2. Bring the capsule graphics back to life
+        if (playerVisualMesh != null) playerVisualMesh.SetActive(true);
+
+        // 3. Move the player safely back to the outside position
+        yield return MovePlayer(outsidePoint.position);
+
+        // 4. Re-enable your mouse look/movement scripts here!
+
+        PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
 
         isInside = false;
-
-        // Close BOTH flaps
-        yield return CloseDoors();
-
         busy = false;
-    }
-
-    IEnumerator OpenDoors()
-    {
-        while (
-            Quaternion.Angle(leftDoor.localRotation, leftOpen) > 0.5f ||
-            Quaternion.Angle(rightDoor.localRotation, rightOpen) > 0.5f
-        )
-        {
-            leftDoor.localRotation = Quaternion.Slerp(
-                leftDoor.localRotation,
-                leftOpen,
-                Time.deltaTime * doorSpeed
-            );
-
-            rightDoor.localRotation = Quaternion.Slerp(
-                rightDoor.localRotation,
-                rightOpen,
-                Time.deltaTime * doorSpeed
-            );
-
-            yield return null;
-        }
-
-        leftDoor.localRotation = leftOpen;
-        rightDoor.localRotation = rightOpen;
-    }
-
-    IEnumerator CloseDoors()
-    {
-        while (
-            Quaternion.Angle(leftDoor.localRotation, leftClosed) > 0.5f ||
-            Quaternion.Angle(rightDoor.localRotation, rightClosed) > 0.5f
-        )
-        {
-            leftDoor.localRotation = Quaternion.Slerp(
-                leftDoor.localRotation,
-                leftClosed,
-                Time.deltaTime * doorSpeed
-            );
-
-            rightDoor.localRotation = Quaternion.Slerp(
-                rightDoor.localRotation,
-                rightClosed,
-                Time.deltaTime * doorSpeed
-            );
-
-            yield return null;
-        }
-
-        leftDoor.localRotation = leftClosed;
-        rightDoor.localRotation = rightClosed;
     }
 
     IEnumerator MovePlayer(Vector3 target)
     {
-        while (
-            Vector3.Distance(player.position, target) > 0.02f
-        )
+        while (Vector3.Distance(player.position, target) > 0.02f)
         {
-            player.position = Vector3.MoveTowards(
-                player.position,
-                target,
-                moveSpeed * Time.deltaTime
-            );
-
+            player.position = Vector3.MoveTowards(player.position, target, moveSpeed * Time.deltaTime);
             yield return null;
         }
-
         player.position = target;
     }
 }
-
