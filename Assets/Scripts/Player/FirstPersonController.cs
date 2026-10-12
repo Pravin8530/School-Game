@@ -379,63 +379,132 @@ namespace StarterAssets
             playerCamera.fieldOfView = _normalFOV;
         }
 
-        private IEnumerator FallRoutine()
+        //private IEnumerator FallRoutine()
+        //{
+        //    _isFalling = true;
+
+        //    float targetRoll = FallTargetRoll;
+
+        //    float t = 0f;
+        //    while (t < FallTiltDuration)
+        //    {
+        //        t += Time.deltaTime;
+        //        float lerpT = Mathf.Clamp01(t / FallTiltDuration);
+        //        float easedT = lerpT * lerpT * (3f - 2f * lerpT);
+
+        //        float roll = Mathf.Lerp(0f, targetRoll, easedT);
+
+        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
+
+        //        yield return null;
+
+        //    }
+
+        //    StartCoroutine(FOVPunch());
+        //    float shakeTimer = 0f;
+        //    while (shakeTimer < ShakeDurationAfterDrop)
+        //    {
+        //        shakeTimer += Time.deltaTime;
+        //        float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
+        //        float shake = GetShakeOffset(ShakeAmount * fade);
+            
+        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
+        //        yield return null;
+        //    }
+           
+
+        //    CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
+        //    float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
+        //    if (holdRemaining > 0f)
+        //    {
+        //        yield return new WaitForSeconds(holdRemaining);
+        //    }
+
+        //    t = 0f;
+        //    float rollAtRecoverStart = targetRoll;
+        //    while (t < FallRecoverDuration)
+        //    {
+        //        t += Time.deltaTime;
+        //        float lerpT = Mathf.Clamp01(t / FallRecoverDuration);
+        //        float easedT = lerpT * lerpT * (3f - 2f * lerpT);
+
+        //        float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
+        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
+        //        yield return null;
+        //    }
+       
+        //    CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0f, _cinemachineTargetPitch);
+
+
+        //    _verticalVelocity = -2f;
+        //    _isFalling = false;
+        //}
+
+          private IEnumerator FallRoutine()
         {
             _isFalling = true;
-
             float targetRoll = FallTargetRoll;
-
             float t = 0f;
+
+            // 1. Tilt Sideways
             while (t < FallTiltDuration)
             {
                 t += Time.deltaTime;
                 float lerpT = Mathf.Clamp01(t / FallTiltDuration);
                 float easedT = lerpT * lerpT * (3f - 2f * lerpT);
-
                 float roll = Mathf.Lerp(0f, targetRoll, easedT);
 
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
+                // FIX: Put _cinemachineTargetPitch in X, and roll in Z
+                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-roll,_cinemachineTargetPitch, 0f);
 
                 yield return null;
-
             }
 
             StartCoroutine(FOVPunch());
+
+            // 2. Shake on impact
             float shakeTimer = 0f;
             while (shakeTimer < ShakeDurationAfterDrop)
             {
                 shakeTimer += Time.deltaTime;
                 float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
                 float shake = GetShakeOffset(ShakeAmount * fade);
-            
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
+
+                // FIX: Applied shake to pitch while keeping the rolled angle in Z
+                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch + shake, 0f, targetRoll);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-targetRoll,_cinemachineTargetPitch + shake, 0f);
+
                 yield return null;
             }
-           
 
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
+            //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-targetRoll,_cinemachineTargetPitch, 0f);
+
             float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
             if (holdRemaining > 0f)
             {
                 yield return new WaitForSeconds(holdRemaining);
             }
 
+            // 3. Recover back to upright posture
             t = 0f;
-            float rollAtRecoverStart = targetRoll;
+            float rollAtRecoverStart = -targetRoll;
             while (t < FallRecoverDuration)
             {
                 t += Time.deltaTime;
                 float lerpT = Mathf.Clamp01(t / FallRecoverDuration);
                 float easedT = lerpT * lerpT * (3f - 2f * lerpT);
-
                 float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
+
+                // FIX: Blending roll back down to 0 on the Z axis
+                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll,_cinemachineTargetPitch, 0f);
+
                 yield return null;
             }
-       
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0f, _cinemachineTargetPitch);
 
-
+            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
             _verticalVelocity = -2f;
             _isFalling = false;
         }
@@ -581,8 +650,9 @@ namespace StarterAssets
             _controller.enabled = true;
             isWindowJumping = false;
         }
+         
+      
 
-       
 
         private void OnDrawGizmosSelected()
         {

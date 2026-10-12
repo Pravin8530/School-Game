@@ -549,7 +549,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeacherController
   player: {fileID: 0}
-  petrolPoints: []
+  petrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   viewDistance: 8
   viewAngle: 90
   obstacleMask:
