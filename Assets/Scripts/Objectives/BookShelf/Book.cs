@@ -17,15 +17,15 @@ public class Book : MonoBehaviour, IInteractables
     private Transform targetSlot;
    
     public string bookColor;
-   
-    public void Interact()
+
+ 
+    public void Interact(InventoryNew inventory)
     {
         isHolding = !isHolding;
 
         if (isHolding)
         {
             targetSlot = null; // Detach from target slot
-        // gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // Prevent self-raycasting
 
             bookShelf.OnBookPickedUp(this);
 
@@ -43,26 +43,26 @@ public class Book : MonoBehaviour, IInteractables
         }
     }
 
-     //this is called in player interact heheh--
     public void MoveWithRay(Vector3 targetPosition)
     {
         targetPosition.y = transform.position.y;
 
         if (!isHolding) return;
 
-        // Smoothly follow raycast ahead of player camera--
+        //follow camera
         transform.position = Vector3.Lerp(
             transform.position,
             targetPosition,
             moveSpeed * Time.deltaTime
         );
 
-        // Send current held position to shelf to update the open gap preview
         if (bookShelf != null)
         {
             bookShelf.OnBookHover(transform.position);
         }
     }
+
+
 
     public void SetTargetSlot(Transform slot)
     {
@@ -71,7 +71,7 @@ public class Book : MonoBehaviour, IInteractables
 
     private void Update()
     {
-        // Smoothly glide toward assigned target slot on shelf when not held
+        // for going back
         if (targetSlot != null && !isHolding)
         {
             transform.position = Vector3.Lerp(

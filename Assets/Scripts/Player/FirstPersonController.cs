@@ -77,15 +77,14 @@ namespace StarterAssets
         [Header("chair")]
         private RollingChair ridingChair;
 
-        // ---------------------------------------
 
         // cinemachine
         private float _cinemachineTargetPitch;
     
        //sound related
 
-       public int maxNoiseRadius = 12; // Maximum noise radius for running
-       public int minNoiseRadius = 4;  // Minimum noise radius for walking
+       public int maxNoiseRadius = 12;
+       public int minNoiseRadius = 4;  
        
 
 
@@ -99,13 +98,12 @@ namespace StarterAssets
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
-        // private float _fallTimeoutDelta;
 
         [Tooltip("Absolute pitch angle to look at during the fall, e.g. -60 = looking mostly down")]
         public float FallTargetPitch = -60f;
 
         [Header("Fall FOV")]
-        public Camera playerCamera; // drag your actual Camera component
+        public Camera playerCamera; 
         public float FallFOVPunch = 15f;
         public float FOVPunchDuration = 0.3f;
 
@@ -163,7 +161,7 @@ namespace StarterAssets
 
 
             _normalFOV = playerCamera.fieldOfView;
-            // NEW: remember the camera target's resting position
+
             _cameraTargetOriginalLocalPos = CinemachineCameraTarget.transform.localPosition;
             _standingCameraHeight = CinemachineCameraTarget.transform.localPosition.y;
 
@@ -172,10 +170,6 @@ namespace StarterAssets
         private void Update()
         {
 
-            // if (Input.GetKeyDown(KeyCode.Space))
-            // {
-            //     TriggerFall();
-            // }
 
             if (_isFalling || isWindowJumping) return;
 
@@ -191,7 +185,6 @@ namespace StarterAssets
             Crouch();
             Move();
 
-            // Inside Player script Update() for sound()()()()
 
             bool isRunning = Input.GetKey(KeyCode.LeftShift);
             bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
@@ -199,9 +192,8 @@ namespace StarterAssets
             
             if (isMoving)
             {
-                float noiseRadius = isRunning ? 12f : 4f; // Running is loud (12m), walking is quiet (4m)
+                float noiseRadius = isRunning ? 12f : 4f; 
 
-                // Send noise event every frame or on step intervals
                 if (SoundManager.Instance != null)
                 {
                     if (_isCrouching)
@@ -365,12 +357,6 @@ namespace StarterAssets
 
 
 
-        // ---------- NEW: Fall Effect ----------
-
-        /// <summary>
-        /// Call this to make the player "fall" — camera drops toward the ground,
-        /// holds briefly, then rises back up and control resumes automatically.
-        /// </summary>
         public void TriggerFall()
         {
             if (!_isFalling)
@@ -397,10 +383,8 @@ namespace StarterAssets
         {
             _isFalling = true;
 
-            // float rollSign = (Random.value > 0.5f) ? 1f : -1f;
-            float targetRoll = FallTargetRoll;//* rollSign;
+            float targetRoll = FallTargetRoll;
 
-            // 1. Tip over into the fall
             float t = 0f;
             while (t < FallTiltDuration)
             {
@@ -410,9 +394,6 @@ namespace StarterAssets
 
                 float roll = Mathf.Lerp(0f, targetRoll, easedT);
 
-                // pitch stays exactly as the player's current look, only roll changes
-                //***************//
-                // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
 
                 yield return null;
@@ -420,30 +401,25 @@ namespace StarterAssets
             }
 
             StartCoroutine(FOVPunch());
-            // 2. Impact shake, fading out
             float shakeTimer = 0f;
             while (shakeTimer < ShakeDurationAfterDrop)
             {
                 shakeTimer += Time.deltaTime;
                 float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
                 float shake = GetShakeOffset(ShakeAmount * fade);
-                //*****//
-                // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll + shake);
+            
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
                 yield return null;
             }
-            //*****//
-            // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
+           
 
             CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
-            // 3. Hold (settled, no shake)
             float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
             if (holdRemaining > 0f)
             {
                 yield return new WaitForSeconds(holdRemaining);
             }
 
-            // 4. Recover back to upright
             t = 0f;
             float rollAtRecoverStart = targetRoll;
             while (t < FallRecoverDuration)
@@ -453,13 +429,10 @@ namespace StarterAssets
                 float easedT = lerpT * lerpT * (3f - 2f * lerpT);
 
                 float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
-                //*****//
-                // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
                 yield return null;
             }
-            //*****// 
-            // CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
+       
             CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0f, _cinemachineTargetPitch);
 
 
@@ -471,7 +444,6 @@ namespace StarterAssets
         {
             return (Mathf.PerlinNoise(Time.time * ShakeSpeed, 0f) - 0.5f) * 2f * amount;
         }
-        // ---------------------------------------
 
         //Crouch----
 
@@ -481,7 +453,6 @@ namespace StarterAssets
 
             float targetSpeed = _isCrouching ? CrouchSpeed : MoveSpeed;
 
-            // Smoothly move camera down/up
             Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
 
             float targetHeight = _isCrouching
@@ -518,7 +489,6 @@ namespace StarterAssets
             if (other.CompareTag("Ladder"))
             { 
                 IsClimbing = true;
-                //_verticalVelocity = 0f;
 
 
             }
@@ -536,8 +506,7 @@ namespace StarterAssets
 
         }
 
-       // -------------
-
+    
         //Detecting window
         private bool CheckWindow()
         {

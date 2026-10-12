@@ -27,24 +27,19 @@ public class SoundVisualizer : MonoBehaviour
 
     void Update()
     {
-        // FIX: Exit early if Setup() hasn't been called yet
         if (lineRenderer == null) return;
 
-        // 1. Expand the ring up to max radius
         if (currentRadius < maxRadius)
         {
             currentRadius += expandSpeed * Time.deltaTime;
         }
 
-        // 2. Draw the circle on the floor
         DrawCircle(currentRadius);
 
-        // 3. Fade out the color over time
         ringColor.a -= fadeSpeed * Time.deltaTime;
         lineRenderer.startColor = ringColor;
         lineRenderer.endColor = ringColor;
 
-        // 4. Destroy object once invisible
         if (ringColor.a <= 0f)
         {
             Destroy(gameObject);

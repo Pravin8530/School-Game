@@ -66,6 +66,7 @@ public class PlayerInteract : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
+           
 
             DetectInteraction(hit, ref highestPriority);
             DetectPickable(hit);
@@ -200,10 +201,10 @@ public class PlayerInteract : MonoBehaviour
 
     void TryInteract()
     {
-        // SAFEGUARD 1: If we are already holding a book, pressing E should DROP it
+        //  If we are already holding a book, pressing E should DROP it
         if (heldBook != null)
         {
-            heldBook.Interact(); // Toggles isHolding to false & drops onto shelf
+            heldBook.Interact(inventoryNew); 
             heldBook = null;
             return;
         }
@@ -211,15 +212,15 @@ public class PlayerInteract : MonoBehaviour
         if (currentInteractable == null)
             return;
 
-        // SAFEGUARD 2: Only pick up a new book if we aren't holding anything
+        //  Only pick up a new book if we aren't holding anything
         Book book = currentInteractable as Book;
 
         if (book != null)
         {
             heldBook = book;
         }
-
-        currentInteractable.Interact();
+        currentInteractable.Interact(inventoryNew);
+        //currentInteractable.Interact();
     }
 
 }

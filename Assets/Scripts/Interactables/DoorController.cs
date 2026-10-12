@@ -60,7 +60,7 @@ public class DoorController : MonoBehaviour,IInteractables
 
     }
 
-    public void Interact()           // IInteractables function To  Interact 
+    public void Interact(InventoryNew inventory)           // IInteractables function To  Interact 
     {
         Debug.Log("Intract Door");
 

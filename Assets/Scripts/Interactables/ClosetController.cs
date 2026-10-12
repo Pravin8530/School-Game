@@ -28,15 +28,7 @@ public class ClosetController : MonoBehaviour, IInteractables
 
     public bool isTransitioning;
 
-    // void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.E) && canIntract)
-    //     {
-    //         Debug.Log("Press E");
-    //         StartCoroutine(OusideCloset());
-    //         //StartCoroutine(InsideCloset());
-    //     }
-    // }
+   
 
 
     public IEnumerator InsideCloset()           // Player Inside Closet
@@ -69,13 +61,10 @@ public class ClosetController : MonoBehaviour, IInteractables
         player.transform.rotation = hidingPosition.rotation;
 
 
-        //   playerCamera.SetActive(false);
-        // closetCamera.SetActive(true);
-        // player.SetActive(false);
+       
         yield return new WaitForSeconds(0.5f);
         doorAnim.Play("Door_Idle");
-       // canIntract = true;
-        //insideCloset=true;
+   
         isTransitioning=false;
     }
 
@@ -90,9 +79,7 @@ public class ClosetController : MonoBehaviour, IInteractables
         Quaternion startRot = player.transform.rotation;
 
 
-        // closetCamera.SetActive(false);
-        // playerCamera.SetActive(true);
-        // player.SetActive(true);
+        
         doorAnim.Play("DoorOpenAndClose");
         yield return new WaitForSeconds(0.5f);
         float duration = 0.5f;
@@ -111,12 +98,11 @@ public class ClosetController : MonoBehaviour, IInteractables
         player.transform.position = exitPosition.position;
         player.transform.rotation = exitPosition.rotation;
         doorAnim.Play("Door_Idle");
-        //canIntract = false;
-       // insideCloset=false;
+    
        isTransitioning=false;
     }
 
-    public void Interact()                       //  IIntractable function To  Intract 
+    public void Interact(InventoryNew invenotory)                       //  IIntractable function To  Intract 
     {
          if(isTransitioning) return;
 
@@ -134,8 +120,5 @@ public class ClosetController : MonoBehaviour, IInteractables
         }
     }
 
-    public void Drop()
-    {
-        
-    }
+    
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   itemName: Box2
   icon: {fileID: 21300000, guid: af0ae2dbf3d1efb4f82af377950704a2, type: 3}
   prefab: {fileID: 3176797073141724127, guid: 90dabded5e94ad646a1f5e40a8eb4989, type: 3}
+  throwSpeed: 20

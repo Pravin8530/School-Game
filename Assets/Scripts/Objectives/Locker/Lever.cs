@@ -26,7 +26,7 @@ public class Lever : MonoBehaviour, IInteractables
     }
 
     // Update is called once per frame
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
      isRotating= true;
       currentDigit = (currentDigit + 1) % maxDigit;

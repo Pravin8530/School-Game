@@ -18,14 +18,11 @@ public class BookShelf : MonoBehaviour
     {
         ShuffleBooks();
         GenrateRandomPassward();
-        // Align starting books to initial slots
         UpdateBookPositions(currentBooks);
 
     }
 
-    // we create new book list 
-    //we sort bookIds 
-    // genrate random sequnce out of it  like suffle shit 
+   
 
     private void GenrateRandomPassward()
     {
@@ -47,7 +44,6 @@ public class BookShelf : MonoBehaviour
         {
             solution += book.bookColor + "-> ";
         }
-         // Debug.Log(solution); 
 
     }
 
@@ -58,9 +54,7 @@ public class BookShelf : MonoBehaviour
         {
 
             Book temp = currentBooks[i];
-        //    Debug.Log(temp);
             int randomNum = Random.Range(i, currentBooks.Count);
-           // Debug.Log(randomNum);
             currentBooks[i] = currentBooks[randomNum];
             currentBooks[randomNum] = temp;
 
@@ -89,9 +83,6 @@ public class BookShelf : MonoBehaviour
 
 
 
-    /// <summary>
-    /// Called when the player picks up a book off the shelf.
-    /// </summary>
     public void OnBookPickedUp(Book pickedBook)
     {
         if (currentBooks.Contains(pickedBook))
@@ -99,56 +90,42 @@ public class BookShelf : MonoBehaviour
             currentBooks.Remove(pickedBook);
             lastHoverIndex = -1;
 
-            // Shift remaining books left to fill the gap
             UpdateBookPositions(currentBooks);
         }
     }
 
-    /// <summary>
-    /// Called every frame while hovering a held book over the shelf.
-    /// Opens up a physical gap dynamically right under the player's view/cursor.
-    /// </summary>
+   
     public void OnBookHover(Vector3 hoverWorldPosition)
     {
         int hoverIndex = GetClosestSlotIndex(hoverWorldPosition);
 
-        // Avoid re-calculating if hovering over the same slot
         if (hoverIndex == lastHoverIndex) return;
         lastHoverIndex = hoverIndex;
 
-        // Build a temporary list with a blank gap inserted at hoverIndex
+        
         List<Book> previewList = new List<Book>(currentBooks);
 
-        // Clamp index to valid bounds
         hoverIndex = Mathf.Clamp(hoverIndex, 0, previewList.Count);
-        previewList.Insert(hoverIndex, null); // null represents the empty gap
+        previewList.Insert(hoverIndex, null);
 
-        // Move books according to the preview gap
         UpdateBookPositions(previewList);
     }
 
-    /// <summary>
-    /// Called when the player drops/places the held book back onto the shelf.
-    /// </summary>
+    
     public void OnBookDropped(Book book, Vector3 dropPosition)
     {
         int dropIndex = GetClosestSlotIndex(dropPosition);
         dropIndex = Mathf.Clamp(dropIndex, 0, currentBooks.Count);
 
-        // Insert into real list
         currentBooks.Insert(dropIndex, book);
         lastHoverIndex = -1;
 
-        // Lock all books to their final slot assignments
         UpdateBookPositions(currentBooks);
 
-        //cheking passward after 
         CheackPassward();
     }
 
-    /// <summary>
-    /// Smoothly assigns target slot transforms to books according to an ordering list.
-    /// </summary>
+    
     private void UpdateBookPositions(List<Book> bookList)
     {
         for (int i = 0; i < bookList.Count; i++)
@@ -160,9 +137,7 @@ public class BookShelf : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Finds which slot index is closest to the given world point.
-    /// </summary>
+   
     private int GetClosestSlotIndex(Vector3 worldPoint)
     {
         int closestIndex = 0;

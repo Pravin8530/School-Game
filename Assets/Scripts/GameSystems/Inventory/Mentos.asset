@@ -16,3 +16,4 @@ MonoBehaviour:
   itemName: mentos
   icon: {fileID: 21300000, guid: 104be145a59ba8148b8fbf8bd20f063b, type: 3}
   prefab: {fileID: 1930235018566816684, guid: 240668cb22a50084286f02b154408199, type: 3}
+  throwSpeed: 10

@@ -4,12 +4,11 @@ using UnityEngine;
 public class KeyPickup : MonoBehaviour ,IInteractables
 {
     [Header("Key Settings")]
-    public string keyID = "key_01";          // Unique ID (useful for multiple keys)
-    public float bobHeight = 0.15f;          // How high the key bobs
-    public float bobSpeed = 2f;              // Speed of bobbing
-    public float rotateSpeed = 90f;          // Degrees per second rotation
-    public float pickupRadius = 1.5f;         // Pickup Trigger
-    public int Priority => 10;               // Interaction Raycast priority
+    public string keyID = "key_01";         
+    public float bobHeight = 0.15f;         
+    public float bobSpeed = 2f;                
+    public float pickupRadius = 1.5f;          
+    public int Priority => 10;             
 
     [Header("Position")]
     private Vector3 _startPos;
@@ -37,22 +36,18 @@ public class KeyPickup : MonoBehaviour ,IInteractables
 
 
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         if (_collected) return;
         _collected = true;
 
-        TargetedDoor.SetLocked(false);                      /// set door to unlocked when key is picked up
 
-        // Tell the UI manager to play the fly-to-corner animation
         KeyUIManager uiManager = FindObjectOfType<KeyUIManager>();
         if (uiManager != null)
         {
-            // Pass the world position so the UI can start the animation from here
             uiManager.OnKeyPickedUp(keyID, transform.position);
         }
 
-        // Hide / destroy the 3D key
         gameObject.SetActive(false);
     }
 

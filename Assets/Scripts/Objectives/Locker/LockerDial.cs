@@ -41,7 +41,7 @@ public class LockerDial : MonoBehaviour, IInteractables
 
     // Interaction 
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         Debug.Log("Dial Interacted");
 

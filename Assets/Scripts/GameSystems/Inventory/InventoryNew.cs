@@ -1,4 +1,5 @@
 //using System.Numerics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class InventoryNew : MonoBehaviour
@@ -9,7 +10,6 @@ public class InventoryNew : MonoBehaviour
     public Camera cam;
     public Transform hand;
 
-    public float throwForce = 50f;
 
     public int selectedSlot = -1;
 
@@ -46,10 +46,14 @@ public class InventoryNew : MonoBehaviour
 
                 if (rb != null)
                 {
+                    if (!rb.isKinematic)
+                    {
+                        rb.linearVelocity = Vector3.zero;
+                        rb.angularVelocity = Vector3.zero;
+                      
+                    }
                     rb.isKinematic = true;
                     rb.useGravity = false;
-                    rb.linearVelocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
                 }
 
                 selectedSlot = i;
@@ -93,10 +97,13 @@ public class InventoryNew : MonoBehaviour
 
         if (rb != null)
         {
+            if(!rb.isKinematic) {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+              
+            }
             rb.isKinematic = true;
             rb.useGravity = false;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
         }
 
         selectedSlot = slot;
@@ -114,6 +121,9 @@ public class InventoryNew : MonoBehaviour
         }
     }
 
+    // attachment point 
+    public GameObject HeldObject =>
+    selectedSlot >= 0 ? heldObjects[selectedSlot] : null;
 
     public void Drop()
     {
@@ -137,10 +147,9 @@ public class InventoryNew : MonoBehaviour
 
 
         // Remove from hand
-        item.transform.SetParent(null);
+         item.transform.SetParent(null);
         item.SetActive(true);
         pickable.isPickedup = false;
-        Debug.Log("Dropping " + pickable.isPickedup);
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
 
 
@@ -149,13 +158,16 @@ public class InventoryNew : MonoBehaviour
 
         if (rb != null)
         {
+            if (!rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            
+            }
             rb.isKinematic = false;
             rb.useGravity = true;
 
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
 
-        
 
 
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
@@ -169,8 +181,9 @@ public class InventoryNew : MonoBehaviour
 
             Vector3 throwDirection =
                 (targetPoint - item.transform.position).normalized;
+            ItemData itemData = slots[selectedSlot];
 
-            rb.linearVelocity = throwDirection * throwForce;
+            rb.linearVelocity = throwDirection * itemData.throwSpeed ;
         }
 
 
@@ -219,6 +232,18 @@ public class InventoryNew : MonoBehaviour
         {
             itemObj.transform.localPosition = Vector3.zero;
             itemObj.transform.localRotation = Quaternion.identity;
+        }
+    }
+
+
+    public ItemData HeldItem
+    {
+        get
+        {
+            if (selectedSlot < 0)
+                return null;
+
+            return slots[selectedSlot];
         }
     }
 

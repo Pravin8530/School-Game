@@ -17,17 +17,15 @@ using Unity.VisualScripting;                   // Remove this line if you use le
 public class KeyUIManager : MonoBehaviour
 {
     [Header("References")]
-    public Canvas canvas;                   // The overlay canvas
-    public RectTransform keySlot;           // Top-left corner slot (destination)
-    public Image flyingKeyImage;            // The image that flies across the screen
-    public TMP_Text keyCountText;           // Optional "x3" counter label
+    public Canvas canvas;                   
+    public RectTransform keySlot;           
+    public Image flyingKeyImage;            
+    public TMP_Text keyCountText;         
 
     [Header("Key Icon")]
-    public Sprite keySprite;               // Drag your key icon here
-
+    public Sprite keySprite;               
     [Header("Animation Settings")]
-    public float flyDuration = 0.8f;       // Seconds for the key to fly to corner
-    public float scalePunch = 1.5f;        // How much the slot punches in scale on arrival
+    public float flyDuration = 0.8f;       
     public AnimationCurve flyCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private int _keyCount = 0;
@@ -51,10 +49,7 @@ public class KeyUIManager : MonoBehaviour
         UpdateCountText();
     }
 
-    /// <summary>
-    /// Called by KeyPickup when the player walks over a key.
-    /// worldPosition = the 3D position of the key in the scene.
-    /// </summary>
+    
     public void OnKeyPickedUp(string keyID, Vector3 worldPosition)
     {
         _keyCount++;
@@ -66,9 +61,7 @@ public class KeyUIManager : MonoBehaviour
         StartCoroutine(FlyKeyToCorner(screenStart));
     }
 
-    // ──────────────────────────────────────────────────────────────
-    //  Core fly animation
-    // ──────────────────────────────────────────────────────────────
+    
     private IEnumerator FlyKeyToCorner(Vector2 startCanvasPos)
 {
     flyingKeyImage.gameObject.SetActive(true);
@@ -101,9 +94,7 @@ public class KeyUIManager : MonoBehaviour
 
     keySlot.gameObject.SetActive(true);
 }
-    // ──────────────────────────────────────────────────────────────
-    //  Slot punch-scale effect
-    // ──────────────────────────────────────────────────────────────
+    
     private IEnumerator PunchScale(RectTransform target, float peakScale, float duration)
     {
         float half = duration * 0.5f;
@@ -132,14 +123,7 @@ public class KeyUIManager : MonoBehaviour
         target.localScale = Vector3.one;
     }
 
-    // ──────────────────────────────────────────────────────────────
-    //  Helpers
-    // ──────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Converts a world 3D position → canvas anchored position.
-    /// Works for Screen Space - Overlay canvases.
-    /// </summary>
+    
 private Vector2 WorldToCanvasPosition(Vector3 worldPos)
 {
     Vector3 screenPoint = _mainCam.WorldToScreenPoint(worldPos);

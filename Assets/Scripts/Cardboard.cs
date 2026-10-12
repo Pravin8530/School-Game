@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using UnityEngine;
 
@@ -5,12 +6,13 @@ public class Cardboard : MonoBehaviour, IInteractables
 {
     [Header("Player Tracking")]
     [SerializeField] private Transform player;
-    [SerializeField] private GameObject playerVisualMesh; // Drag your capsule mesh graphics here
+    [SerializeField] private GameObject playerVisualMesh;
 
     [Header("Hiding Points")]
     [SerializeField] private Transform insidePoint;
     [SerializeField] private Transform outsidePoint;
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 5f;
 
     public int Priority => 1;
 
@@ -21,16 +23,28 @@ public class Cardboard : MonoBehaviour, IInteractables
     public Transform DropPoint;
     private Rigidbody boxRigidbody;
 
+    private Transform originalPlayerParent;
+    private Vector3 originalPlayerScale;
+    private Quaternion fixedPlayerRotation;
+
     void Awake()
     {
         boxRigidbody = GetComponent<Rigidbody>();
         if (boxRigidbody != null)
         {
+            // Keep box kinematic so it never glitches with physics/gravity while worn
             boxRigidbody.isKinematic = true;
+            boxRigidbody.useGravity = false;
+        }
+
+        if (player != null)
+        {
+            originalPlayerScale = player.localScale;
+            originalPlayerParent = player.parent;
         }
     }
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         if (busy) return;
         StartCoroutine(isInside ? Exit() : Enter());
@@ -42,21 +56,20 @@ public class Cardboard : MonoBehaviour, IInteractables
 
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Hiding);
 
-        // 1. Reset Box Position up into the air
+        TogglePlayerPhysics(false);
+
+        // Snap box to drop point
         transform.position = DropPoint.position;
         transform.rotation = DropPoint.rotation;
 
-        // 2. Disable your custom mouse look/movement scripts here if needed 
-        // so the player can't walk away while hiding!
+        // Move player inside the box
+        yield return MoveAndRotatePlayer(insidePoint.position, insidePoint.rotation);
 
-        // 3. Move the ENTIRE player capsule into the box
-        yield return MovePlayer(insidePoint.position);
+        player.localScale = originalPlayerScale * 0.7f;
+        fixedPlayerRotation = player.rotation;
 
-        // 4. HIDE the capsule graphics completely so it doesn't poke out of the box
-        if (playerVisualMesh != null) playerVisualMesh.SetActive(false);
-
-        // 5. Drop the box over the player!
-        if (boxRigidbody != null) boxRigidbody.isKinematic = false;
+        // Parent player to box so they move together
+        player.SetParent(transform);
 
         isInside = true;
         busy = false;
@@ -66,32 +79,81 @@ public class Cardboard : MonoBehaviour, IInteractables
     {
         busy = true;
 
-        // 1. Pick the box back up into the ceiling
-        if (boxRigidbody != null) boxRigidbody.isKinematic = true;
+        // Unparent player
+        player.SetParent(originalPlayerParent);
+        player.localScale = originalPlayerScale;
+
         transform.position = DropPoint.position;
         transform.rotation = DropPoint.rotation;
 
-        // 2. Bring the capsule graphics back to life
         if (playerVisualMesh != null) playerVisualMesh.SetActive(true);
 
-        // 3. Move the player safely back to the outside position
-        yield return MovePlayer(outsidePoint.position);
+        // Move player outside
+        yield return MoveAndRotatePlayer(outsidePoint.position, outsidePoint.rotation);
 
-        // 4. Re-enable your mouse look/movement scripts here!
-
+        TogglePlayerPhysics(true);
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
 
         isInside = false;
         busy = false;
     }
 
-    IEnumerator MovePlayer(Vector3 target)
+    void LateUpdate()
     {
-        while (Vector3.Distance(player.position, target) > 0.02f)
+        if (isInside && !busy && player != null)
         {
-            player.position = Vector3.MoveTowards(player.position, target, moveSpeed * Time.deltaTime);
+            // Keep player rotation locked relative to the box if needed
+            player.rotation = fixedPlayerRotation;
+        }
+    }
+
+    IEnumerator MoveAndRotatePlayer(Vector3 targetPos, Quaternion targetRot)
+    {
+        while (Vector3.Distance(player.position, targetPos) > 0.02f ||
+               Quaternion.Angle(player.rotation, targetRot) > 0.1f)
+        {
+            player.position = Vector3.MoveTowards(player.position, targetPos, moveSpeed * Time.deltaTime);
+            player.rotation = Quaternion.Slerp(player.rotation, targetRot, rotationSpeed * Time.deltaTime);
             yield return null;
         }
-        player.position = target;
+        player.position = targetPos;
+        player.rotation = targetRot;
+    }
+
+    private void TogglePlayerPhysics(bool state)
+    {
+        if (player == null) return;
+
+        FirstPersonController customMovementScript = player.GetComponent<FirstPersonController>();
+        if (customMovementScript != null) customMovementScript.enabled = state;
+
+        CharacterController playerController = player.GetComponent<CharacterController>();
+
+        if (playerController != null)
+        {
+            if (!state)
+            {
+                playerController.Move(Vector3.zero);
+            }
+            playerController.enabled = state;
+        }
+
+        Rigidbody playerRb = player.GetComponent<Rigidbody>();
+        if (playerRb != null)
+        {
+            playerRb.useGravity = state;
+            playerRb.isKinematic = !state;
+
+            if (!state)
+            {
+                playerRb.linearVelocity = Vector3.zero;
+                playerRb.angularVelocity = Vector3.zero;
+                playerRb.constraints = RigidbodyConstraints.FreezeAll;
+            }
+            else
+            {
+                playerRb.constraints = RigidbodyConstraints.None;
+            }
+        }
     }
 }

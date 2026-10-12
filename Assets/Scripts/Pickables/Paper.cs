@@ -5,7 +5,6 @@ public class Paper : MonoBehaviour, IPickable
     [SerializeField] private Vector3 holdPosition;
     [SerializeField] private Vector3 rotation;
 
-    // 1. ADD THIS VARIABLE
     [SerializeField] private string paperName = "English Paper";
 
     private Transform originalParent;
@@ -18,7 +17,6 @@ public class Paper : MonoBehaviour, IPickable
         col = GetComponent<Collider>();
     }
 
-    // 2. ADD THIS FUNCTION SO THE PRINTER CAN READ IT
     public string GetPaperName()
     {
         return paperName;

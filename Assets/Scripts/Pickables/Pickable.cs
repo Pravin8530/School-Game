@@ -1,5 +1,4 @@
 using System.Collections;
-//using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -58,17 +57,15 @@ public class Pickable : MonoBehaviour, IPickable
         rb.isKinematic = true;
         rb.useGravity = false;
 
-        // Parent immediately so local coordinates match the hand
         transform.SetParent(playerHand, true);
 
         float timer = 0f;
-        float duration = 0.2f; // Takes exactly 0.2 seconds to snap to hand
+        float duration = 0.2f; 
 
         Vector3 startPos = transform.localPosition;
         Quaternion startRot = transform.localRotation;
         Quaternion targetRot = Quaternion.Euler(holdRotationOffset);
 
-        // Smoothly lerp using a timed loop 
         while (timer < duration)
         {
             timer += Time.deltaTime;
@@ -80,11 +77,10 @@ public class Pickable : MonoBehaviour, IPickable
             yield return null;
         }
 
-        // Lock exactly
         transform.localPosition = holdPositionOffset;
         transform.localRotation = targetRot;
 
-        // NOW add to inventory
+        // add to inventory
         WorldItem worldItem = GetComponent<WorldItem>();
         InventoryNew inventoryNew = playerHand.GetComponentInParent<InventoryNew>();
 

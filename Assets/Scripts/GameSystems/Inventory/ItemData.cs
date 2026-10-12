@@ -10,4 +10,6 @@ public class ItemData : ScriptableObject
     public Sprite icon;
     public GameObject prefab;
 
+    public float throwSpeed;
+
 }

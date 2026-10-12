@@ -23,7 +23,7 @@ public class PrinterCap : MonoBehaviour, IInteractables
         pivot.localRotation = Quaternion.RotateTowards(pivot.localRotation, targetRotation, speed * Time.deltaTime);
     }
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         if (isPrinting) return;
 
@@ -33,13 +33,11 @@ public class PrinterCap : MonoBehaviour, IInteractables
 
             if (heldPaper != null)
             {
-                // Kick off the fully automated loop!
                 StartCoroutine(FullyAutomatedPrintSequence(heldPaper));
             }
         }
         else
         {
-            // Optional: If player clicks without paper, just toggle the door normally
             isOpen = !isOpen;
         }
     }
@@ -49,43 +47,32 @@ public class PrinterCap : MonoBehaviour, IInteractables
         isPrinting = true;
         string identityName = placedPaper.GetPaperName();
 
-        // 1. AUTOMATICALLY OPEN DOOR
         isOpen = true;
         Debug.Log("Printer Lid opening automatically...");
 
-        // Wait for the lid to finish swinging open
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.01f);
 
-        // 2. AUTOMATICALLY DROP PAPER THERE
         placedPaper.transform.SetParent(paperSlot);
         placedPaper.transform.localPosition = Vector3.zero;
         placedPaper.transform.localRotation = Quaternion.identity;
 
-        // Clear the player's hands right away
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
         Debug.Log("Paper dropped into slot.");
 
-        // Wait a tiny bit so the player sees the paper on the glass
         yield return new WaitForSeconds(0.8f);
 
-        // 3. AUTOMATICALLY CLOSE DOOR
         isOpen = false;
         Debug.Log("Printer Lid closing automatically...");
 
-        // Wait for lid to close completely
         yield return new WaitForSeconds(1.0f);
 
-        // 4. PRINTING DELAY
         Debug.Log("Printer: BZZZ... Copying document...");
         yield return new WaitForSeconds(3.0f);
 
-        // 5. DESTROY ORIGINAL AND SPIT OUT NEW ONE
         Destroy(placedPaper.gameObject);
 
-        // Pop lid back open automatically so player can use it again later
         isOpen = true;
 
-        // Spawn the copy out of the machine tray
         GameObject printedPage = Instantiate(printedPaperPrefab, printExitLocation.position, printExitLocation.rotation);
 
         Paper newPaperScript = printedPage.GetComponent<Paper>();

@@ -6,7 +6,6 @@ public class Volcano : MonoBehaviour, IInteractables
     public int priority = 1;
     public int Priority => priority;
 
-    public GameObject hand;
     public GameObject volcano;
 
     private ParticleSystem volcanoPartical;
@@ -15,51 +14,61 @@ public class Volcano : MonoBehaviour, IInteractables
 
     private InventoryNew inventory;
 
+    private float throwSpeed = 15f;
+
     void Start()
     {
         volcanoPartical = volcano.GetComponent<ParticleSystem>();
         rb = elementComponent.GetComponent<Rigidbody>();
-        inventory = hand.GetComponentInParent<InventoryNew>();
+        if (volcanoPartical == null)
+            Debug.Log("no partical assigned");
+
     }
 
-    // Update is called once per frame
-   
 
-    public void Interact()
+
+    public void Interact(InventoryNew inventory)
     {
-        Transform mentos = hand.transform.Find("mentos");
+        ItemData mentos = inventory.HeldItem;
 
-        if (mentos != null && mentos.gameObject.activeInHierarchy)
+        if (mentos == null || mentos.itemName != "mentos")
+            return;
+
+        GameObject mentosObject = inventory.HeldObject;
+   
+        if (mentosObject == null)
+            return;
+
+        inventory.RemoveHeldItem(mentosObject);
+
+        Transform itemTransform = mentosObject.transform;
+        itemTransform.SetParent(null);
+
+        // Drop Mentos from above the volcano.
+        itemTransform.position =
+            elementComponent.transform.position + Vector3.up * 2f;
+
+        Rigidbody mentosRb = mentosObject.GetComponent<Rigidbody>();
+
+        if (mentosRb != null)
         {
-            Debug.Log("InteractedVolcano");
+            mentosRb.linearVelocity = Vector3.zero;
+            mentosRb.angularVelocity = Vector3.zero;
+            mentosRb.transform.SetParent(null);
+          
+        }
 
-            // Remove Mentos from inventory
-            inventory.RemoveHeldItem(mentos.gameObject);
-
-            // Remove from player's hand
-            mentos.SetParent(null);
-
-            // Enable physics
-            Rigidbody mentosRb = mentos.GetComponent<Rigidbody>();
-
-            if (mentosRb != null)
-            {
-                mentosRb.isKinematic = false;
-                mentosRb.useGravity = true;
-
-                // Put it inside/above volcano
-                mentos.position = elementComponent.transform.position;
-
-                // Drop it into volcano
-                mentosRb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
-            }
-
-            // Volcano effect
+        // Trigger the eruption.
+        if (volcanoPartical != null)
             volcanoPartical.Play();
 
-            // Volcano element launches
-            rb.isKinematic = false;
-            rb.AddForce(Vector3.up * 11f, ForceMode.Impulse);
+        if (elementComponent != null)
+        {
+            Debug.Log("elementComponent : " + rb);
+           rb.isKinematic = false;
+            rb.angularVelocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
+            rb.AddForce(Vector3.up * throwSpeed, ForceMode.Impulse);
         }
     }
 }

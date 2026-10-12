@@ -30,7 +30,7 @@ public class Circuit : MonoBehaviour, IInteractables
         }
     }
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         Transform cell = hand.Find("Cell");
 

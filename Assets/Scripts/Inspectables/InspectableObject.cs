@@ -44,7 +44,7 @@ public class InspectableObject : MonoBehaviour, IInteractables
    
     public float minimumInspectDistance = 0.6f;
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HoldingItem) {
 

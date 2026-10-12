@@ -44,7 +44,7 @@ public class DrawerBig : MonoBehaviour, IInteractables
 
     }
 
-    public void Interact()                    // IIntractable function To  Intract 
+    public void Interact(InventoryNew inventory)                    // IIntractable function To  Intract 
     {
         if (isMoving) return;
 

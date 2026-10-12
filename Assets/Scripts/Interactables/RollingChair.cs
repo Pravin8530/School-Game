@@ -14,7 +14,7 @@ public class RollingChair : MonoBehaviour, IInteractables
 
     public int Priority => 1;
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
         if (!isRiding)
             Sit();

@@ -11,12 +11,11 @@ namespace StarterAssets
         [Header("TMP Debug Elements")]
         [SerializeField] private TextMeshProUGUI stateText;
         [SerializeField] private TextMeshProUGUI groundedText;
-        [SerializeField] private TextMeshProUGUI velocityText;      // Vector3 speed
-        [SerializeField] private TextMeshProUGUI inputVectorText;    // Vector2 move input
-        [SerializeField] private TextMeshProUGUI noiseText;          // Active noise radius
-        [SerializeField] private TextMeshProUGUI crouchText;         // Crouch state & height
-        [SerializeField] private TextMeshProUGUI cameraPitchText;    // Cinemachine target pitch
-    //    [SerializeField] private TextMeshProUGUI fallEffectText;     // Is fall effect active
+        [SerializeField] private TextMeshProUGUI velocityText;     
+        [SerializeField] private TextMeshProUGUI inputVectorText;    
+        [SerializeField] private TextMeshProUGUI noiseText;      
+        [SerializeField] private TextMeshProUGUI crouchText;      
+        [SerializeField] private TextMeshProUGUI cameraPitchText;   
 
         private CharacterController _characterController;
 
@@ -32,7 +31,6 @@ namespace StarterAssets
         {
             if (playerController == null) return;
 
-            // 1. Player State Manager (Inspecting, Hiding, BookInteract, etc.)
             if (stateText != null)
             {
                 string stateName = PlayerStateManager.Instance != null 
@@ -41,14 +39,14 @@ namespace StarterAssets
                 stateText.text = $"State: {stateName}";
             }
 
-            // 2. Grounded Check
+            // Grounded Check
             if (groundedText != null)
             {
                 groundedText.text = $"Grounded: {playerController.Grounded}";
                 groundedText.color = playerController.Grounded ? Color.green : Color.red;
             }
 
-            // 3. Raw Vector3 Velocity & Speed
+            //  Raw Vector3 Velocity & Speed
             if (velocityText != null && _characterController != null)
             {
                 Vector3 vel = _characterController.velocity;
@@ -56,7 +54,7 @@ namespace StarterAssets
                 velocityText.text = $"Vel: ({vel.x:F1}, {vel.y:F1}, {vel.z:F1}) | Speed: {speed:F2} m/s";
             }
 
-            // 4. Input Direction Vector
+            //  Input Direction Vector
             if (inputVectorText != null)
             {
                 float h = Input.GetAxisRaw("Horizontal");
@@ -64,7 +62,7 @@ namespace StarterAssets
                 inputVectorText.text = $"Input Raw: ({h:F1}, {v:F1})";
             }
 
-            // 5. Noise Radius (Walking vs Running vs Idle)
+            //  Noise Radius (Walking vs Running vs Idle)
             if (noiseText != null)
             {
                 bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
@@ -79,13 +77,13 @@ namespace StarterAssets
                 noiseText.text = $"Noise Radius: {currentNoise}m";
             }
 
-            // 6. Crouch State
+            //  Crouch State
             if (crouchText != null)
             {
                 crouchText.text = $"Crouching: {playerController._isCrouching}";
             }
 
-            // 7. Camera Transform Angle (Pitch / Camera Target Local Rotation)
+            //  Camera Transform Angle (Pitch / Camera Target Local Rotation)
             if (cameraPitchText != null && playerController.CinemachineCameraTarget != null)
             {
                 Vector3 rot = playerController.CinemachineCameraTarget.transform.localEulerAngles;

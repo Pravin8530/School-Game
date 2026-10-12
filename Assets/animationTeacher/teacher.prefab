@@ -573,6 +573,7 @@ MonoBehaviour:
   isStunned: 0
   animator: {fileID: 0}
   patrolClip: {fileID: 0}
+  supriseClip: {fileID: 0}
   searchClip: {fileID: 0}
   chaseClip: {fileID: 0}
   stunClip: {fileID: 0}

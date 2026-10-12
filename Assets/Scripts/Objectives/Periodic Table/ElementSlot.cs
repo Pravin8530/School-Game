@@ -12,7 +12,7 @@ public class ElementSlot : MonoBehaviour, IInteractables
 
     public int Priority => 1;
 
-    public float zOffset = -3; //
+    public float zOffset = -3; 
 
     void Awake()
     {
@@ -23,13 +23,11 @@ public class ElementSlot : MonoBehaviour, IInteractables
     public void PlaceElementIntoDedicatedPosition(ElementCube cube)
     {
 
-        // Parent directly to the ghost slot, WITHOUT keeping world position
         cube.transform.SetParent(GhostelementPosition, false);
 
-        // Zero everything out locally — guaranteed exact, no matrix math needed
         cube.transform.localPosition = Vector3.zero;
         cube.transform.localRotation = Quaternion.identity;
-        cube.transform.localScale = Vector3.one; // adjust if cube needs to be smaller/larger than the slot
+        cube.transform.localScale = Vector3.one; 
         cube.transform.localPosition = new Vector3(zOffset, 0f, 0f);
 
         Rigidbody rb = cube.GetComponent<Rigidbody>();
@@ -43,10 +41,9 @@ public class ElementSlot : MonoBehaviour, IInteractables
 
         PeriodicTableCollapse.instance.CheckCompletion();
 
-        // PlayerInteract.instance.ClearHeldItem();
     }
 
-    public void Interact()
+    public void Interact(InventoryNew inventory)
     {
 
         if (isFilled)
@@ -55,7 +52,6 @@ public class ElementSlot : MonoBehaviour, IInteractables
         }
 
 
-        // ElementCube cube = PlayerInteract.instance.targetPickable as ElementCube;
         ElementCube cube = PlayerInteract.instance.heldElement;
         if (cube == null)
         {

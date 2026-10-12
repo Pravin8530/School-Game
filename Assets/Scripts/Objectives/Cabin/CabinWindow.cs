@@ -40,30 +40,10 @@ public class CabinWindow : MonoBehaviour, IInteractables
 
    }
 
-//    private IEnumerator
-//    RotateToOrigin(quaternion from, quaternion to, float duriation)
-//    {
-//        float timeGoneby = 0f;
-
-//        while (timeGoneby < duriation)
-//        {
-//            timeGoneby += Time.deltaTime;
-//            float t = timeGoneby / duriation;
-
-//            player.transform.rotation = Quaternion.Slerp(from, to, t);
-
-//            yield return null;
-            
-//        }
-        
-//            player.transform.rotation = to;
-
-//    }
 
 
 
-
-   public void Interact()
+   public void Interact(InventoryNew inventory)
    {
        Debug.Log("Cabin Interact");
        if (!isEntered)

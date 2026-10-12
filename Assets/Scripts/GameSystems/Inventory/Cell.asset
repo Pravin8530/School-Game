@@ -16,3 +16,4 @@ MonoBehaviour:
   itemName: Cell
   icon: {fileID: 21300000, guid: ff7bfa7addf40784d86f62b8e4a034a6, type: 3}
   prefab: {fileID: 9045022921782454506, guid: aa96f08c8d0324c43b496689fe5c3a86, type: 3}
+  throwSpeed: 10

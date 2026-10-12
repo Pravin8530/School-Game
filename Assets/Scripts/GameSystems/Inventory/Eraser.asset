@@ -16,3 +16,4 @@ MonoBehaviour:
   itemName: Eraser
   icon: {fileID: -2413806693520163455, guid: c4a058cc8b3f2fc4099dd92a75092fbb, type: 3}
   prefab: {fileID: 4559069291348053593, guid: 530ba7bc6e9e7f349bd555ac426b6702, type: 3}
+  throwSpeed: 40
