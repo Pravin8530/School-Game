@@ -30,7 +30,7 @@ public class TeacherController : MonoBehaviour
 
 
     [Header("Stun Settings")]
-    public float stunDuration = 3f; 
+    public float stunDuration = 3f;
 
     [Header("Debugging_Ui")]
     public TextMeshProUGUI debugText;
@@ -111,27 +111,27 @@ public class TeacherController : MonoBehaviour
     void Update()
     {
         currentState?.Update();
-        
+
         //debug txt thingy
         if (debugText != null)
         {
-            debugText.text = "Current State: " + (currentState?.GetType().Name ?? "None");
+            debugText.text = "Current Ai State: " + (currentState?.GetType().Name ?? "None");
         }
         if (canSeeText != null)
         {
             bool canSee = CanSeePlayer();
             canSeeText.text = "Can See Player: " + canSee;
-            canSeeText.color = canSee ? Color.green : Color.red; 
+            canSeeText.color = canSee ? Color.green : Color.red;
         }
         if (HeardSoundText != null)
         {
             HeardSoundText.text = "Heard Sound: " + hasHeardSound;
-            HeardSoundText.color = hasHeardSound ? Color.green : Color.red; 
+            HeardSoundText.color = hasHeardSound ? Color.green : Color.red;
         }
         if (stunedText != null)
         {
             stunedText.text = "Is Stunned: " + isStunned;
-            stunedText.color = isStunned ? Color.green : Color.red; 
+            stunedText.color = isStunned ? Color.green : Color.red;
         }
 
     }
@@ -205,7 +205,7 @@ public class TeacherController : MonoBehaviour
         soundLocation = noisePosition;
         investigationPoint = soundLocation; 
 
-        Debug.Log("Teacher heard a sound at: " + noisePosition);
+       
 
         hasHeardSound = true;
         ChangeState(new SearchState(this));

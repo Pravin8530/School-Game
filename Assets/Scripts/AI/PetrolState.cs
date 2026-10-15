@@ -88,7 +88,7 @@ public class PetrolState : ITeacherState
 
     private void SetNextTarget()
     {
-        //null safegaurd
+        
         if (teacher.petrolPoints == null && teacher.petrolPoints.Count == 0)
         {
             Debug.Log("No petrol points set");
@@ -96,7 +96,6 @@ public class PetrolState : ITeacherState
         }
         currentTarget = teacher.petrolPoints[currentPetrolIndex];
 
-        // null safeguard
         if (currentTarget == null)
         {
             Debug.Log("Current petrol point is null");

@@ -60,7 +60,6 @@ public class ChaseState : ITeacherState
             return;
         }
 
-        // Step 2: Vision check
         if (teacher.CanSeePlayer())
         {
             teacher.lastSeenTimer = Time.time;

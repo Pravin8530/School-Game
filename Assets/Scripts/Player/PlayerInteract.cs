@@ -1,9 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
-//using UnityEngine.UI;
 using UnityEngine.XR;
-//***
-// detect if (found) callmethods
 
 public class PlayerInteract : MonoBehaviour
 {
@@ -22,7 +19,7 @@ public class PlayerInteract : MonoBehaviour
     
     private InventoryNew inventoryNew;
 
-    private WorldItem targetWorldItem; // stores worlditem ur looking at
+    
 
     public ElementCube heldElement;
 
@@ -52,7 +49,6 @@ public class PlayerInteract : MonoBehaviour
 
     public void DetectTargets()
     {
-        targetWorldItem = null;
         targetPickable = null;
         currentInteractable = null;
 
@@ -65,8 +61,7 @@ public class PlayerInteract : MonoBehaviour
         int highestPriority = -1;
 
         foreach (RaycastHit hit in hits)
-        {
-           
+        {     
 
             DetectInteraction(hit, ref highestPriority);
             DetectPickable(hit);
@@ -121,12 +116,7 @@ public class PlayerInteract : MonoBehaviour
         }
 
 
-        WorldItem worldItem = hit.collider.GetComponent<WorldItem>();
-        if (worldItem != null)
-        {
-            targetWorldItem = worldItem;
-        }
-
+    
     }
 
     public void HandleInput()
@@ -201,7 +191,6 @@ public class PlayerInteract : MonoBehaviour
 
     void TryInteract()
     {
-        //  If we are already holding a book, pressing E should DROP it
         if (heldBook != null)
         {
             heldBook.Interact(inventoryNew); 
@@ -212,7 +201,6 @@ public class PlayerInteract : MonoBehaviour
         if (currentInteractable == null)
             return;
 
-        //  Only pick up a new book if we aren't holding anything
         Book book = currentInteractable as Book;
 
         if (book != null)
@@ -220,7 +208,6 @@ public class PlayerInteract : MonoBehaviour
             heldBook = book;
         }
         currentInteractable.Interact(inventoryNew);
-        //currentInteractable.Interact();
     }
 
 }

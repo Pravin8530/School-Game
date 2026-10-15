@@ -9,6 +9,7 @@ TagManager:
   - ChillSpots
   - Enemy
   - Ladder
+  - FusePoint
   layers:
   - Default
   - TransparentFX

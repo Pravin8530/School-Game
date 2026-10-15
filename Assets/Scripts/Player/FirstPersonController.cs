@@ -12,13 +12,13 @@ namespace StarterAssets
 #endif
     public class FirstPersonController : MonoBehaviour
     {
-        PlayerStateManager playerStateManager;
 
         [Header("Player")]
         public float MoveSpeed = 4.0f;
         public float SprintSpeed = 6.0f;
         public float RotationSpeed = 1.0f;
         public float SpeedChangeRate = 10.0f;
+
 
         [Space(10)]
         public float JumpHeight = 1.2f;
@@ -27,6 +27,7 @@ namespace StarterAssets
         [Space(10)]
         public float JumpTimeout = 0.1f;
         public float FallTimeout = 0.15f;
+
 
         [Header("Player Grounded")]
         public bool Grounded = true;
@@ -317,7 +318,7 @@ namespace StarterAssets
                         Debug.Log(CheckWindow());
                         _input.jump = false;
                       
-                        StartCoroutine(JumpRoutine());
+                        StartCoroutine(WindowJumpRoutine());
                         return;
                     }
 
@@ -379,66 +380,7 @@ namespace StarterAssets
             playerCamera.fieldOfView = _normalFOV;
         }
 
-        //private IEnumerator FallRoutine()
-        //{
-        //    _isFalling = true;
-
-        //    float targetRoll = FallTargetRoll;
-
-        //    float t = 0f;
-        //    while (t < FallTiltDuration)
-        //    {
-        //        t += Time.deltaTime;
-        //        float lerpT = Mathf.Clamp01(t / FallTiltDuration);
-        //        float easedT = lerpT * lerpT * (3f - 2f * lerpT);
-
-        //        float roll = Mathf.Lerp(0f, targetRoll, easedT);
-
-        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
-
-        //        yield return null;
-
-        //    }
-
-        //    StartCoroutine(FOVPunch());
-        //    float shakeTimer = 0f;
-        //    while (shakeTimer < ShakeDurationAfterDrop)
-        //    {
-        //        shakeTimer += Time.deltaTime;
-        //        float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
-        //        float shake = GetShakeOffset(ShakeAmount * fade);
-            
-        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll + shake, 0f, _cinemachineTargetPitch);
-        //        yield return null;
-        //    }
-           
-
-        //    CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(targetRoll, 0f, _cinemachineTargetPitch);
-        //    float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
-        //    if (holdRemaining > 0f)
-        //    {
-        //        yield return new WaitForSeconds(holdRemaining);
-        //    }
-
-        //    t = 0f;
-        //    float rollAtRecoverStart = targetRoll;
-        //    while (t < FallRecoverDuration)
-        //    {
-        //        t += Time.deltaTime;
-        //        float lerpT = Mathf.Clamp01(t / FallRecoverDuration);
-        //        float easedT = lerpT * lerpT * (3f - 2f * lerpT);
-
-        //        float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
-        //        CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll, 0f, _cinemachineTargetPitch);
-        //        yield return null;
-        //    }
        
-        //    CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(0f, 0f, _cinemachineTargetPitch);
-
-
-        //    _verticalVelocity = -2f;
-        //    _isFalling = false;
-        //}
 
           private IEnumerator FallRoutine()
         {
@@ -454,8 +396,7 @@ namespace StarterAssets
                 float easedT = lerpT * lerpT * (3f - 2f * lerpT);
                 float roll = Mathf.Lerp(0f, targetRoll, easedT);
 
-                // FIX: Put _cinemachineTargetPitch in X, and roll in Z
-                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+               
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-roll,_cinemachineTargetPitch, 0f);
 
                 yield return null;
@@ -471,14 +412,12 @@ namespace StarterAssets
                 float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
                 float shake = GetShakeOffset(ShakeAmount * fade);
 
-                // FIX: Applied shake to pitch while keeping the rolled angle in Z
-                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch + shake, 0f, targetRoll);
+               
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-targetRoll,_cinemachineTargetPitch + shake, 0f);
 
                 yield return null;
             }
 
-            //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, targetRoll);
             CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-targetRoll,_cinemachineTargetPitch, 0f);
 
             float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
@@ -497,8 +436,7 @@ namespace StarterAssets
                 float easedT = lerpT * lerpT * (3f - 2f * lerpT);
                 float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
 
-                // FIX: Blending roll back down to 0 on the Z axis
-                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, roll);
+                
                 CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll,_cinemachineTargetPitch, 0f);
 
                 yield return null;
@@ -537,7 +475,7 @@ namespace StarterAssets
             CinemachineCameraTarget.transform.localPosition = cameraPos;
         }
 
-        
+        //Climb
 
         private void Climb()
         {
@@ -574,9 +512,9 @@ namespace StarterAssets
 
 
         }
-
+        //----------
     
-        //Detecting window
+        //Detecting window 
         private bool CheckWindow()
         {
             Vector3 origin = transform.position + Vector3.up * 1.0f;
@@ -600,7 +538,9 @@ namespace StarterAssets
             return false;
         }
 
-        private IEnumerator JumpRoutine()
+
+       
+        private IEnumerator WindowJumpRoutine()
         {
            
             isWindowJumping = true;
@@ -656,13 +596,16 @@ namespace StarterAssets
 
         private void OnDrawGizmosSelected()
         {
-            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
+            Color transparentGreen = Color.green;
+            Color transparentRed = Color.red;
 
             if (Grounded) Gizmos.color = transparentGreen;
             else Gizmos.color = transparentRed;
 
             Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
         }
+
+
+        
     }
 }

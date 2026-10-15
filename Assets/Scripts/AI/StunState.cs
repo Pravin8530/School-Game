@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public class StunState : ITeacherState
 {
     private TeacherController teacher;
+
     private NavMeshAgent agent;
     private float stunDuration;
     private float timer;
