@@ -5,10 +5,13 @@ using System.Collections.Generic;
 public class TeacherController : MonoBehaviour
 {
     public GameObject player;
-
+    public teacherAnimation teacherAnimation;
+    public TeacherDebugUi teacherDebug;
     public List<Transform> petrolPoints = new List<Transform>();
 
     private ITeacherState currentState;
+
+    public ITeacherState CurrentState => currentState;
 
     [Header("Vision")]
     public float viewDistance = 50f;
@@ -32,67 +35,12 @@ public class TeacherController : MonoBehaviour
     [Header("Stun Settings")]
     public float stunDuration = 3f;
 
-    [Header("Debugging_Ui")]
-    public TextMeshProUGUI debugText;
-    public TextMeshProUGUI canSeeText;
-    public TextMeshProUGUI HeardSoundText;
-    public TextMeshProUGUI stunedText;
+   
 
-    [SerializeField] public bool hasHeardSound = false;
-    [SerializeField] public bool isStunned = false;
+    public bool hasHeardSound = false;
+   public bool isStunned = false;
 
-//-----------------------------Animation Settings--------------------------------
-
-    [Header("Animation Settings")]
-    public Animator animator;
-
-    [Header("Animation Clips")]
-    public AnimationClip patrolClip;
-    public AnimationClip supriseClip;
-    public AnimationClip searchClip;
-    public AnimationClip chaseClip;
-    public AnimationClip stunClip;
-    public AnimationClip catchClip;
-
-
-
-    public void PlayAnimation(AnimationClip clip, float crossfadeTime = 0.15f)
-    {
-        if (clip == null)
-        {
-            Debug.LogWarning("Animation clip is null. Cannot play animation.");
-            return;
-        }
-
-        if (animator != null)
-        {
-            if (!animator.gameObject.activeInHierarchy)
-            {
-                animator.gameObject.SetActive(true);
-            }
-
-            if (!animator.enabled)
-            {
-                animator.enabled = true;
-            }
-
-            animator.CrossFade(clip.name, crossfadeTime);
-            Debug.Log("Playing animation: " + clip.name);
-        }
-    }
-
-    void Awake()
-    {
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-            if (animator == null)
-            {
-                Debug.LogError("Animator component not found in children.");
-            }
-        }
-    }
-//--------------------------
+    
 
     void Start()
     {
@@ -112,27 +60,7 @@ public class TeacherController : MonoBehaviour
     {
         currentState?.Update();
 
-        //debug txt thingy
-        if (debugText != null)
-        {
-            debugText.text = "Current Ai State: " + (currentState?.GetType().Name ?? "None");
-        }
-        if (canSeeText != null)
-        {
-            bool canSee = CanSeePlayer();
-            canSeeText.text = "Can See Player: " + canSee;
-            canSeeText.color = canSee ? Color.green : Color.red;
-        }
-        if (HeardSoundText != null)
-        {
-            HeardSoundText.text = "Heard Sound: " + hasHeardSound;
-            HeardSoundText.color = hasHeardSound ? Color.green : Color.red;
-        }
-        if (stunedText != null)
-        {
-            stunedText.text = "Is Stunned: " + isStunned;
-            stunedText.color = isStunned ? Color.green : Color.red;
-        }
+      
 
     }
 
@@ -201,7 +129,7 @@ public class TeacherController : MonoBehaviour
 
     public void OnHearSound(Vector3 noisePosition)
     {
-        if (currentState is ChaseState || currentState is CatchState  /* || currentState is SearchState */) return;
+        if (currentState is ChaseState || currentState is CatchState ) return;
         soundLocation = noisePosition;
         investigationPoint = soundLocation; 
 

@@ -4,7 +4,8 @@ using UnityEngine;
 public class TeacherDebugUi : MonoBehaviour
 {
     TeacherController teacher;
-    private ITeacherState currentState;
+   // private ITeacherState currentState;
+
 
     [Header("Debugging_Ui")]
     public TextMeshProUGUI currentAiState;
@@ -12,9 +13,9 @@ public class TeacherDebugUi : MonoBehaviour
     public TextMeshProUGUI HeardSoundText;
     public TextMeshProUGUI stunedText;
 
-    [SerializeField] public bool hasHeardSound = false;
-    [SerializeField] public bool isStunned = false; 
-    
+    //[SerializeField] public bool hasHeardSound = false;
+    //[SerializeField] public bool isStunned = false;
+
     void Start()
     {
         teacher = GetComponent<TeacherController>();
@@ -23,6 +24,8 @@ public class TeacherDebugUi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ITeacherState currentState = teacher.CurrentState;
+
         currentState?.Update();
         
         //debug txt thingy
@@ -38,13 +41,13 @@ public class TeacherDebugUi : MonoBehaviour
         }
         if (HeardSoundText != null)
         {
-            HeardSoundText.text = "Heard Sound: " + hasHeardSound;
-            HeardSoundText.color = hasHeardSound ? Color.green : Color.red;
+            HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound;
+            HeardSoundText.color = teacher.hasHeardSound ? Color.green : Color.red;
         }
         if (stunedText != null)
         {
-            stunedText.text = "Is Stunned: " + isStunned;
-            stunedText.color = isStunned ? Color.green : Color.red;
+            stunedText.text = "Is Stunned: " +teacher.isStunned;
+            stunedText.color = teacher.isStunned ? Color.green : Color.red;
         }
 
     }

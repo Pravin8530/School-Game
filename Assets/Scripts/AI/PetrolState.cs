@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ public class PetrolState : ITeacherState
     private Transform currentTarget;
     private float speed = 5f;
 
+   // private teacherAnimation teacherAnimation;
     private NavMeshAgent teacherAI;
 
     private int currentPetrolIndex = 0;
@@ -31,7 +33,7 @@ public class PetrolState : ITeacherState
          teacherAI.isStopped = false; 
         SetNextTarget();
 
-        teacher.PlayAnimation(teacher.patrolClip,0.15f);
+       teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.patrolClip,0.15f);
     }
 
     public void Update()

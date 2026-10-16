@@ -13,7 +13,7 @@ public class SearchState : ITeacherState
 
     private NavMeshAgent agent;
     private bool reachedDestination = false;
-    private bool playedSearchAnim = false; // Prevents calling PlayAnimation every frame
+    private bool playedSearchAnim = false; 
 
     public SearchState(TeacherController teacher)
     {
@@ -32,15 +32,14 @@ public class SearchState : ITeacherState
         playedSearchAnim = false;
 
         agent.isStopped = false;
-        agent.stoppingDistance = 0.8f; // Slightly increased for NavMesh stability
+        agent.stoppingDistance = 0.8f; 
         agent.SetDestination(teacher.investigationPoint);
 
-        // Explicitly play walking animation while traveling to the sound
-        teacher.PlayAnimation(teacher.patrolClip, 0.15f);
+        teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.patrolClip, 0.15f);
 
         teacher.hasHeardSound = true;
-        if (teacher.HeardSoundText != null)
-            teacher.HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound;
+        if (teacher.teacherDebug.HeardSoundText != null)
+            teacher.teacherDebug.HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound;
     }
 
     public void Update()
@@ -75,7 +74,7 @@ public class SearchState : ITeacherState
         if (!playedSearchAnim)
         {
             Debug.Log("Reached sound location. Playing Search Animation!");
-            teacher.PlayAnimation(teacher.searchClip, 0.15f);
+           teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.searchClip, 0.15f);
             playedSearchAnim = true;
         }
 
@@ -105,11 +104,11 @@ public class SearchState : ITeacherState
         Debug.Log("Exiting Search State");
 
         teacher.hasHeardSound = false;
-        if (teacher.HeardSoundText != null)
-            teacher.HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound;
+        if (teacher.teacherDebug.HeardSoundText != null)
+            teacher.teacherDebug.HeardSoundText.text = "Heard Sound: " + teacher.hasHeardSound;
 
         teacher.isStunned = false;
-        if (teacher.stunedText != null)
-            teacher.stunedText.text = "Stunned: " + teacher.isStunned;
+        if (teacher.teacherDebug.stunedText != null)
+            teacher.teacherDebug.stunedText.text = "Stunned: " + teacher.isStunned;
     }
 }

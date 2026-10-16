@@ -5,7 +5,7 @@ public class ChillState : ITeacherState
     private TeacherController teacher;
     private float chillDuration = 5.0f; 
     private float timer;
-
+    private teacherAnimation teacherAnimation;
     public ChillState(TeacherController teacher)
     {
         this.teacher = teacher;

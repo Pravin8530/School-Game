@@ -5,7 +5,7 @@ public class ChaseState : ITeacherState
 {
     private TeacherController teacher;
     private NavMeshAgent agent;
-
+    //private teacherAnimation teacherAnimation;
     private float timer = 0f;
     private float delay = 0f;
     private bool isDoneWaiting = false;
@@ -18,7 +18,7 @@ public class ChaseState : ITeacherState
 
     public void Enter()
     {
-        teacher.PlayAnimation(teacher.supriseClip, 0.15f);
+       teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.supriseClip, 0.15f);
 
 
         agent.isStopped = true;
@@ -48,7 +48,7 @@ public class ChaseState : ITeacherState
                 isDoneWaiting = true;
                 agent.isStopped = false;
 
-                teacher.PlayAnimation(teacher.chaseClip, 0.15f);
+               teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.chaseClip, 0.15f);
             }
             return;
         }

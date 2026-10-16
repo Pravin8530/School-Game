@@ -6,6 +6,7 @@ public class CatchState : ITeacherState
     private TeacherController teacher;
     private NavMeshAgent agent;
 
+   // private teacherAnimation teacherAnimation;
     private float timer = 0f;
     private float catchAnimationTime = 1.0f; 
     private bool playerHidden = false;
@@ -25,7 +26,7 @@ public class CatchState : ITeacherState
         timer = 0f;
         playerHidden = false;
 
-        teacher.PlayAnimation(teacher.catchClip, 0.15f);
+       teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.catchClip, 0.15f);
     }
 
     public void Update()
