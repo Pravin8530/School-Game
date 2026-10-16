@@ -47,8 +47,14 @@ public class Book : MonoBehaviour, IInteractables
     {
         targetPosition.y = transform.position.y;
 
+        
         if (!isHolding) return;
 
+        // Clamp the movement to the shelf bounds if the reference exists
+        if (bookShelf != null)
+        {
+            targetPosition = bookShelf.ClampPositionToShelf(targetPosition);
+        }
         //follow camera
         transform.position = Vector3.Lerp(
             transform.position,

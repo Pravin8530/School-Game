@@ -15,13 +15,23 @@ public class teacherAnimation : MonoBehaviour
     public AnimationClip stunClip;
     public AnimationClip catchClip;
 
-
+    void Awake()
+    {
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+            if (animator == null)
+            {
+                Debug.LogError("Animator component not found ");
+            }
+        }
+    }
 
     public void PlayAnimation(AnimationClip clip, float crossfadeTime = 0.15f)
     {
         if (clip == null)
         {
-            Debug.LogWarning("Animation clip is null. Cannot play animation.");
+            Debug.LogWarning("Animation clip is null");
             return;
         }
 
@@ -43,15 +53,5 @@ public class teacherAnimation : MonoBehaviour
     }
 
 
-    void Awake()
-    {
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-            if (animator == null)
-            {
-                Debug.LogError("Animator component not found in children.");
-            }
-        }
-    }
+   
 }

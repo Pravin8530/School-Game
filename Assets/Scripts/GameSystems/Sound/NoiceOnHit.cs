@@ -8,15 +8,11 @@ public class NoiseOnHit : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Calculate force of the object striking this item
         if (collision.relativeVelocity.magnitude >= minImpactForce)
         {
             if (SoundManager.Instance != null && collision.contactCount > 0)
             {
-                // Safely fetch contact point
-                Vector3 contactPoint = collision.GetContact(0).point;
-                SoundManager.Instance.MakeNoise(contactPoint, noiseRadius);
-               // Debug.Log($"{gameObject.name} struck! Noise created at {contactPoint}");
+                SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
             }
         }
     }

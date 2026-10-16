@@ -11,7 +11,6 @@ public class PetrolState : ITeacherState
     private Transform currentTarget;
     private float speed = 5f;
 
-   // private teacherAnimation teacherAnimation;
     private NavMeshAgent teacherAI;
 
     private int currentPetrolIndex = 0;
@@ -78,9 +77,7 @@ public class PetrolState : ITeacherState
                 currentPetrolIndex = 0;
             }
         
-          /// based on chances like bara
             SetNextTarget();
-          //  teacher.ChangeState(new ChillState(teacher));   
 
 
         }

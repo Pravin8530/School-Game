@@ -5,7 +5,6 @@ public class ChaseState : ITeacherState
 {
     private TeacherController teacher;
     private NavMeshAgent agent;
-    //private teacherAnimation teacherAnimation;
     private float timer = 0f;
     private float delay = 0f;
     private bool isDoneWaiting = false;

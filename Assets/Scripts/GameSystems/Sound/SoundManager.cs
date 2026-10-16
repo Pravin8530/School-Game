@@ -17,9 +17,11 @@ public class SoundManager : MonoBehaviour
             GameObject ring = Instantiate(soundVisualizerPrefab, sourcePosition, Quaternion.identity);
             ring.GetComponent<SoundVisualizer>().Setup(soundRadius);
         }
-        TeacherController[] teachers = FindObjectsByType<TeacherController>(FindObjectsSortMode.None);
 
-        foreach (TeacherController teacher in teachers)
+
+        TeacherController teacher = FindFirstObjectByType<TeacherController>();
+
+        if(teacher !=null)
         {
             float distanceToNoise = Vector3.Distance(teacher.transform.position, sourcePosition);
 

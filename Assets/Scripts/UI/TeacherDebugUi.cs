@@ -4,7 +4,6 @@ using UnityEngine;
 public class TeacherDebugUi : MonoBehaviour
 {
     TeacherController teacher;
-   // private ITeacherState currentState;
 
 
     [Header("Debugging_Ui")]
@@ -13,22 +12,17 @@ public class TeacherDebugUi : MonoBehaviour
     public TextMeshProUGUI HeardSoundText;
     public TextMeshProUGUI stunedText;
 
-    //[SerializeField] public bool hasHeardSound = false;
-    //[SerializeField] public bool isStunned = false;
-
     void Start()
     {
         teacher = GetComponent<TeacherController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         ITeacherState currentState = teacher.CurrentState;
 
         currentState?.Update();
         
-        //debug txt thingy
         if (currentAiState != null)
         {
             currentAiState.text = "Current Ai State: " + (currentState?.GetType().Name ?? "None");

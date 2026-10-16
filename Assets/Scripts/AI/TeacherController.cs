@@ -17,6 +17,7 @@ public class TeacherController : MonoBehaviour
     public float viewDistance = 50f;
     public float viewAngle = 90f;
     public LayerMask obstacleMask;
+
     [Header("Notice Delays")]
     public float firstNoticeTime = 2.0f; 
     public float quickNoticeTime = 0.2f; 
@@ -58,9 +59,7 @@ public class TeacherController : MonoBehaviour
 
     void Update()
     {
-        currentState?.Update();
-
-      
+        currentState?.Update();  
 
     }
 
@@ -89,6 +88,34 @@ public class TeacherController : MonoBehaviour
     }
 
 
+
+
+
+
+
+    public void OnHearSound(Vector3 noisePosition)
+    {
+        if (currentState is ChaseState || currentState is CatchState ) return;
+        soundLocation = noisePosition;
+        investigationPoint = soundLocation; 
+
+       
+
+        hasHeardSound = true;
+        ChangeState(new SearchState(this));
+    }
+
+
+    public void GetStunned(Vector3 attackerPosition)
+    {
+        lastKnownPosition = attackerPosition;
+        ChangeState(new StunState(this, stunDuration));
+
+    }
+
+
+
+    // gizmos and mesh 
 
     private Mesh CreateVisionConeMesh()
     {
@@ -124,29 +151,6 @@ public class TeacherController : MonoBehaviour
 
         return mesh;
     }
-
-
-
-    public void OnHearSound(Vector3 noisePosition)
-    {
-        if (currentState is ChaseState || currentState is CatchState ) return;
-        soundLocation = noisePosition;
-        investigationPoint = soundLocation; 
-
-       
-
-        hasHeardSound = true;
-        ChangeState(new SearchState(this));
-    }
-
-
-    public void GetStunned(Vector3 attackerPosition)
-    {
-        lastKnownPosition = attackerPosition;
-        ChangeState(new StunState(this, stunDuration));
-
-    }
-
     private void OnDrawGizmosSelected()
     {
         // Draw the yellow distance sphere
@@ -168,6 +172,8 @@ public class TeacherController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, hearingRadius);
 
     }
+
+
 
 }
 
