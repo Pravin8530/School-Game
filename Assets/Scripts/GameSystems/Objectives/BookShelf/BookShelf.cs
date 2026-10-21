@@ -38,13 +38,13 @@ public class BookShelf : MonoBehaviour
 
 
         }
-        string solution = "solution is ";
+        string solution = "solution is " ;
 
         foreach (Book book in currentBookSequence)
         {
             solution += book.bookColor + "-> ";
         }
-
+        Debug.Log(solution);
     }
 
 
@@ -156,34 +156,6 @@ public class BookShelf : MonoBehaviour
         return closestIndex;
     }
 
-    //public Vector3 ClampPositionToShelf(Vector3 targetPos)
-    //{
-    //    if (bookSlots == null || bookSlots.Length == 0) return targetPos;
-
-    //    Transform firstSlot = bookSlots[0];
-    //    Transform lastSlot = bookSlots[bookSlots.Length - 1];
-
-    //    Vector3 start = firstSlot.position;
-    //    Vector3 end = lastSlot.position;
-
-    //    // Direction and total length of the shelf
-    //    Vector3 shelfDirection = end - start;
-    //    float shelfLength = shelfDirection.magnitude;
-    //    shelfDirection.Normalize();
-
-    //    // Project the target position onto the shelf line
-    //    Vector3 pointDirection = targetPos - start;
-    //    float dot = Vector3.Dot(pointDirection, shelfDirection);
-
-    //    // Clamp the distance between 0 (first slot) and the shelf length (last slot)
-    //    float clampedDot = Mathf.Clamp(dot, 0f, shelfLength);
-
-    //    // Return the clamped world position (keeping the Y height intact)
-    //    Vector3 finalPos = start + shelfDirection * clampedDot;
-    //    finalPos.y = targetPos.y;
-
-    //    return finalPos;
-    //}
 
     public Vector3 ClampPositionToShelf(Vector3 targetPos)
     {
@@ -195,37 +167,29 @@ public class BookShelf : MonoBehaviour
         Vector3 start = firstSlot.position;
         Vector3 end = lastSlot.position;
 
-        // Shelf's horizontal slide direction
         Vector3 shelfDir = (end - start);
         float shelfLength = shelfDir.magnitude;
         shelfDir.Normalize();
 
-        // Shelf's fixed forward/depth direction
         Vector3 localForward = transform.forward;
         Vector3 depthDir = (localForward - Vector3.Dot(localForward, shelfDir) * shelfDir).normalized;
         if (depthDir == Vector3.zero) depthDir = Vector3.forward;
 
-        // Project target onto the shelf's coordinate system
         Vector3 toTarget = targetPos - start;
         float horizontalDist = Vector3.Dot(toTarget, shelfDir);
         float depthDist = Vector3.Dot(toTarget, depthDir);
 
-        // 1. Clamp horizontal slide strictly between the first and last slots
         float clampedHorizontal = Mathf.Clamp(horizontalDist, 0f, shelfLength);
 
-        // 2. Clamp the depth so it cannot pull infinitely forward
         float clampedDepth = Mathf.Clamp(depthDist, 0f, 1.2f);
 
-        // 3. If the player tries to drag past the edges and turns their head, 
-        // lock the depth so the raycast angle stretching can't pull the book forward.
         if (horizontalDist < 0f || horizontalDist > shelfLength)
         {
-            clampedDepth = Mathf.Min(clampedDepth, 0.5f); // Keeps it pinned near the shelf edge
+            clampedDepth = Mathf.Min(clampedDepth, 0.5f); 
         }
 
-        // Reconstruct the final stable position
         Vector3 finalPos = start + (shelfDir * clampedHorizontal) + (depthDir * clampedDepth);
-        finalPos.y = targetPos.y; // Keep vertical movement responsive
+        finalPos.y = targetPos.y;
 
         return finalPos;
     }

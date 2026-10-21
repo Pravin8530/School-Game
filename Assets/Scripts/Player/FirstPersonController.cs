@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
+
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -72,7 +74,7 @@ namespace StarterAssets
        private float windowCheakdistance = 1.5f;
         public LayerMask windowLayer;
         public float jumpDuration;
-        public float goinDownDuriation = 0.05f;
+        public float goinDownDuriation = 0.01f;
         private bool isWindowJumping = false;
 
         [Header("chair")]
@@ -96,7 +98,7 @@ namespace StarterAssets
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-        // timeout deltatime
+      
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
@@ -366,93 +368,108 @@ namespace StarterAssets
             }
         }
 
-        private IEnumerator FOVPunch()
-        {
-            float t = 0f;
-            while (t < FOVPunchDuration)
-            {
-                t += Time.deltaTime;
-                float lerpT = Mathf.Clamp01(t / FOVPunchDuration);
-                float curve = Mathf.Sin(lerpT * Mathf.PI); // punch out then back
-                playerCamera.fieldOfView = _normalFOV + FallFOVPunch * curve;
-                yield return null;
-            }
-            playerCamera.fieldOfView = _normalFOV;
-        }
-
-       
-
-          private IEnumerator FallRoutine()
+        private IEnumerator FallRoutine()
         {
             _isFalling = true;
-            float targetRoll = FallTargetRoll;
+
+            Quaternion startRotation = CinemachineCameraTarget.transform.localRotation;
+
+            Quaternion fallRotation = Quaternion.Euler(
+                -FallTargetRoll,
+                _cinemachineTargetPitch,
+                0f
+            );
+
             float t = 0f;
 
-            // 1. Tilt Sideways
             while (t < FallTiltDuration)
             {
                 t += Time.deltaTime;
-                float lerpT = Mathf.Clamp01(t / FallTiltDuration);
-                float easedT = lerpT * lerpT * (3f - 2f * lerpT);
-                float roll = Mathf.Lerp(0f, targetRoll, easedT);
 
-               
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-roll,_cinemachineTargetPitch, 0f);
+                CinemachineCameraTarget.transform.localRotation =
+                    Quaternion.Slerp(startRotation, fallRotation, t / FallTiltDuration);
 
                 yield return null;
             }
 
-            StartCoroutine(FOVPunch());
+            CinemachineCameraTarget.transform.localRotation = fallRotation;
 
-            // 2. Shake on impact
-            float shakeTimer = 0f;
-            while (shakeTimer < ShakeDurationAfterDrop)
-            {
-                shakeTimer += Time.deltaTime;
-                float fade = 1f - Mathf.Clamp01(shakeTimer / ShakeDurationAfterDrop);
-                float shake = GetShakeOffset(ShakeAmount * fade);
+            transform.DOShakePosition(0.5f, new Vector3(0.5f, 0.3f, 0), 12, 90f, true).SetRelative(true);
+            transform.DOShakeRotation(0.5f, new Vector3(0.5f, 0.3f, 0), 12, 90f, true).SetRelative(true);
 
-               
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-targetRoll,_cinemachineTargetPitch + shake, 0f);
+            yield return new WaitForSeconds(FallHoldDuration);
 
-                yield return null;
-            }
-
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(-targetRoll,_cinemachineTargetPitch, 0f);
-
-            float holdRemaining = FallHoldDuration - ShakeDurationAfterDrop;
-            if (holdRemaining > 0f)
-            {
-                yield return new WaitForSeconds(holdRemaining);
-            }
-
-            // 3. Recover back to upright posture
             t = 0f;
-            float rollAtRecoverStart = -targetRoll;
+
             while (t < FallRecoverDuration)
             {
                 t += Time.deltaTime;
-                float lerpT = Mathf.Clamp01(t / FallRecoverDuration);
-                float easedT = lerpT * lerpT * (3f - 2f * lerpT);
-                float roll = Mathf.Lerp(rollAtRecoverStart, 0f, easedT);
 
-                
-                CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(roll,_cinemachineTargetPitch, 0f);
+                CinemachineCameraTarget.transform.localRotation =
+                    Quaternion.Slerp(fallRotation, startRotation, t / FallRecoverDuration);
 
                 yield return null;
             }
 
-            CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0f, 0f);
+            CinemachineCameraTarget.transform.localRotation = startRotation;
+
             _verticalVelocity = -2f;
             _isFalling = false;
         }
 
-        private float GetShakeOffset(float amount)
-        {
-            return (Mathf.PerlinNoise(Time.time * ShakeSpeed, 0f) - 0.5f) * 2f * amount;
-        }
 
-        //Crouch----
+
+
+        //private IEnumerator FallRoutine()
+        //{
+        //    _isFalling = true;
+
+        //    Quaternion startRotation = CinemachineCameraTarget.transform.localRotation;
+
+        //    Quaternion fallRotation = Quaternion.Euler(
+        //        -FallTargetRoll,
+        //        _cinemachineTargetPitch,
+        //        0f
+        //    );
+
+        //    float t = 0f;
+
+        //    while (t < FallTiltDuration)
+        //    {
+        //        t += Time.deltaTime;
+
+        //        CinemachineCameraTarget.transform.localRotation =
+        //            Quaternion.Slerp(startRotation, fallRotation, t / FallTiltDuration);
+
+        //        yield return null;
+        //    }
+
+        //    CinemachineCameraTarget.transform.localRotation = fallRotation;
+
+        //    transform.DOShakePosition(1f, new Vector3(0.5f,0.3f,0),12,90f,true).SetRelative(true);
+        //    transform.DOShakeRotation(1f, new Vector3(0.5f, 0.3f, 0), 12, 90f, true).SetRelative(true);
+
+        //    yield return new WaitForSeconds(FallHoldDuration);
+
+        //    t = 0f;
+
+        //    while (t < FallRecoverDuration)
+        //    {
+        //        t += Time.deltaTime;
+
+        //        CinemachineCameraTarget.transform.localRotation =
+        //            Quaternion.Slerp(fallRotation, startRotation, t / FallRecoverDuration);
+
+        //        yield return null;
+        //    }
+
+        //    CinemachineCameraTarget.transform.localRotation = startRotation;
+
+        //    _verticalVelocity = -2f;
+        //    _isFalling = false;
+        //}
+
+
 
         private void Crouch()
         {
@@ -475,7 +492,6 @@ namespace StarterAssets
             CinemachineCameraTarget.transform.localPosition = cameraPos;
         }
 
-        //Climb
 
         private void Climb()
         {
@@ -512,9 +528,7 @@ namespace StarterAssets
 
 
         }
-        //----------
     
-        //Detecting window 
         private bool CheckWindow()
         {
             Vector3 origin = transform.position + Vector3.up * 1.0f;

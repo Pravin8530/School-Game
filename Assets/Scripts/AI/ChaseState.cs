@@ -62,7 +62,7 @@ public class ChaseState : ITeacherState
         if (teacher.CanSeePlayer())
         {
             teacher.lastSeenTimer = Time.time;
-            teacher.lastKnownPosition = teacher.player.transform.position; // Update last known position
+            teacher.lastKnownPosition = teacher.player.transform.position; 
             agent.SetDestination(teacher.player.transform.position);
         }
         else

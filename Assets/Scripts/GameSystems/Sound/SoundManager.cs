@@ -19,6 +19,7 @@ public class SoundManager : MonoBehaviour
         }
 
 
+
         TeacherController teacher = FindFirstObjectByType<TeacherController>();
 
         if(teacher !=null)

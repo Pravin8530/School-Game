@@ -10,7 +10,7 @@ public class StunState : ITeacherState
     private float stunDuration;
     private float timer;
 
-    private bool isStunned = true;
+    private bool isStunned ;
 
 
 
@@ -28,7 +28,7 @@ public class StunState : ITeacherState
         agent.velocity = Vector3.zero;
         timer = 0f;
 
-       teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.stunClip, 0.15f);
+       teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.stunClip,0.15f);
         teacher.isStunned = true;
         teacher.teacherDebug.stunedText.text = "Stunned: " + teacher.isStunned;
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,7 +31,7 @@ public class CatchState : ITeacherState
 
     public void Update()
     {
-     
+
 
         timer += Time.deltaTime;
 
@@ -40,7 +41,7 @@ public class CatchState : ITeacherState
 
             if (teacher.player != null)
             {
-                teacher.player.SetActive(false); 
+                teacher.player.SetActive(false);
                 Debug.Log("Player has disappeared. Game Over / Reset state.");
             }
 
@@ -48,6 +49,7 @@ public class CatchState : ITeacherState
         }
     }
 
+ 
     public void Exit()
     {
         agent.isStopped = false;

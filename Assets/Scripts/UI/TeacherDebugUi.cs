@@ -12,6 +12,8 @@ public class TeacherDebugUi : MonoBehaviour
     public TextMeshProUGUI HeardSoundText;
     public TextMeshProUGUI stunedText;
 
+    public TextMeshProUGUI nationalAnthamCd;
+
     void Start()
     {
         teacher = GetComponent<TeacherController>();
@@ -42,6 +44,12 @@ public class TeacherDebugUi : MonoBehaviour
         {
             stunedText.text = "Is Stunned: " +teacher.isStunned;
             stunedText.color = teacher.isStunned ? Color.green : Color.red;
+        }
+        if(nationalAnthamCd != null)
+        {
+            nationalAnthamCd.text = "nationalAntham: " + teacher.nationalAnthamDuriation;
+
+
         }
 
     }

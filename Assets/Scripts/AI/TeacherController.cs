@@ -1,12 +1,17 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.AppUI.UI;
+using Unity.Mathematics;
 
 public class TeacherController : MonoBehaviour
 {
     public GameObject player;
     public teacherAnimation teacherAnimation;
     public TeacherDebugUi teacherDebug;
+
+    public TeacherAudio teacherAudio;
     public List<Transform> petrolPoints = new List<Transform>();
 
     private ITeacherState currentState;
@@ -41,8 +46,10 @@ public class TeacherController : MonoBehaviour
     public bool hasHeardSound = false;
    public bool isStunned = false;
 
-    
-
+    [Header("national antham")]
+   public float nationalAnthamDuriation = 30f;
+    private bool isLooking;
+    Quaternion currentRotation;
     void Start()
     {
         ChangeState(new PetrolState(this));
@@ -59,8 +66,23 @@ public class TeacherController : MonoBehaviour
 
     void Update()
     {
-        currentState?.Update();  
+        currentState?.Update();
 
+        if (isLooking)
+        {
+
+            Vector3 directionVector3 = player.transform.position - transform.position;
+            directionVector3.y = 0;
+
+
+            currentRotation = transform.rotation;
+
+            Quaternion direction = Quaternion.LookRotation(directionVector3);
+
+            transform.rotation = Quaternion.Slerp(currentRotation, direction, 10f * Time.deltaTime);
+             
+            
+        }
     }
 
 
@@ -88,6 +110,12 @@ public class TeacherController : MonoBehaviour
     }
 
 
+    public void LookAtPlayer()
+    {
+        isLooking = true;
+        Debug.Log("isLooking at the player");
+
+    }
 
 
 
@@ -113,6 +141,7 @@ public class TeacherController : MonoBehaviour
 
     }
 
+     
 
 
     // gizmos and mesh 

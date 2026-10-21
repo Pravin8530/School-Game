@@ -28,7 +28,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 34959095116326359}
   m_Father: {fileID: 8997996947095583982}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5393215578589016642
@@ -170,11 +171,11 @@ Transform:
   m_GameObject: {fileID: 7439530873982558252}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.49644184, y: 1.375, z: 0.78338647}
+  m_LocalPosition: {x: 0.49644488, y: 0, z: 0.7833863}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8997996947095583982}
+  m_Father: {fileID: 4135013735270702856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8616685848737228372
 GameObject:
@@ -213,7 +214,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4135013735270702856}
-  - {fileID: 34959095116326359}
   - {fileID: 5393215578589016641}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -283,6 +283,14 @@ MonoBehaviour:
   CrouchTransitionSpeed: 5
   _isCrouching: 0
   _standingCameraHeight: 0
+  IsClimbing: 0
+  windowLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  jumpDuration: 0
+  goinDownDuriation: 0.05
+  maxNoiseRadius: 12
+  minNoiseRadius: 4
   FallTargetPitch: -60
   playerCamera: {fileID: 0}
   FallFOVPunch: 15
@@ -548,5 +556,4 @@ MonoBehaviour:
   - {fileID: 0}
   cam: {fileID: 0}
   hand: {fileID: 0}
-  throwForce: 500
   selectedSlot: -1

@@ -121,41 +121,42 @@ public class PlayerInteract : MonoBehaviour
 
     public void HandleInput()
     {
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (PlayerStateManager.Instance.currentState != PlayerStateManager.PlayerState.HasImportantItem)
         {
 
-            inventoryNew.SelectSlot(0);
-            return;
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
+                inventoryNew.SelectSlot(0);
+                return;
+            }
 
-            inventoryNew.SelectSlot(1);
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            inventoryNew.SelectSlot(2);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            inventoryNew.SelectSlot(3);
-        }
+                inventoryNew.SelectSlot(1);
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                inventoryNew.SelectSlot(2);
+            }
 
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            inventoryNew.SelectSlot(4);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                inventoryNew.SelectSlot(3);
+            }
 
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            inventoryNew.SelectSlot(5);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                inventoryNew.SelectSlot(4);
+            }
 
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                inventoryNew.SelectSlot(5);
+            }
+        }
 
 
         if (Input.GetKeyDown(KeyCode.Q))

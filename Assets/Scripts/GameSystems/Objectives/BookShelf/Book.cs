@@ -25,7 +25,7 @@ public class Book : MonoBehaviour, IInteractables
 
         if (isHolding)
         {
-            targetSlot = null; // Detach from target slot
+            targetSlot = null; 
 
             bookShelf.OnBookPickedUp(this);
 
@@ -50,12 +50,10 @@ public class Book : MonoBehaviour, IInteractables
         
         if (!isHolding) return;
 
-        // Clamp the movement to the shelf bounds if the reference exists
         if (bookShelf != null)
         {
             targetPosition = bookShelf.ClampPositionToShelf(targetPosition);
         }
-        //follow camera
         transform.position = Vector3.Lerp(
             transform.position,
             targetPosition,
@@ -77,7 +75,6 @@ public class Book : MonoBehaviour, IInteractables
 
     private void Update()
     {
-        // for going back
         if (targetSlot != null && !isHolding)
         {
             transform.position = Vector3.Lerp(

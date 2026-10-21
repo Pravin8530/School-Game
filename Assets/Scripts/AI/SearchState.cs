@@ -26,7 +26,7 @@ public class SearchState : ITeacherState
     public void Enter()
     {
          
-        Debug.Log("Investigating sound location...");
+        Debug.Log("Investigating sound location");
         stateTimer = 0f;
         reachedDestination = false;
         playedSearchAnim = false;
@@ -44,14 +44,13 @@ public class SearchState : ITeacherState
 
     public void Update()
     {
-        // 1. Vision priority
+        
         if (teacher.CanSeePlayer())
         {
             teacher.ChangeState(new ChaseState(teacher));
             return;
         }
 
-        // 2. Navigation Phase
         if (!reachedDestination)
         {
             if (!agent.pathPending && agent.hasPath)
@@ -60,15 +59,14 @@ public class SearchState : ITeacherState
                 {
                     reachedDestination = true;
                     agent.isStopped = true;
-                    agent.ResetPath(); // Stop the agent completely
+                    agent.ResetPath(); 
 
-                    // Lock rotations at arrival spot
                     startRotation = teacher.transform.rotation;
                     leftRotation = startRotation * Quaternion.Euler(0, -60f, 0);
                     rightRotation = startRotation * Quaternion.Euler(0, 60f, 0);
                 }
             }
-            return; // Wait until arrival
+            return; 
         }
 
         if (!playedSearchAnim)
@@ -94,7 +92,6 @@ public class SearchState : ITeacherState
         }
         else
         {
-            Debug.Log("Area clear. Resuming patrol.");
             teacher.ChangeState(new PetrolState(teacher));
         }
     }

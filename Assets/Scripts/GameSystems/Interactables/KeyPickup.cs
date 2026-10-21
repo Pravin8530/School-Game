@@ -42,7 +42,7 @@ public class KeyPickup : MonoBehaviour ,IInteractables
         _collected = true;
 
 
-        KeyUIManager uiManager = FindObjectOfType<KeyUIManager>();
+        KeyUIManager uiManager = FindFirstObjectByType<KeyUIManager>();
         if (uiManager != null)
         {
             uiManager.OnKeyPickedUp(keyID, transform.position);

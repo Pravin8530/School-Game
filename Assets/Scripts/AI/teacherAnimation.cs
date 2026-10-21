@@ -14,6 +14,7 @@ public class teacherAnimation : MonoBehaviour
     public AnimationClip chaseClip;
     public AnimationClip stunClip;
     public AnimationClip catchClip;
+    public AnimationClip saluteClip;
 
     void Awake()
     {

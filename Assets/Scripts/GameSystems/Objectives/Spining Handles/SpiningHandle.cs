@@ -30,7 +30,6 @@ public class SpiningHandle : MonoBehaviour, IInteractables
 
         Debug.Log("Wheel mechanism interacted.");
 
-        // FIRST INTERACTION: install handle.
         if (!handleInstalled)
         {
             ItemData itemData = inventory.HeldItem;
@@ -52,21 +51,18 @@ public class SpiningHandle : MonoBehaviour, IInteractables
 
             inventory.RemoveHeldItem(handle);
 
-            // Destroy the Rigidbody so it completely stops fighting Unity's physics
             Rigidbody rb = handle.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 Destroy(rb);
             }
 
-            // Disable collider so it doesn't block rays or clip
             Collider collider = handle.GetComponent<Collider>();
             if (collider != null)
             {
                 collider.enabled = false;
             }
 
-            // Safely parent and snap it to center
             handle.transform.SetParent(handlePoint);
             handle.transform.localPosition = Vector3.zero;
             handle.transform.localRotation = Quaternion.identity;
@@ -77,7 +73,6 @@ public class SpiningHandle : MonoBehaviour, IInteractables
             return;
         }
 
-        // SECOND INTERACTION: spin wheel and open gate.
         if (isSpinning || gateOpened)
             return;
 

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db83232ff5993244b3a4ec9b791a554, type: 3}
+  m_Name: Flag
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  id: 23
+  itemName: Flag
+  icon: {fileID: 7482667652216324306, guid: b376b9679ffa1b44d8188a2856b992f4, type: 3}
+  prefab: {fileID: 1997025767880478805, guid: 962da0b8f05439e479afde7a0133b5ed, type: 3}
+  throwSpeed: 5
