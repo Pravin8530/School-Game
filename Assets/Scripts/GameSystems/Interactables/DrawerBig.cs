@@ -43,9 +43,11 @@ public class DrawerBig : MonoBehaviour, IInteractables
         HandleOpenClose();
 
     }
-
-    public void Interact(InventoryNew inventory)                    // IIntractable function To  Intract 
+    // get key ref 
+    public void Interact(InventoryNew inventory)                   
     {
+
+
         if (isMoving) return;
 
         drawerCollider.enabled = false;

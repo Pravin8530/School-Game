@@ -7,6 +7,7 @@ public class Paper : MonoBehaviour, IPickable
 
     [SerializeField] private string paperName = "English Paper";
 
+ public bool isOnPrinter = false;
     private Transform originalParent;
     private Rigidbody rb;
     private Collider col;
@@ -23,7 +24,9 @@ public class Paper : MonoBehaviour, IPickable
     }
 
     public void Interact(Transform hand)
-    {
+    { 
+        if (isOnPrinter) return; 
+        
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HasPaper, this);
 
         InventoryNew inventory = hand.GetComponentInParent<InventoryNew>();

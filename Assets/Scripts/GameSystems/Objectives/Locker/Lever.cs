@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
@@ -15,14 +16,13 @@ public class Lever : MonoBehaviour, IInteractables
    public int currentDigit { get; set; } = 0;
 
    
-
+   
     public void Interact(InventoryNew inventory)
     {
      isRotating= true;
       currentDigit = (currentDigit + 1) % maxDigit;
-        Debug.Log("Lever Interacted");
-
+        Debug.Log("Lever Interacted");    
     }
-
+  
    
 }

@@ -31,8 +31,8 @@ public class PrinterCap : MonoBehaviour, IInteractables
         {
             Paper heldPaper = PlayerStateManager.Instance.HeldPaper;
 
-            if (heldPaper != null)
-            {
+            if (heldPaper != null ){
+
                 StartCoroutine(FullyAutomatedPrintSequence(heldPaper));
             }
         }
@@ -41,7 +41,7 @@ public class PrinterCap : MonoBehaviour, IInteractables
             isOpen = !isOpen;
         }
     }
-
+       
     private IEnumerator FullyAutomatedPrintSequence(Paper placedPaper)
     {
         isPrinting = true;
@@ -55,8 +55,9 @@ public class PrinterCap : MonoBehaviour, IInteractables
         placedPaper.transform.SetParent(paperSlot);
         placedPaper.transform.localPosition = Vector3.zero;
         placedPaper.transform.localRotation = Quaternion.identity;
-
+        placedPaper.isOnPrinter = true;       // blocking it from picking again while printing
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
+
         Debug.Log("Paper dropped into slot.");
 
         yield return new WaitForSeconds(0.8f);
@@ -64,7 +65,7 @@ public class PrinterCap : MonoBehaviour, IInteractables
         isOpen = false;
         Debug.Log("Printer Lid closing automatically...");
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.8f);
 
         Debug.Log("Printer: BZZZ... Copying document...");
         yield return new WaitForSeconds(3.0f);
@@ -74,6 +75,7 @@ public class PrinterCap : MonoBehaviour, IInteractables
         isOpen = true;
 
         GameObject printedPage = Instantiate(printedPaperPrefab, printExitLocation.position, printExitLocation.rotation);
+         Destroy(printedPage, 1.0f);                   
 
         Paper newPaperScript = printedPage.GetComponent<Paper>();
         if (newPaperScript != null)

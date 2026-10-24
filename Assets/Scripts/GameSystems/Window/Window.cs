@@ -40,5 +40,11 @@ public class Window : MonoBehaviour
             shard.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
             
         }
+        
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        if (boxCollider != null)
+        {
+            boxCollider.isTrigger = true;
+        }
     }
 }

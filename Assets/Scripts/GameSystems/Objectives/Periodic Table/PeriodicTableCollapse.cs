@@ -73,10 +73,10 @@ public class PeriodicTableCollapse : MonoBehaviour
         // then clear them out of the player's way
         foreach (Rigidbody rb in allCubes)
         {
-            if (rb == null) continue; // safety in case any got destroyed already
+            if (rb == null) continue; 
             Collider col = rb.GetComponent<Collider>();
-            if (col != null) col.enabled = false; // stop blocking movement
-            rb.isKinematic = true; // stop physics entirely, or Destroy(rb.gameObject) if you don't need them anymore
+            if (col != null) col.enabled = false; 
+            rb.isKinematic = true; 
         }
     }
 

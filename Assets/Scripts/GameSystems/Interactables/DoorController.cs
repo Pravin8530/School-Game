@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class DoorController : MonoBehaviour,IInteractables
+public class DoorController : MonoBehaviour, IInteractables
 {
 
     [Header("Door Speed And Angle")]
@@ -9,14 +9,14 @@ public class DoorController : MonoBehaviour,IInteractables
     public float speed = 120f;
 
 
-   [Header("Bool Value")]
-   public bool isOpen;
-   public bool isMoving;
-   public bool isDoorLocked;
+    [Header("Bool Value")]
+    public bool isOpen;
+    public bool isMoving;
+    public bool isDoorLocked;
 
-   [Header("Quaternion")]
-   Quaternion closedRot;
-   Quaternion openRot;
+    [Header("Quaternion")]
+    Quaternion closedRot;
+    Quaternion openRot;
 
     [Header("Animator")]
     public Animator lockedDoorAnimation;
@@ -25,7 +25,8 @@ public class DoorController : MonoBehaviour,IInteractables
     public int Priority => 1;
 
 
-    
+    [Header("Key Requirement")]
+    public string requiredKeyID = "key_01";
 
 
     void Start()
@@ -35,7 +36,7 @@ public class DoorController : MonoBehaviour,IInteractables
 
         if (lockedDoorAnimation != null)
             lockedDoorAnimation.enabled = false;
-        
+
     }
 
     void Update()
@@ -60,41 +61,68 @@ public class DoorController : MonoBehaviour,IInteractables
 
     }
 
-    public void Interact(InventoryNew inventory)           // IInteractables function To  Interact 
-    {
-        Debug.Log("Intract Door");
+    // public void Interact(InventoryNew inventory)           
+    // {
+    //     Debug.Log("Intract Door");
 
-        if (isMoving) return;
-        Debug.Log("Intract Door 1 ");
-        if (isDoorLocked && !isOpen)
+    //     if (isMoving) return;
+    //     Debug.Log("Intract Door 1 ");
+    //     if (isDoorLocked && !isOpen)
+    //     {
+    //         Debug.Log("Intract Door 2 ");
+    //         StartCoroutine(DoorLockAnimation());
+    //         return;
+    //     }
+
+    //     isOpen = !isOpen;
+    //     isMoving = true;
+    //     Debug.Log("Intract Door 3");
+
+    // }
+
+    
+public void Interact(InventoryNew inventory)
+{
+    if (isMoving) return;
+
+    if (isDoorLocked && !isOpen)
+    {
+        // Play the locked animation if the player has no key.
+        if (!KeyItem.HasKey(requiredKeyID))
         {
-            Debug.Log("Intract Door 2 ");
-            StartCoroutine(DoorLockAnimation());
+            if (lockedDoorAnimation != null)
+                StartCoroutine(DoorLockAnimation());
+
+            Debug.Log("Door locked. Required key: " + requiredKeyID);
             return;
         }
 
-        isOpen = !isOpen;
-        isMoving = true;
-        Debug.Log("Intract Door 3");
-
+        // The correct key was collected.
+        isDoorLocked = false;
+        Debug.Log("Door unlocked!");
     }
 
-    public IEnumerator DoorLockAnimation()     // Play This Animation When Door is Loocked
+    isOpen = !isOpen;
+    isMoving = true;
+}
+
+
+    public IEnumerator DoorLockAnimation()     
     {
 
         lockedDoorAnimation.enabled = true;
         lockedDoorAnimation.Play("DoorLockAnim");
-        yield return null; 
-        float animLength = lockedDoorAnimation.GetCurrentAnimatorStateInfo(0).length;               //  Get the length of the animation clip 
-        yield return new WaitForSeconds(animLength);                                        // Wait for the animation to finish
+        yield return null;
+        float animLength = lockedDoorAnimation.GetCurrentAnimatorStateInfo(0).length;                
+        yield return new WaitForSeconds(animLength);                                       
 
         lockedDoorAnimation.enabled = false;
-  
+
 
     }
-    public void SetLocked(bool locked)                  // Function to set the door's locked state
+    public void SetLocked(bool locked)                  
     {
         isDoorLocked = locked;
     }
-    
+
 }

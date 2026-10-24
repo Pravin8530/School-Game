@@ -38,7 +38,7 @@ public class PatrioticState : ITeacherState
         {
             teacher.teacherAudio.PlaySoundClip(teacher.teacherAudio.nationalAnthem);
             timer += Time.deltaTime;
-            teacher.LookAtPlayer();
+           // teacher.LookAtPlayer();
             if (timer >= teacher.nationalAnthamDuriation)
             {
                 teacher.ChangeState(new PetrolState(teacher));

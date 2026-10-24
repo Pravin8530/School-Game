@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class BookShelf : MonoBehaviour
 {
     [Header("Shelf Setup")]
@@ -11,8 +11,11 @@ public class BookShelf : MonoBehaviour
     public List<Book> currentBookSequence;
     private bool isSolved = false;
 
-
+    public PasswordText passwordText;
     private int lastHoverIndex = -1;
+ 
+    public GameObject Drawer;
+    public Transform DrawerOpenPosition;
 
     private void Start()
     {
@@ -21,12 +24,25 @@ public class BookShelf : MonoBehaviour
         UpdateBookPositions(currentBooks);
 
     }
+  
+   void Update()
+    { 
+        if(isSolved)
+        {
+            Drawer.transform.localPosition = Vector3.Lerp(Drawer.transform.localPosition, DrawerOpenPosition.localPosition, Time.deltaTime * 10f);
+        }
+        else
+        {
+             return;  
 
+        }
+    }
    
 
     private void GenrateRandomPassward()
     {
         currentBookSequence = new List<Book>(currentBooks);
+        //passwordText.passwordText = new TextMeshProUGUI[currentBookSequence.Count];
 
         for (int i = 0; i < currentBookSequence.Count; i++)
         {
@@ -39,11 +55,14 @@ public class BookShelf : MonoBehaviour
 
         }
         string solution = "solution is " ;
-
+        
         foreach (Book book in currentBookSequence)
         {
             solution += book.bookColor + "-> ";
         }
+        
+        passwordText.UpdatePasswordText(currentBookSequence);
+
         Debug.Log(solution);
     }
 
@@ -76,7 +95,8 @@ public class BookShelf : MonoBehaviour
         }
 
         isSolved = true;
-        Debug.Log("ye We won");
+       Debug.Log("Passward is correct");
+        
 
 
     }

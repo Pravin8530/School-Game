@@ -45,7 +45,7 @@ public class ElementSlot : MonoBehaviour, IInteractables
 
     public void Interact(InventoryNew inventory)
     {
-
+           
         if (isFilled)
         {
             return;
@@ -53,8 +53,10 @@ public class ElementSlot : MonoBehaviour, IInteractables
 
 
         ElementCube cube = PlayerInteract.instance.heldElement;
+        cube.onBoard=true;
         if (cube == null)
-        {
+        {  
+         
             Debug.Log("cube is null");
 
         }

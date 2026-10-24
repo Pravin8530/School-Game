@@ -30,7 +30,7 @@ public class Pickable : MonoBehaviour, IPickable
 
 
     public void Interact(Transform hand)
-    { 
+    {
         if (isPickedup) return;
 
         if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasImportantItem)
@@ -48,7 +48,7 @@ public class Pickable : MonoBehaviour, IPickable
 
 
 
-   
+
 
     private IEnumerator PickupRoutine()
     {
@@ -60,7 +60,7 @@ public class Pickable : MonoBehaviour, IPickable
         transform.SetParent(playerHand, true);
 
         float timer = 0f;
-        float duration = 0.2f; 
+        float duration = 0.2f;
 
         Vector3 startPos = transform.localPosition;
         Quaternion startRot = transform.localRotation;
@@ -87,6 +87,16 @@ public class Pickable : MonoBehaviour, IPickable
         if (inventoryNew != null && worldItem != null)
         {
             inventoryNew.AddItem(worldItem.itemData, gameObject);
+            
+        }
+
+
+        KeyItem key = GetComponent<KeyItem>();
+
+        if (key != null)
+        {
+            KeyItem.RegisterKey(key.keyID);
+            Debug.Log("Key collected: " + key.keyID);
         }
     }
 

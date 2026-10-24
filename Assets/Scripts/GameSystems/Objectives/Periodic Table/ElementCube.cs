@@ -16,7 +16,8 @@ public class ElementCube : MonoBehaviour, IPickable
 
     [SerializeField]
     private Vector3 rotation;
-
+ 
+    public bool onBoard= false;
     private Transform originalParent;
     private Rigidbody rb;
     private Collider col;
@@ -33,7 +34,8 @@ public class ElementCube : MonoBehaviour, IPickable
 
    
     public void Interact(Transform hand)
-    {
+    { 
+        if(onBoard) return; // Prevent interaction if the cube is already on the board
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HasImportantItem);
 
         InventoryNew inventory = hand.GetComponentInParent<InventoryNew>();
