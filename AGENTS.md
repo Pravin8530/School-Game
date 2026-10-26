@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground
 - Active game object:
-  - Name: Terrence
+  - Name: Periodic Table System
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

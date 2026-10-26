@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class LockerPassward : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class LockerPassward : MonoBehaviour
   
 
     public LockerDial lockerDial;
-
+  
+     public GameObject DoorPivot;
+        bool isSolved = false;
     public void Awake()
     { 
         enteredNumbers = new int[4];
@@ -28,9 +31,11 @@ public class LockerPassward : MonoBehaviour
     }
  
     void Update()
-    {
-              //  CheckPassward();
-    
+    { 
+          if(!isSolved){
+                CheckPassward();
+
+          } 
                    HandleEnteredNumber(lockerDial.currentNumber, lever.currentDigit);
 
     }
@@ -51,6 +56,7 @@ public class LockerPassward : MonoBehaviour
         {
             correctPassward[i] = Random.Range(0, 10);
         }
+        Debug.Log("Generated Passward: " + string.Join(", ", correctPassward));
     }
 
 
@@ -70,6 +76,12 @@ public class LockerPassward : MonoBehaviour
         if (isCorrect)
         {
             Debug.Log("Passward is correct!");
+            isSolved = true;
+            if(lockerDial != null)
+            {
+                lockerDial.StopDial();
+            }
+            StartCoroutine(RotateDoor());
         }
         else
         {
@@ -77,5 +89,27 @@ public class LockerPassward : MonoBehaviour
         }
     }
   
+   IEnumerator RotateDoor()
+    {
+        float rotationSpeed = 100f;
+        float rotationAmount = 70f; 
+
+        Quaternion initialRotation = DoorPivot.transform.localRotation;
+        Quaternion targetRotation =  Quaternion.Euler(0f, 90f, 0f)* initialRotation;
+        float duration = rotationAmount / rotationSpeed;
+        
+        float timeElapsed = 0f;
+
+        while (timeElapsed < duration)
+        {  
+             timeElapsed += Time.deltaTime;
+          float   t = timeElapsed / duration;
+           DoorPivot.transform.localRotation = Quaternion.Slerp(initialRotation, targetRotation, t);  
+                      yield return null;
+
+        }
+       
+       
+    }
 
 }

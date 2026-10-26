@@ -18,7 +18,16 @@ public class BookShelf : MonoBehaviour
     public Transform DrawerOpenPosition;
 
     private void Start()
-    {
+    { 
+          if(passwordText == null)
+        {
+            passwordText = GetComponentInChildren<PasswordText>();
+            if(passwordText == null)
+            {
+                Debug.LogError("PasswordText component not found in children.");
+            }
+        }
+
         ShuffleBooks();
         GenrateRandomPassward();
         UpdateBookPositions(currentBooks);
@@ -42,7 +51,7 @@ public class BookShelf : MonoBehaviour
     private void GenrateRandomPassward()
     {
         currentBookSequence = new List<Book>(currentBooks);
-        //passwordText.passwordText = new TextMeshProUGUI[currentBookSequence.Count];
+       // passwordText.passwordText = new TextMeshProUGUI[currentBookSequence.Count];
 
         for (int i = 0; i < currentBookSequence.Count; i++)
         {

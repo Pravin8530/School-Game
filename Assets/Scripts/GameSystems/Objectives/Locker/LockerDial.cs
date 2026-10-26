@@ -58,7 +58,7 @@ public class LockerDial : MonoBehaviour, IInteractables
     }
 
 
-    private void StopDial()
+    public  void StopDial()
     {
         isRotating = false;
         timer = 0f;

@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class TeacherAudio : MonoBehaviour
 {
-    public AudioClip nationalAnthem;
+   // public AudioClip nationalAnthem;
 
-    private AudioSource audioSource;
+    [SerializeField] private AudioData audioData;
+   //AudioSource audioSource;
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        // audioSource = GetComponent<AudioSource>();
 
-        if(audioSource == null)
-        {
-            Debug.Log("audioSorceis Nullheheh");
+        // if(audioSource == null)
+        // {
+        //     Debug.Log("audioSorceis Nullheheh");
 
-        }
+        // }
     }
 
     void Update()
@@ -21,14 +22,14 @@ public class TeacherAudio : MonoBehaviour
         
     }
 
-    public void PlaySoundClip(AudioClip audioClip)
+    public void PlaySoundClip()
     {
-        if(audioClip == null)
-        {
-            Debug.Log("audio clip is null");
-            return;
-        }
-        audioSource.PlayOneShot(audioClip);
+        // if(audioSource == null)
+        // {
+        //     Debug.Log("audio source is null");
+        //     return;
+        // }
+        AudioManager.Instance.PlayAudioClip(audioData.audioClip);
 
 
     }

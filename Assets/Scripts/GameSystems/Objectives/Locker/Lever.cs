@@ -7,22 +7,48 @@ public class Lever : MonoBehaviour, IInteractables
     float targetRotation = 4f;
    
    private int priority = 1;
-   private float rotationSpeed = 5f;
+   
  
    bool isRotating = false;
    public int Priority => priority;
   
     int maxDigit=4;
    public int currentDigit { get; set; } = 0;
-
-   
+  
+   public GameObject leverPivot;
    
     public void Interact(InventoryNew inventory)
     {
      isRotating= true;
       currentDigit = (currentDigit + 1) % maxDigit;
         Debug.Log("Lever Interacted");    
+        StartCoroutine(RotateLever());
+
     }
   
+    IEnumerator RotateLever()
+    {
+        float rotationSpeed = 100f;
+        float rotationAmount = 70f; 
+        float rotatedForward = 0f;
+   
+        while (rotatedForward < rotationAmount)
+        {
+            float step = rotationSpeed * Time.deltaTime;
+            transform.Rotate(Vector3.up, step);
+            rotatedForward += step;
+        }
+          yield return new WaitForSeconds(0.5f);
+       
+        float rotatedBackward = 0f;
+        while (rotatedBackward < rotationAmount)
+        {
+            float step = rotationSpeed * Time.deltaTime;
+            transform.Rotate(Vector3.down, step);
+            rotatedBackward += step;
+        } 
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        isRotating = false;
+    }
    
 }
