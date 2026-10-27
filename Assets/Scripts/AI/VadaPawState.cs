@@ -13,7 +13,7 @@ public class VadaPawState : ITeacherState
 
 
     private float timer = 0f;
-    bool isSaluted;
+    bool isEating;
     public  VadaPawState(TeacherController teacher, Transform vadaPawPosition)
     {
         this.teacher = teacher;
@@ -24,9 +24,9 @@ public class VadaPawState : ITeacherState
     }
     public void Enter()
     {
-        isSaluted = false;
+        isEating = false;
 
-        Debug.Log("entered the patriotic mode");
+        Debug.Log("entered eating mode");
         agent.SetDestination(vadaPawPosition.position);
         teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.chaseClip, 0.15f);
        
@@ -34,12 +34,10 @@ public class VadaPawState : ITeacherState
 
     public void Update()
     {
-        if (isSaluted) 
+        if (isEating) 
         {
-          //  teacher.teacherAudio.PlaySoundClip(teacher.teacherAudio.nationalAnthem);
            teacher.teacherAudio.PlaySoundClip();
             timer += Time.deltaTime;
-           // teacher.LookAtPlayer();
             if (timer >= teacher.nationalAnthamDuriation)
             {
                 teacher.ChangeState(new PetrolState(teacher));
@@ -61,7 +59,7 @@ public class VadaPawState : ITeacherState
                     teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.saluteClip, 0.15f);
 
                     agent.ResetPath();
-                    isSaluted = true;
+                    isEating = true;
 
                 }
             }

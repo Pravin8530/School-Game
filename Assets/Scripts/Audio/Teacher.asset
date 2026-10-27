@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f16646f5556354646a7467bc5a5f8964, type: 3}
+  m_Name: Teacher
+  m_EditorClassIdentifier: Assembly-CSharp::AudioData
+  audioClips:
+  - {fileID: 8300000, guid: 7259e64be1a915b41a9c5daac9ce6939, type: 3}
+  - {fileID: 8300000, guid: 102a77de47213d04890ecd0d5adf89b1, type: 3}
+  volume: 0.138
+  pitch: 0.58
+  pitchRandomness: 0.05

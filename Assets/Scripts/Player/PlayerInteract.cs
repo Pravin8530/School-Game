@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
-
+using System.Collections;
 public class PlayerInteract : MonoBehaviour
 {
     public static PlayerInteract instance;
@@ -16,14 +16,16 @@ public class PlayerInteract : MonoBehaviour
     [Header("Interactable")]
     private IInteractables currentInteractable = null;
 
-    
+
     private InventoryNew inventoryNew;
 
-    
+
 
     public ElementCube heldElement;
 
-   private Book heldBook;
+    private Book heldBook;
+
+    [SerializeField] private LayerMask ignoreLayer;
 
     public void Awake()
     {
@@ -57,17 +59,24 @@ public class PlayerInteract : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
         RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance);
-
-        int highestPriority = -1;
+ 
+        
+         int highestPriority = -1;
 
         foreach (RaycastHit hit in hits)
-        {     
+        {
+           //if (((1 << hit.collider.gameObject.layer) & ignoreLayer) != 0) continue;
+
+         if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast")) return;
 
             DetectInteraction(hit, ref highestPriority);
             DetectPickable(hit);
 
         }
-
+ 
+         
+           
+       
 
 
 
@@ -76,7 +85,7 @@ public class PlayerInteract : MonoBehaviour
             if (heldBook.isHolding)
             {
                 Vector3 target = ray.origin +
-                                ( ray.direction * heldBook.distanceFromCamera) ;
+                                (ray.direction * heldBook.distanceFromCamera);
 
                 heldBook.MoveWithRay(target);
             }
@@ -90,6 +99,7 @@ public class PlayerInteract : MonoBehaviour
 
     public void DetectInteraction(RaycastHit hit, ref int highestPriority)
     {
+      
         IInteractables interactable =
                 hit.collider.GetComponent<IInteractables>();
 
@@ -106,7 +116,6 @@ public class PlayerInteract : MonoBehaviour
 
     public void DetectPickable(RaycastHit hit)
     {
-
         IPickable pickable =
                hit.collider.GetComponent<IPickable>();
 
@@ -116,7 +125,7 @@ public class PlayerInteract : MonoBehaviour
         }
 
 
-    
+
     }
 
     public void HandleInput()
@@ -194,7 +203,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (heldBook != null)
         {
-            heldBook.Interact(inventoryNew); 
+            heldBook.Interact(inventoryNew);
             heldBook = null;
             return;
         }

@@ -29,7 +29,7 @@ public class TeacherAudio : MonoBehaviour
         //     Debug.Log("audio source is null");
         //     return;
         // }
-        AudioManager.Instance.PlayAudioClip(audioData.audioClip);
+       // AudioManager.Instance.PlayAudioClip(audioData.audioClips,1);
 
 
     }

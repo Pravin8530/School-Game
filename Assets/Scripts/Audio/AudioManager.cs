@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -36,11 +37,11 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    public void PlayAudioClip(AudioClip clip)
+    public void PlayAudioClip(AudioClip[] clip, int index)
     {
         if (sfxAudioSource != null && clip != null)
         {
-            sfxAudioSource.PlayOneShot(clip);
+            sfxAudioSource.PlayOneShot(clip[index]);
         }
     }
 
@@ -52,8 +53,9 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayAmbientAudio(AudioClip clip)
+    public void PlayAmbientAudio(AudioClip clip, int index)
     {
+
 
         if (ambientAudioSource != null && clip != null)
         {

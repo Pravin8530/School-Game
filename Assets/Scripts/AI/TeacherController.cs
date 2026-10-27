@@ -41,7 +41,7 @@ public class TeacherController : MonoBehaviour
     [Header("Stun Settings")]
     public float stunDuration = 3f;
 
-   
+    
 
     public bool hasHeardSound = false;
    public bool isStunned = false;
@@ -50,6 +50,11 @@ public class TeacherController : MonoBehaviour
    public float nationalAnthamDuriation = 30f;
     private bool isLooking;
     Quaternion currentRotation;
+  
+   [Header("audio data")]
+    public AudioData AudioData;
+
+
     void Start()
     {
         ChangeState(new PetrolState(this));

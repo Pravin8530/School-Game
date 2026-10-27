@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground
 - Active game object:
-  - Name: Periodic Table System
-  - Tag: Untagged
+  - Name: PlayerCameraRoot
+  - Tag: CinemachineTarget
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

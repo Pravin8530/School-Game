@@ -36,8 +36,9 @@ public class PatrioticState : ITeacherState
     {
         if (isSaluted) 
         {
+            AudioManager.Instance.PlayAudioClip(teacher.AudioData.audioClips,0);
            // teacher.teacherAudio.PlaySoundClip(teacher.teacherAudio.nationalAnthem);
-           teacher.teacherAudio.PlaySoundClip();
+           //teacher.teacherAudio.PlaySoundClip();
             timer += Time.deltaTime;
            // teacher.LookAtPlayer();
             if (timer >= teacher.nationalAnthamDuriation)
@@ -73,7 +74,12 @@ public class PatrioticState : ITeacherState
     }
 
     public void Exit()
-    { 
+    {  
+          // typecasting Examples
+        // int gameIndex = 5;
+        // float castValue;
+
+        // castValue = (float)gameIndex;
 
         Debug.Log("exit the patriotic  state");
 

@@ -27,7 +27,8 @@ public class DoorController : MonoBehaviour, IInteractables
 
     [Header("Key Requirement")]
     public string requiredKeyID = "key_01";
-
+   
+   //public Quaternion targetRot;
 
     void Start()
     {
