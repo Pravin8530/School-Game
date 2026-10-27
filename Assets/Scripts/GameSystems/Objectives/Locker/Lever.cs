@@ -16,7 +16,9 @@ public class Lever : MonoBehaviour, IInteractables
    public int currentDigit { get; set; } = 0;
   
    public GameObject leverPivot;
-   
+   public float rotationAmount = 70f;
+    
+  public  Vector3 rotationDir = Vector3.down;
     public void Interact(InventoryNew inventory)
     {
      isRotating= true;
@@ -29,13 +31,13 @@ public class Lever : MonoBehaviour, IInteractables
     IEnumerator RotateLever()
     {
         float rotationSpeed = 100f;
-        float rotationAmount = 70f; 
+       // float rotationAmount = 70f; 
         float rotatedForward = 0f;
    
         while (rotatedForward < rotationAmount)
         {
             float step = rotationSpeed * Time.deltaTime;
-            transform.Rotate(Vector3.up, step);
+            transform.Rotate(-rotationDir/*Vector3.up*/, step);
             rotatedForward += step;
         }
           yield return new WaitForSeconds(0.5f);
@@ -44,7 +46,7 @@ public class Lever : MonoBehaviour, IInteractables
         while (rotatedBackward < rotationAmount)
         {
             float step = rotationSpeed * Time.deltaTime;
-            transform.Rotate(Vector3.down, step);
+            transform.Rotate(rotationDir/*Vector3.down*/, step);
             rotatedBackward += step;
         } 
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);

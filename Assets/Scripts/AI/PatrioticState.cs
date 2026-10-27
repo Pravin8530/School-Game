@@ -37,8 +37,7 @@ public class PatrioticState : ITeacherState
         if (isSaluted) 
         {
             AudioManager.Instance.PlayAudioClip(teacher.AudioData.audioClips,0);
-           // teacher.teacherAudio.PlaySoundClip(teacher.teacherAudio.nationalAnthem);
-           //teacher.teacherAudio.PlaySoundClip();
+           
             timer += Time.deltaTime;
            // teacher.LookAtPlayer();
             if (timer >= teacher.nationalAnthamDuriation)
