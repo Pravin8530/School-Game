@@ -18,7 +18,9 @@ public class CatchState : ITeacherState
     }
 
     public void Enter()
-    {
+    {  
+        if(teacher.CurrentState is VadaPawState)return;
+         
         Debug.Log("Die Motherfucker!");
         agent.isStopped = true;
         agent.ResetPath();

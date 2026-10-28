@@ -28,6 +28,8 @@ public class PetrolState : ITeacherState
 
     public void Enter()
     {
+       if(teacher.CurrentState is VadaPawState) return;
+
         Debug.Log("entering Petrol State");
          teacherAI.isStopped = false; 
         SetNextTarget();

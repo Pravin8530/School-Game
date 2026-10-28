@@ -1798,6 +1798,7 @@ MonoBehaviour:
   hasHeardSound: 0
   isStunned: 0
   nationalAnthamDuriation: 10
+  AudioData: {fileID: 0}
 --- !u!43 &134992678
 Mesh:
   m_ObjectHideFlags: 0
@@ -46446,7 +46447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4377cc9a616271a4eab255ced41bdc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeacherAudio
-  nationalAnthem: {fileID: 8300000, guid: 7259e64be1a915b41a9c5daac9ce6939, type: 3}
+  audioData: {fileID: 0}
 --- !u!1 &1964921883
 GameObject:
   m_ObjectHideFlags: 0
@@ -47884,7 +47885,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 903478975745815203}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2055720948
+--- !u!114 &2055720956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47893,9 +47894,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2055720940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeeae5fe98b9e204cbb00679c2569995, type: 3}
+  m_Script: {fileID: 11500000, guid: fe210ad8827f5c64c8d22dfde2001d6f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrowableObject
+  m_EditorClassIdentifier: Assembly-CSharp::ThrownObject
 --- !u!1 &2076535407
 GameObject:
   m_ObjectHideFlags: 0
@@ -59922,7 +59923,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5258597864416912234, guid: 9c27ec8627138bf40b59c4c2d093942c,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2055720948}
+      addedObject: {fileID: 2055720956}
   m_SourcePrefab: {fileID: 100100000, guid: 9c27ec8627138bf40b59c4c2d093942c, type: 3}
 --- !u!4 &919773915595553074
 Transform:

@@ -15,22 +15,48 @@ public class Book : MonoBehaviour, IInteractables
     public bool IsHolding => isHolding;
 
     private Transform targetSlot;
-   
+
     public string bookColor;
 
- 
+
+    // public void Interact(InventoryNew inventory)
+    // {
+    //     isHolding = !isHolding;
+
+    //     if (isHolding)
+    //     {
+    //         targetSlot = null; 
+
+    //         bookShelf.OnBookPickedUp(this);
+
+    //         if (PlayerStateManager.Instance != null)
+    //             PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.BookInteract);
+    //     }
+    //     else
+    //     {
+    //         gameObject.layer = LayerMask.NameToLayer("Default");
+
+    //         bookShelf.OnBookDropped(this, transform.position);
+
+    //         if (PlayerStateManager.Instance != null)
+    //             PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
+    //     }
+    // }
+
+
     public void Interact(InventoryNew inventory)
     {
         isHolding = !isHolding;
 
         if (isHolding)
         {
-            targetSlot = null; 
+            targetSlot = null;
 
             bookShelf.OnBookPickedUp(this);
 
             if (PlayerStateManager.Instance != null)
-                PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.BookInteract);
+                PlayerStateManager.Instance.SetState(
+                    PlayerStateManager.PlayerState.BookInteract);
         }
         else
         {
@@ -39,33 +65,61 @@ public class Book : MonoBehaviour, IInteractables
             bookShelf.OnBookDropped(this, transform.position);
 
             if (PlayerStateManager.Instance != null)
-                PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
+                PlayerStateManager.Instance.SetState(
+                    PlayerStateManager.PlayerState.Normal);
         }
     }
 
+
+
+
+    // public void MoveWithRay(Vector3 targetPosition)
+    // {
+    //     targetPosition.y = transform.position.y;
+
+
+    //     if (!isHolding) return;
+
+    //     if (bookShelf != null)
+    //     {
+    //         targetPosition = bookShelf.ClampPositionToShelf(targetPosition);
+    //     }
+    //     transform.position = Vector3.Lerp(
+    //         transform.position,
+    //         targetPosition,
+    //         moveSpeed * Time.deltaTime
+    //     );
+
+    //     if (bookShelf != null)
+    //     {
+    //         bookShelf.OnBookHover(transform.position);
+    //     }
+    // }
+
+
     public void MoveWithRay(Vector3 targetPosition)
     {
-        targetPosition.y = transform.position.y;
-
-        
         if (!isHolding) return;
 
-        if (bookShelf != null)
-        {
-            targetPosition = bookShelf.ClampPositionToShelf(targetPosition);
-        }
+        targetPosition.y = transform.position.y;
+
         transform.position = Vector3.Lerp(
             transform.position,
             targetPosition,
             moveSpeed * Time.deltaTime
         );
 
+        // if (bookShelf != null)
+        //     bookShelf.OnBookHover(transform.position);
+
         if (bookShelf != null)
         {
-            bookShelf.OnBookHover(transform.position);
+            if (bookShelf.IsNearShelf(transform.position))
+                bookShelf.OnBookHover(transform.position);
+            else
+                bookShelf.ResetHover();
         }
     }
-
 
 
     public void SetTargetSlot(Transform slot)

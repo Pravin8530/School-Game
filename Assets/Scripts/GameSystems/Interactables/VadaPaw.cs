@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 public class VadaPaw : MonoBehaviour, IInteractables
 {
     public int Priority => 1;
@@ -17,14 +18,16 @@ public class VadaPaw : MonoBehaviour, IInteractables
      public TeacherController teacherController;
 
      private bool VadaInstalled;
- 
+  
+     public GameObject vadapawPrefab;
+   
 
     public void Interact(InventoryNew inventory)
     {
         if (inventory == null)
             return;
 
-        Debug.Log("Wheel mechanism interacted.");
+    
 
         if (!VadaInstalled)
         {
@@ -64,56 +67,23 @@ public class VadaPaw : MonoBehaviour, IInteractables
             Vada.transform.localRotation = Quaternion.identity;
 
             VadaInstalled = true;
-            teacherController.ChangeState(new VadaPawState(teacherController, VadaPoint));
+            teacherController.ChangeState(new VadaPawState(teacherController, vadapawPrefab.transform));
             Debug.Log("Vada Placed Successfully");
+          
+            Vector3 spawnPosition = transform.position;
+            Quaternion spawnRotation = transform.rotation;
+
+            GameObject vadapawRef = Instantiate(vadapawPrefab,spawnPosition,spawnRotation);
+            Destroy(gameObject);
+          
+ 
             return;
         }
-
-        // if (isSpinning || gateOpened)
-        //      return;
-
-        // if (spinningPart == null)
-        // {
-        //     Debug.LogError("Assign the actual rotating wheel mesh to Spinning Part.");
-        //     return;
-        // }
-
-        // if (gate == null)
-        // {
-        //     Debug.LogError("Assign Gate in Inspector.");
-        //     return;
-        // }
-
-       // StartCoroutine(SpinMechanism());
+  
+       
     }
 
-    // private IEnumerator SpinMechanism()
-    // {
-    //     isSpinning = true;
-
-        
     
-    //     float elapsed = 0f;
-
-    //     float spinSpeed = rotationAmount / spinDuration;
-    //     Vector3 startPosition = gate.position;
-    //     Vector3 endPosition = startPosition + Vector3.up * gateOpenHeight;
-    //     while (elapsed < spinDuration)
-    //     {
-    //         elapsed += Time.deltaTime;
-
-    //          transform.Rotate(rotationAxis * spinSpeed * Time.deltaTime, Space.Self);
-    //         //gate
-    //           float t = Mathf.Clamp01(elapsed / spinDuration);
-    //         gate.position = Vector3.Lerp(startPosition, endPosition, t);
-
-
-    //         yield return null;
-    //     }
-
-
-        
-    // }
 
     
 }

@@ -12,7 +12,8 @@ public class ChillState : ITeacherState
     }
 
     public void Enter()
-    {
+    { if( teacher.CurrentState  is VadaPawState)return;
+         
         Debug.Log("Teacher is chilling!");
         timer = 0f;
 

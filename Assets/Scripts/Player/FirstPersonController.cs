@@ -258,7 +258,7 @@ namespace StarterAssets
             if (ridingChair != null)
                 return;
 
-            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.BookInteract)
+            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding /*|| PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.BookInteract*/)
                 return;
 
             if(!_controller.enabled)

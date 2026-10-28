@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 public class BookShelf : MonoBehaviour
 {
+    [Header("All Puzzle Books")]
+    public List<Book> allBooks = new List<Book>();
+
+    [SerializeField] private float shelfDropDistance = 1.5f;
+
     [Header("Shelf Setup")]
     public Transform[] bookSlots;
     public List<Book> currentBooks = new List<Book>();
@@ -13,45 +17,77 @@ public class BookShelf : MonoBehaviour
 
     public PasswordText passwordText;
     private int lastHoverIndex = -1;
- 
+
     public GameObject Drawer;
     public Transform DrawerOpenPosition;
 
+
+    // private void Start()
+    // {
+    //     if (passwordText == null)
+    //     {
+    //         passwordText = GetComponentInChildren<PasswordText>();
+    //         if (passwordText == null)
+    //         {
+    //             Debug.LogError("PasswordText component not found in children.");
+    //         }
+    //     }
+
+
+    //     ShuffleBooks();
+    //     GenrateRandomPassward();
+    //     UpdateBookPositions(currentBooks);
+
+    // }
+
     private void Start()
-    { 
-          if(passwordText == null)
-        {
+    {
+        if (passwordText == null)
             passwordText = GetComponentInChildren<PasswordText>();
-            if(passwordText == null)
-            {
-                Debug.LogError("PasswordText component not found in children.");
-            }
-        }
 
-        ShuffleBooks();
-        GenrateRandomPassward();
-        UpdateBookPositions(currentBooks);
+        currentBooks.Clear();
 
+        currentBookSequence = new List<Book>(allBooks);
+
+        ShuffleList(currentBookSequence);
+
+        string solution = "Solution: ";
+        foreach (Book book in currentBookSequence)
+            solution += book.bookColor + " -> ";
+
+        passwordText.UpdatePasswordText(currentBookSequence);
+        Debug.Log(solution);
     }
-  
-   void Update()
-    { 
-        if(isSolved)
+
+    void Update()
+    {
+
+        if (isSolved)
         {
             Drawer.transform.localPosition = Vector3.Lerp(Drawer.transform.localPosition, DrawerOpenPosition.localPosition, Time.deltaTime * 10f);
         }
         else
         {
-             return;  
+            return;
 
         }
     }
-   
+    private void ShuffleList(List<Book> books)
+    {
+        for (int i = 0; i < books.Count; i++)
+        {
+            int randomIndex = Random.Range(i, books.Count);
+            (books[i], books[randomIndex]) =
+                (books[randomIndex], books[i]);
+        }
+    }
+
+
 
     private void GenrateRandomPassward()
     {
         currentBookSequence = new List<Book>(currentBooks);
-       // passwordText.passwordText = new TextMeshProUGUI[currentBookSequence.Count];
+        // passwordText.passwordText = new TextMeshProUGUI[currentBookSequence.Count];
 
         for (int i = 0; i < currentBookSequence.Count; i++)
         {
@@ -63,13 +99,13 @@ public class BookShelf : MonoBehaviour
 
 
         }
-        string solution = "solution is " ;
-        
+        string solution = "solution is ";
+
         foreach (Book book in currentBookSequence)
         {
             solution += book.bookColor + "-> ";
         }
-        
+
         passwordText.UpdatePasswordText(currentBookSequence);
 
         Debug.Log(solution);
@@ -90,28 +126,58 @@ public class BookShelf : MonoBehaviour
         }
 
     }
-    
+
+    // private void CheackPassward()
+    // {
+    //     if (isSolved)
+    //         return;
+
+    //     for (int i = 0; i < currentBooks.Count; i++)
+    //     {
+    //         if (currentBooks[i] != currentBookSequence[i])
+    //             return;
+
+    //     }
+
+    //     isSolved = true;
+    //     Debug.Log("Passward is correct");
+
+    // }
+
     private void CheackPassward()
     {
-        if (isSolved)
+        if (isSolved || currentBooks.Count != allBooks.Count)
             return;
 
         for (int i = 0; i < currentBooks.Count; i++)
         {
             if (currentBooks[i] != currentBookSequence[i])
                 return;
-
         }
 
         isSolved = true;
-       Debug.Log("Passward is correct");
-        
-
-
+        Debug.Log("Password is correct");
     }
 
+    public bool IsNearShelf(Vector3 position)
+    {
+        foreach (Transform slot in bookSlots)
+        {
+            if (Vector3.Distance(position, slot.position)
+                <= shelfDropDistance)
+            {
+                return true;
+            }
+        }
 
-    
+        return false;
+    }
+    public void ResetHover()
+    {
+        lastHoverIndex = -1;
+        UpdateBookPositions(currentBooks);
+    }
+
     public void OnBookPickedUp(Book pickedBook)
     {
         if (currentBooks.Contains(pickedBook))
@@ -123,7 +189,7 @@ public class BookShelf : MonoBehaviour
         }
     }
 
-   
+
     public void OnBookHover(Vector3 hoverWorldPosition)
     {
         int hoverIndex = GetClosestSlotIndex(hoverWorldPosition);
@@ -131,7 +197,7 @@ public class BookShelf : MonoBehaviour
         if (hoverIndex == lastHoverIndex) return;
         lastHoverIndex = hoverIndex;
 
-        
+
         List<Book> previewList = new List<Book>(currentBooks);
 
         hoverIndex = Mathf.Clamp(hoverIndex, 0, previewList.Count);
@@ -140,21 +206,48 @@ public class BookShelf : MonoBehaviour
         UpdateBookPositions(previewList);
     }
 
-    
+
+    // public void OnBookDropped(Book book, Vector3 dropPosition)
+    // {
+    //     int dropIndex = GetClosestSlotIndex(dropPosition);
+    //     dropIndex = Mathf.Clamp(dropIndex, 0, currentBooks.Count);
+
+    //     currentBooks.Insert(dropIndex, book);
+    //     lastHoverIndex = -1;
+
+    //     UpdateBookPositions(currentBooks);
+
+    //     CheackPassward();
+    // }
+
     public void OnBookDropped(Book book, Vector3 dropPosition)
     {
-        int dropIndex = GetClosestSlotIndex(dropPosition);
-        dropIndex = Mathf.Clamp(dropIndex, 0, currentBooks.Count);
-
-        currentBooks.Insert(dropIndex, book);
         lastHoverIndex = -1;
+
+        // Dropped outside the shelf: leave it where it is.
+        if (!IsNearShelf(dropPosition))
+        {
+            UpdateBookPositions(currentBooks);
+            return;
+        }
+
+        // Prevent duplicate entries.
+        if (!currentBooks.Contains(book))
+        {
+            int dropIndex = GetClosestSlotIndex(dropPosition);
+            dropIndex = Mathf.Clamp(dropIndex, 0, currentBooks.Count);
+
+            currentBooks.Insert(dropIndex, book);
+        }
 
         UpdateBookPositions(currentBooks);
 
-        CheackPassward();
+        // Solve only after every puzzle book is on the shelf.
+        if (currentBooks.Count == allBooks.Count)
+            CheackPassward();
     }
 
-    
+
     private void UpdateBookPositions(List<Book> bookList)
     {
         for (int i = 0; i < bookList.Count; i++)
@@ -166,7 +259,7 @@ public class BookShelf : MonoBehaviour
         }
     }
 
-   
+
     private int GetClosestSlotIndex(Vector3 worldPoint)
     {
         int closestIndex = 0;
@@ -214,7 +307,7 @@ public class BookShelf : MonoBehaviour
 
         if (horizontalDist < 0f || horizontalDist > shelfLength)
         {
-            clampedDepth = Mathf.Min(clampedDepth, 0.5f); 
+            clampedDepth = Mathf.Min(clampedDepth, 0.5f);
         }
 
         Vector3 finalPos = start + (shelfDir * clampedHorizontal) + (depthDir * clampedDepth);

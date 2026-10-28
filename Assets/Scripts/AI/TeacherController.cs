@@ -24,34 +24,34 @@ public class TeacherController : MonoBehaviour
     public LayerMask obstacleMask;
 
     [Header("Notice Delays")]
-    public float firstNoticeTime = 2.0f; 
-    public float quickNoticeTime = 0.2f; 
-    public float memoryTime = 5.0f;      
+    public float firstNoticeTime = 2.0f;
+    public float quickNoticeTime = 0.2f;
+    public float memoryTime = 5.0f;
     public Vector3 lastKnownPosition;
     public float lastSeenTimer = -999f;
 
     [Header("Hearing Settings")]
-    public float hearingRadius; 
+    public float hearingRadius;
     [HideInInspector] public Vector3 soundLocation;
     [HideInInspector] public bool heardSoundThisFrame = false;
 
-    public Vector3 investigationPoint; 
+    public Vector3 investigationPoint;
 
 
     [Header("Stun Settings")]
     public float stunDuration = 3f;
 
-    
+
 
     public bool hasHeardSound = false;
-   public bool isStunned = false;
+    public bool isStunned = false;
 
     [Header("national antham")]
-   public float nationalAnthamDuriation = 30f;
+    public float nationalAnthamDuriation = 30f;
     private bool isLooking;
     Quaternion currentRotation;
-  
-   [Header("audio data")]
+
+    [Header("audio data")]
     public AudioData AudioData;
 
 
@@ -65,6 +65,7 @@ public class TeacherController : MonoBehaviour
     {
         currentState?.Exit();
         currentState = userState;
+        // if(currentState is VadaPawState) return;
         currentState?.Enter();
 
     }
@@ -85,8 +86,8 @@ public class TeacherController : MonoBehaviour
             Quaternion direction = Quaternion.LookRotation(directionVector3);
 
             transform.rotation = Quaternion.Slerp(currentRotation, direction, 10f * Time.deltaTime);
-             
-            
+
+
         }
     }
 
@@ -105,7 +106,7 @@ public class TeacherController : MonoBehaviour
             {
                 if (!Physics.Raycast(transform.position + Vector3.up, dirToPlayer.normalized, distanceToPlayer, obstacleMask))
                 {
-                    lastKnownPosition = player.transform.position; 
+                    lastKnownPosition = player.transform.position;
                     return true;
                 }
             }
@@ -128,11 +129,11 @@ public class TeacherController : MonoBehaviour
 
     public void OnHearSound(Vector3 noisePosition)
     {
-        if (currentState is ChaseState || currentState is CatchState ) return;
+        if (currentState is ChaseState || currentState is CatchState) return;
         soundLocation = noisePosition;
-        investigationPoint = soundLocation; 
+        investigationPoint = soundLocation;
 
-       
+
 
         hasHeardSound = true;
         ChangeState(new SearchState(this));
@@ -146,7 +147,7 @@ public class TeacherController : MonoBehaviour
 
     }
 
-     
+
 
 
     // gizmos and mesh 

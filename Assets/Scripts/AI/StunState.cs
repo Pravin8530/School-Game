@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,11 +23,12 @@ public class StunState : ITeacherState
     }
 
     public void Enter()
-    {
+    {  if(teacher.CurrentState is VadaPawState)return;
+    
         Debug.Log("Teacher is stunned!");
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
-        timer = 0f;
+        timer = 2f;
 
        teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.stunClip,0.15f);
         teacher.isStunned = true;

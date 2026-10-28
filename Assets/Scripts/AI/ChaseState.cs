@@ -16,7 +16,9 @@ public class ChaseState : ITeacherState
     }
 
     public void Enter()
-    {
+    {  
+        if(teacher.CurrentState is VadaPawState)return;
+
        teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.supriseClip, 0.15f);
 
 
