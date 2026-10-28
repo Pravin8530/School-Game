@@ -19,11 +19,10 @@ public class PlayerInteract : MonoBehaviour
 
     private InventoryNew inventoryNew;
 
-
-
     public ElementCube heldElement;
 
     private Book heldBook;
+
 
     [SerializeField] private LayerMask ignoreLayer;
 
@@ -58,27 +57,33 @@ public class PlayerInteract : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
-        RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance);
+        RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance, ~ignoreLayer);
  
-        
+        System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
+
          int highestPriority = -1;
 
         foreach (RaycastHit hit in hits)
         {
-           //if (((1 << hit.collider.gameObject.layer) & ignoreLayer) != 0) continue;
-
-         if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast")) return;
+  
+          // if(hit.collider.gameObject.layer == LayerMask.NameToLayer("BlockLayer")) continue;
 
             DetectInteraction(hit, ref highestPriority);
             DetectPickable(hit);
+  
+            if(currentInteractable != null || targetPickable!=null)
+            {
+               break;    
 
+            }
+
+             if (!hit.collider.isTrigger)
+            {
+                break;
+            }
         }
  
          
-           
-       
-
-
 
         if (heldBook != null)
         {

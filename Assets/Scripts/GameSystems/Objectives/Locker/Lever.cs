@@ -16,7 +16,7 @@ public class Lever : MonoBehaviour, IInteractables
    public int currentDigit { get; set; } = 0;
   
    public GameObject leverPivot;
-   public float rotationAmount = 70f;
+  [SerializeField] private float rotationAmount = 70f;
     
   public  Vector3 rotationDir = Vector3.down;
     public void Interact(InventoryNew inventory)
