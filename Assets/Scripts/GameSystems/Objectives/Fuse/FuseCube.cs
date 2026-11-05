@@ -33,8 +33,17 @@ public class FuseCube : MonoBehaviour, IInteractables
          {
 
             isConected = true;
-        }
+         }
 
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.CompareTag("FusePoint"))
+         {
+
+            isConected = false;
+         }
     }
 
 

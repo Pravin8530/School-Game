@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 public class PlayerStateManager : MonoBehaviour
-{ 
+{
     public static PlayerStateManager Instance;
 
-   
-   
+
+
     public PlayerState currentState { get; private set; }
 
     public Paper HeldPaper { get; private set; }
@@ -18,16 +17,16 @@ public class PlayerStateManager : MonoBehaviour
         Crouching,
         Hiding,
         BookInteract,
-        HasImportantItem, 
+        HasImportantItem,
         HasPaper,
         HoldingItem
-   
+
     }
 
-    
+
     void Awake()
-    { 
-        if(Instance != null && Instance != this)
+    {
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
@@ -35,17 +34,19 @@ public class PlayerStateManager : MonoBehaviour
         }
         Instance = this;
         currentState = PlayerState.Normal;
-       
-      DontDestroyOnLoad(gameObject);
+
+        DontDestroyOnLoad(gameObject);
     }
 
 
-  
 
-    public void SetState(PlayerState newState, Paper PaperItem = null )
+
+    public void SetState(PlayerState newState, Paper PaperItem = null)
     {
 
         currentState = newState;
+
+
 
         if (newState == PlayerState.HasPaper)
         {
@@ -69,5 +70,5 @@ public class PlayerStateManager : MonoBehaviour
 
     }
 
-    
+
 }

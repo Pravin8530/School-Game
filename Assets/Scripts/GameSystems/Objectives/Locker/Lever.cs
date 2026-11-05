@@ -19,6 +19,9 @@ public class Lever : MonoBehaviour, IInteractables
   [SerializeField] private float rotationAmount = 70f;
     
   public  Vector3 rotationDir = Vector3.down;
+
+  public FuseBox fusebox;
+  public bool puzzleComplete;
     public void Interact(InventoryNew inventory)
     {
      isRotating= true;
@@ -27,11 +30,18 @@ public class Lever : MonoBehaviour, IInteractables
         StartCoroutine(RotateLever());
 
     }
-  
+   
+   void Update()
+   {
+         if(puzzleComplete)
+         fusebox.OpenDrawer();
+
+
+   }
+
     IEnumerator RotateLever()
     {
         float rotationSpeed = 100f;
-       // float rotationAmount = 70f; 
         float rotatedForward = 0f;
    
         while (rotatedForward < rotationAmount)
@@ -39,7 +49,8 @@ public class Lever : MonoBehaviour, IInteractables
             float step = rotationSpeed * Time.deltaTime;
             transform.Rotate(-rotationDir/*Vector3.up*/, step);
             rotatedForward += step;
-        }
+        } 
+         puzzleComplete =true;
           yield return new WaitForSeconds(0.5f);
        
         float rotatedBackward = 0f;
@@ -53,4 +64,6 @@ public class Lever : MonoBehaviour, IInteractables
         isRotating = false;
     }
    
+
+
 }

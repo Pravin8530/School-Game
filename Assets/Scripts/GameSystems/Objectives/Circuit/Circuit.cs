@@ -33,7 +33,6 @@ public class Circuit : MonoBehaviour, IInteractables
     {
         Transform cell = hand.Find("Cell");
          
-
         if (cell == null)
         {
             return;

@@ -62,25 +62,7 @@ public class DoorController : MonoBehaviour, IInteractables
 
     }
 
-    // public void Interact(InventoryNew inventory)           
-    // {
-    //     Debug.Log("Intract Door");
-
-    //     if (isMoving) return;
-    //     Debug.Log("Intract Door 1 ");
-    //     if (isDoorLocked && !isOpen)
-    //     {
-    //         Debug.Log("Intract Door 2 ");
-    //         StartCoroutine(DoorLockAnimation());
-    //         return;
-    //     }
-
-    //     isOpen = !isOpen;
-    //     isMoving = true;
-    //     Debug.Log("Intract Door 3");
-
-    // }
-
+  
     
 public void Interact(InventoryNew inventory)
 {
@@ -88,7 +70,6 @@ public void Interact(InventoryNew inventory)
 
     if (isDoorLocked && !isOpen)
     {
-        // Play the locked animation if the player has no key.
         if (!KeyItem.HasKey(requiredKeyID))
         {
             if (lockedDoorAnimation != null)
@@ -107,7 +88,7 @@ public void Interact(InventoryNew inventory)
     isMoving = true;
 }
 
-
+  // can create through coding insted of animation anyway??????
     public IEnumerator DoorLockAnimation()     
     {
 

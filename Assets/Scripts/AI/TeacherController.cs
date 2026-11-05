@@ -11,7 +11,6 @@ public class TeacherController : MonoBehaviour
     public teacherAnimation teacherAnimation;
     public TeacherDebugUi teacherDebug;
 
-    public TeacherAudio teacherAudio;
     public List<Transform> petrolPoints = new List<Transform>();
 
     private ITeacherState currentState;
@@ -54,6 +53,7 @@ public class TeacherController : MonoBehaviour
     [Header("audio data")]
     public AudioData AudioData;
 
+    public Transform vadapawPos; 
 
     void Start()
     {
@@ -71,7 +71,8 @@ public class TeacherController : MonoBehaviour
     }
 
     void Update()
-    {
+    { 
+         
         currentState?.Update();
 
         if (isLooking)

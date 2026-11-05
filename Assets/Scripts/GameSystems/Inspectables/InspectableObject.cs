@@ -1,26 +1,19 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using Unity.Cinemachine;
 
 public class InspectableObject : MonoBehaviour, IInteractables
 {
     [SerializeField] private int priority = 1;
     public int Priority => priority;
 
-  
      public Camera inspectCamera;
 
-
-    public float inspectDistance = 1.5f;
+    public float inspectDistance;
 
     public float inspectSpeed = 10f;
 
     public float returnSpeed = 1f;
 
     public float rotateSensitivity = 3f;
-
-
-
 
     public bool _inspecting;
 
@@ -31,12 +24,13 @@ public class InspectableObject : MonoBehaviour, IInteractables
     private Rigidbody _rb;
 
     public float minimumInspectDistance = 0.6f;
+  
 
+  
     public void Interact(InventoryNew inventory)
     {
         if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HoldingItem)
         {
-
             return;
         }
         ;
@@ -65,7 +59,6 @@ public class InspectableObject : MonoBehaviour, IInteractables
     //  Unity
     private void Awake()
     {
-
         _rb = GetComponent<Rigidbody>();
         if (inspectCamera == null)
 
@@ -74,8 +67,6 @@ public class InspectableObject : MonoBehaviour, IInteractables
 
     private void Update()
     {
-
-
 
         if (_inspecting)
         {

@@ -13,7 +13,7 @@ public class ClosetController : MonoBehaviour, IInteractables
 
     [Header("Bool Value")]
     public bool insideCloset;
-    public bool canIntract;
+    public bool canInteract;
 
     [Header("Animator Ref")]
     public Animator doorAnim;
@@ -28,15 +28,16 @@ public class ClosetController : MonoBehaviour, IInteractables
 
     public bool isTransitioning;
 
-   
+
 
 
     public IEnumerator InsideCloset()           // Player Inside Closet
-    {  isTransitioning=true;
+    {
+        isTransitioning = true;
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Hiding);
         Debug.Log("inside Closet");
-         insideCloset = true;
-         canIntract=false;
+        insideCloset = true;
+        canInteract = false;
         doorAnim.Play("DoorOpenAndClose");
         yield return new WaitForSeconds(0.5f);
 
@@ -61,25 +62,26 @@ public class ClosetController : MonoBehaviour, IInteractables
         player.transform.rotation = hidingPosition.rotation;
 
 
-       
+
         yield return new WaitForSeconds(0.5f);
         doorAnim.Play("Door_Idle");
-   
-        isTransitioning=false;
+
+        isTransitioning = false;
     }
 
 
     public IEnumerator OusideCloset()                        //   When  player Outside Closet 
-    {  isTransitioning= true;
+    {
+        isTransitioning = true;
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
         Debug.Log("outside Closet");
         insideCloset = false;
-        canIntract =false;
+        canInteract= false;
         Vector3 startPos = player.transform.position;
         Quaternion startRot = player.transform.rotation;
 
 
-        
+
         doorAnim.Play("DoorOpenAndClose");
         yield return new WaitForSeconds(0.5f);
         float duration = 0.5f;
@@ -98,27 +100,27 @@ public class ClosetController : MonoBehaviour, IInteractables
         player.transform.position = exitPosition.position;
         player.transform.rotation = exitPosition.rotation;
         doorAnim.Play("Door_Idle");
-    
-       isTransitioning=false;
+
+        isTransitioning = false;
     }
 
     public void Interact(InventoryNew invenotory)                       //  IIntractable function To  Intract 
     {
-         if(isTransitioning) return;
+        if (isTransitioning) return;
 
         if (insideCloset)
         {
             StartCoroutine(OusideCloset());
-           
-            
+
+
         }
         else
         {
             StartCoroutine(InsideCloset());
-           
-            
+
+
         }
     }
 
-    
+
 }

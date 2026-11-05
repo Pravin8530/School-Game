@@ -65,16 +65,16 @@ namespace StarterAssets
         private float _pitchBeforeFall;
         private Vector3 _cameraTargetOriginalLocalPos;
 
-     
+
         [Header("Climbing")]
-        [SerializeField]private bool IsClimbing= false;
-         private float climbSpeed = 3f;
+        [SerializeField] private bool IsClimbing = false;
+        private float climbSpeed = 3f;
 
         [Header("Window Jump")]
-       private float windowCheakdistance = 1.5f;
+        private float windowCheakdistance = 1.5f;
         public LayerMask windowLayer;
-        public float jumpDuration;
-        public float goinDownDuriation = 0.01f;
+        public float jumpDuration = 0.5f;
+        public float goinDownDuriation = 0.2f;
         private bool isWindowJumping = false;
 
         [Header("chair")]
@@ -83,13 +83,13 @@ namespace StarterAssets
 
         // cinemachine
         private float _cinemachineTargetPitch;
-    
-       //sound related
 
-       public int maxNoiseRadius = 12;
-       public int minNoiseRadius = 4;  
-       
 
+        [Header("Sound")]
+        public int sprintNoiseRadius = 12;
+        public int walkNoiseRadius = 4;
+
+        //private Collider currentLadder;
 
 
         // player
@@ -98,7 +98,7 @@ namespace StarterAssets
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-      
+
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
@@ -106,11 +106,12 @@ namespace StarterAssets
         public float FallTargetPitch = -60f;
 
         [Header("Fall FOV")]
-        public Camera playerCamera; 
+        public Camera playerCamera;
         public float FallFOVPunch = 15f;
         public float FOVPunchDuration = 0.3f;
 
         private float _normalFOV;
+
 
 
         private PlayerStateManager playerManager;
@@ -173,9 +174,8 @@ namespace StarterAssets
         private void Update()
         {
 
-
             if (_isFalling || isWindowJumping) return;
-
+            if (IsStateRestricted()) return;
 
             if (IsClimbing)
             {
@@ -183,37 +183,34 @@ namespace StarterAssets
                 return;
             }
 
-            JumpAndGravity();
             GroundedCheck();
+            JumpAndGravity();
             Crouch();
             Move();
-
-
-            bool isRunning = Input.GetKey(KeyCode.LeftShift);
-            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
-            
-            
-            if (isMoving)
-            {
-                float noiseRadius = isRunning ? 12f : 4f; 
-
-                if (SoundManager.Instance != null)
-                {
-                    if (_isCrouching)
-                        return;
-                    SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
-                }
-            }
-
-
+            HandleNoiseEmission();
 
         }
-
         private void LateUpdate()
         {
-            if (_isFalling || isWindowJumping) return;
+            if (_isFalling || isWindowJumping ||
+                IsStateRestricted())
+                return;
 
             CameraRotation();
+        }
+        // private void LateUpdate()
+        // {
+        //     if (_isFalling || isWindowJumping) return;
+
+        //     CameraRotation();
+        // }
+
+        private bool IsStateRestricted()
+        {
+            if (PlayerStateManager.Instance == null) return false;
+            var state = PlayerStateManager.Instance.currentState;
+            return state == PlayerStateManager.PlayerState.Inspecting ||
+                   state == PlayerStateManager.PlayerState.Hiding;
         }
 
         private void GroundedCheck()
@@ -223,12 +220,7 @@ namespace StarterAssets
         }
 
         private void CameraRotation()
-
-        {    
-
-            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding)
-                return;
-
+        {
 
             if (_input.look.sqrMagnitude >= _threshold)
             {
@@ -253,15 +245,14 @@ namespace StarterAssets
         {
             return _input.move;
         }
+
         private void Move()
         {
             if (ridingChair != null)
                 return;
 
-            if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Inspecting || PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.Hiding /*|| PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.BookInteract*/)
-                return;
 
-            if(!_controller.enabled)
+            if (!_controller.enabled)
                 return;
 
             float targetSpeed;
@@ -316,10 +307,10 @@ namespace StarterAssets
                 {
                     if (CheckWindow())
                     {
-                        
+
                         Debug.Log(CheckWindow());
                         _input.jump = false;
-                      
+
                         StartCoroutine(WindowJumpRoutine());
                         return;
                     }
@@ -417,9 +408,6 @@ namespace StarterAssets
             _isFalling = false;
         }
 
-
-
-
         //private IEnumerator FallRoutine()
         //{
         //    _isFalling = true;
@@ -471,27 +459,48 @@ namespace StarterAssets
 
 
 
+        // private void Crouch()
+        // {
+        //     _isCrouching = _input.crouch;
+
+        //     float targetSpeed = _isCrouching ? CrouchSpeed : MoveSpeed;
+
+        //     Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+
+        //     float targetHeight = _isCrouching
+        //         ? CrouchCameraHeight
+        //         : _standingCameraHeight;
+
+        //     cameraPos.y = Mathf.Lerp(
+        //         cameraPos.y,
+        //         targetHeight,
+        //         Time.deltaTime * CrouchTransitionSpeed
+        //     );
+
+        //     CinemachineCameraTarget.transform.localPosition = cameraPos;
+        // }
+
         private void Crouch()
         {
             _isCrouching = _input.crouch;
-
-            float targetSpeed = _isCrouching ? CrouchSpeed : MoveSpeed;
-
             Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+            float targetHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
 
-            float targetHeight = _isCrouching
-                ? CrouchCameraHeight
-                : _standingCameraHeight;
-
-            cameraPos.y = Mathf.Lerp(
-                cameraPos.y,
-                targetHeight,
-                Time.deltaTime * CrouchTransitionSpeed
-            );
-
+            cameraPos.y = Mathf.Lerp(cameraPos.y, targetHeight, 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime));
             CinemachineCameraTarget.transform.localPosition = cameraPos;
         }
 
+        private void HandleNoiseEmission()
+        {
+            if (SoundManager.Instance == null || _isCrouching) return;
+
+            bool isMoving = _input.move.sqrMagnitude > 0.001f;
+            if (isMoving)
+            {
+                float noiseRadius = _input.sprint ? sprintNoiseRadius : walkNoiseRadius;
+                SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
+            }
+        }
 
         private void Climb()
         {
@@ -499,6 +508,7 @@ namespace StarterAssets
             if (input < 0f)
             {
                 IsClimbing = false;
+                _verticalVelocity = -2;
                 return;
             }
 
@@ -510,9 +520,9 @@ namespace StarterAssets
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Ladder"))
-            { 
+            {
                 IsClimbing = true;
-
+                _verticalVelocity = 0f;
 
             }
 
@@ -523,17 +533,17 @@ namespace StarterAssets
             if (other.CompareTag("Ladder"))
             {
                 IsClimbing = false;
-               _verticalVelocity = -2f;
+                _verticalVelocity = -2f;
             }
 
-
         }
-    
+
+
         private bool CheckWindow()
         {
             Vector3 origin = transform.position + Vector3.up * 1.0f;
 
-            if(Physics.Raycast(origin,
+            if (Physics.Raycast(origin,
                                transform.forward,
                                out RaycastHit hit,
                                windowCheakdistance,
@@ -542,7 +552,7 @@ namespace StarterAssets
             {
                 Window window = hit.collider.GetComponentInParent<Window>();
 
-    
+
 
                 if (window != null && window.isWindowBroken)
                 {
@@ -553,59 +563,96 @@ namespace StarterAssets
         }
 
 
-       
+
+        // private IEnumerator WindowJumpRoutine()
+        // {
+
+        //     isWindowJumping = true;
+
+
+        //     Debug.Log("JumpRoutine");
+        //     Vector3 start = transform.position;
+        //     Vector3 down = start - transform.up * 0.3f;
+        //     Vector3 end = transform.position + transform.forward * 2f + Vector3.up * 1f;
+        //     _controller.enabled = false;
+
+
+        //     float t = 0f;
+
+        //     // goin down
+        //     while (t < goinDownDuriation)
+        //     {
+        //         t += Time.deltaTime;
+
+        //         float normalized = Mathf.Clamp01(t / goinDownDuriation);
+
+        //         Vector3 position = Vector3.Lerp(start, down, normalized);
+
+        //         transform.position = position;
+
+        //         yield return null;
+
+        //     }
+
+        //     t = 0f;
+        //     // goingup and forward
+        //     while (t < jumpDuration)
+        //     {
+
+        //         t += Time.deltaTime;
+
+        //         float normalized = Mathf.Clamp01(t / jumpDuration);
+
+        //         Vector3 position = Vector3.Lerp(down, end, normalized);
+
+        //         transform.position = position;
+
+        //         yield return null;
+
+        //     }
+
+        //     transform.position = end;
+        //     _controller.enabled = true;
+        //     isWindowJumping = false;
+        // }
+
+
         private IEnumerator WindowJumpRoutine()
         {
-           
             isWindowJumping = true;
-           
 
-            Debug.Log("JumpRoutine");
             Vector3 start = transform.position;
-            Vector3 down = start - transform.up * 0.3f;
-            Vector3 end = transform.position + transform.forward * 2f + Vector3.up * 1f;
+            Vector3 end = start
+                + transform.forward * 2f
+                + Vector3.up * 1f;
+
+            float duration = Mathf.Max(jumpDuration, 0.1f);
+            float elapsed = 0f;
+
             _controller.enabled = false;
 
-
-            float t = 0f;
-
-            // goin down
-            while (t < goinDownDuriation )
+            while (elapsed < duration)
             {
-                t += Time.deltaTime;
+                elapsed += Time.deltaTime;
 
-                float normalized = Mathf.Clamp01(t / goinDownDuriation);
+                float t = Mathf.Clamp01(elapsed / duration);
 
-                Vector3 position = Vector3.Lerp(start, down, normalized);
+                // Smooth forward movement with an arc.
+                float arc = Mathf.Sin(t * Mathf.PI) * 0.5f;
 
-                transform.position = position;
+                transform.position = Vector3.Lerp(start, end, t)
+                                     + Vector3.up * arc;
 
                 yield return null;
-
-            }
-
-             t = 0f;
-            // goingup and forward
-          while(t < jumpDuration){
-
-                t += Time.deltaTime;
-
-              float normalized = Mathf.Clamp01(t / jumpDuration);
-
-              Vector3 position = Vector3.Lerp(down, end, normalized);
-
-                transform.position = position; 
-
-            yield return null;
-
             }
 
             transform.position = end;
+
             _controller.enabled = true;
+            _verticalVelocity = -2f;
             isWindowJumping = false;
         }
-         
-      
+
 
 
         private void OnDrawGizmosSelected()
@@ -620,6 +667,6 @@ namespace StarterAssets
         }
 
 
-        
+
     }
 }

@@ -1,3 +1,4 @@
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class Book : MonoBehaviour, IInteractables
@@ -18,7 +19,8 @@ public class Book : MonoBehaviour, IInteractables
 
     public string bookColor;
 
-
+    //  private Collider col;
+    //  private Rigidbody rb;
     // public void Interact(InventoryNew inventory)
     // {
     //     isHolding = !isHolding;
@@ -45,7 +47,12 @@ public class Book : MonoBehaviour, IInteractables
 
 
     public void Interact(InventoryNew inventory)
-    {
+    { 
+    //    col = GetComponent<Collider>();
+    //     rb = GetComponent<Rigidbody>();
+    //      col.isTrigger =true;
+    //      rb.useGravity =false;
+    //      rb.isKinematic=true;
         isHolding = !isHolding;
 
         if (isHolding)
@@ -60,7 +67,7 @@ public class Book : MonoBehaviour, IInteractables
         }
         else
         {
-            gameObject.layer = LayerMask.NameToLayer("Default");
+          // gameObject.layer = LayerMask.NameToLayer("Default");
 
             bookShelf.OnBookDropped(this, transform.position);
 
@@ -109,11 +116,13 @@ public class Book : MonoBehaviour, IInteractables
             moveSpeed * Time.deltaTime
         );
 
-        // if (bookShelf != null)
-        //     bookShelf.OnBookHover(transform.position);
+       // if (bookShelf != null)
+            //bookShelf.OnBookHover(transform.position);
 
         if (bookShelf != null)
-        {
+        { 
+           // bookShelf.OnBookHover(transform.position);
+
             if (bookShelf.IsNearShelf(transform.position))
                 bookShelf.OnBookHover(transform.position);
             else
@@ -128,7 +137,7 @@ public class Book : MonoBehaviour, IInteractables
     }
 
     private void Update()
-    {
+    {         // we get target slot and go to that and check if in range boom go there
         if (targetSlot != null && !isHolding)
         {
             transform.position = Vector3.Lerp(
@@ -136,7 +145,7 @@ public class Book : MonoBehaviour, IInteractables
                 targetSlot.position,
                 moveSpeed * Time.deltaTime
             );
-
+// maybe need slerp xd
             transform.rotation = Quaternion.Lerp(
                 transform.rotation,
                 targetSlot.rotation,

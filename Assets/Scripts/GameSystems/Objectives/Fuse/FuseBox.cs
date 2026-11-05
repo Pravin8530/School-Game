@@ -5,6 +5,9 @@ public class FuseBox : MonoBehaviour
 {
     public FuseCube[] cubes;
     public LineRenderer lineRenderer;
+    public GameObject Drawer;
+    public bool isSolved;
+    public Transform DrawerOpenPosition;
     void Start()
     {
 
@@ -14,6 +17,7 @@ public class FuseBox : MonoBehaviour
     void Update()
     {
         ConnectedCheak();
+       
     }
 
 
@@ -28,12 +32,10 @@ public class FuseBox : MonoBehaviour
                 return;
             }
 
-
-
             if (!cube.isConected)
                 return;
         }
-
+        isSolved =true;
         Debug.Log("Woooooooo Patern Complete");
         lineRenderer.startWidth = 0.03f;
         lineRenderer.endWidth = 0.03f;
@@ -45,4 +47,19 @@ public class FuseBox : MonoBehaviour
             lineRenderer.SetPosition(i, cubes[i].transform.position);
         }
     }
+ 
+ 
+      public  void OpenDrawer(){
+       
+        if (isSolved)
+        {
+            Drawer.transform.localPosition = Vector3.Lerp(Drawer.transform.localPosition, DrawerOpenPosition.localPosition, Time.deltaTime * 10f);
+        }
+       else
+       {
+           return;
+       }
+     }
+
+
 }

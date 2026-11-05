@@ -24,13 +24,11 @@ public class FlagEvent : MonoBehaviour, IInteractables
          
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isFlagAttached)
         {
            
-
             if (time < duriation)
             {
                 time += Time.deltaTime;

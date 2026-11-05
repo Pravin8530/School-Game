@@ -36,7 +36,6 @@ public class VadaPawState : ITeacherState
     {
         if (isEating) 
         {
-           teacher.teacherAudio.PlaySoundClip();
             timer += Time.deltaTime;
             if (timer >= teacher.nationalAnthamDuriation)
             {

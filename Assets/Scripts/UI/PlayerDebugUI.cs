@@ -67,7 +67,7 @@ namespace StarterAssets
                 float currentNoise = 0f;
                 if (isMoving)
                 {
-                    currentNoise = isRunning ? playerController.maxNoiseRadius : playerController.minNoiseRadius;
+                    currentNoise = isRunning ? playerController.sprintNoiseRadius : playerController.walkNoiseRadius;
                 }
 
                 noiseText.text = $"Noise Radius: {currentNoise}m";

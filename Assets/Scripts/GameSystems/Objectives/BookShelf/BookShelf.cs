@@ -60,8 +60,8 @@ public class BookShelf : MonoBehaviour
     }
 
     void Update()
-    {
-
+    { 
+             
         if (isSolved)
         {
             Drawer.transform.localPosition = Vector3.Lerp(Drawer.transform.localPosition, DrawerOpenPosition.localPosition, Time.deltaTime * 10f);
@@ -122,7 +122,6 @@ public class BookShelf : MonoBehaviour
             currentBooks[i] = currentBooks[randomNum];
             currentBooks[randomNum] = temp;
 
-
         }
 
     }
@@ -172,6 +171,7 @@ public class BookShelf : MonoBehaviour
 
         return false;
     }
+    
     public void ResetHover()
     {
         lastHoverIndex = -1;
@@ -183,9 +183,7 @@ public class BookShelf : MonoBehaviour
         if (currentBooks.Contains(pickedBook))
         {
             currentBooks.Remove(pickedBook);
-            lastHoverIndex = -1;
-
-            UpdateBookPositions(currentBooks);
+            lastHoverIndex = -1;                                                                                                                                                                                                                                                                                                                                                                   UpdateBookPositions(currentBooks);
         }
     }
 

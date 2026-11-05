@@ -1,7 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.XR;
-using System.Collections;
 public class PlayerInteract : MonoBehaviour
 {
     public static PlayerInteract instance;
@@ -15,12 +12,8 @@ public class PlayerInteract : MonoBehaviour
 
     [Header("Interactable")]
     private IInteractables currentInteractable = null;
-
-
     private InventoryNew inventoryNew;
-
     public ElementCube heldElement;
-
     private Book heldBook;
 
 
@@ -41,10 +34,8 @@ public class PlayerInteract : MonoBehaviour
 
     void Update()
     {
-
         DetectTargets();
         HandleInput();
-
     }
 
 
@@ -58,32 +49,30 @@ public class PlayerInteract : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
         RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance, ~ignoreLayer);
- 
+
         System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
 
-         int highestPriority = -1;
+        int highestPriority = -1;
 
         foreach (RaycastHit hit in hits)
         {
-  
-          // if(hit.collider.gameObject.layer == LayerMask.NameToLayer("BlockLayer")) continue;
 
             DetectInteraction(hit, ref highestPriority);
             DetectPickable(hit);
-  
-            if(currentInteractable != null || targetPickable!=null)
+
+            if (currentInteractable != null || targetPickable != null)
             {
-               break;    
+                break;
 
             }
 
-             if (!hit.collider.isTrigger)
+            if (!hit.collider.isTrigger)
             {
                 break;
             }
         }
- 
-         
+
+
 
         if (heldBook != null)
         {
@@ -92,7 +81,7 @@ public class PlayerInteract : MonoBehaviour
                 Vector3 target = ray.origin +
                                 (ray.direction * heldBook.distanceFromCamera);
 
-                heldBook.MoveWithRay(target);
+               heldBook.MoveWithRay(target);
             }
             else
             {
@@ -104,7 +93,7 @@ public class PlayerInteract : MonoBehaviour
 
     public void DetectInteraction(RaycastHit hit, ref int highestPriority)
     {
-      
+
         IInteractables interactable =
                 hit.collider.GetComponent<IInteractables>();
 
@@ -129,10 +118,10 @@ public class PlayerInteract : MonoBehaviour
             targetPickable = pickable;
         }
 
-
-
     }
 
+
+      // Why is the interact handling input here xd
     public void HandleInput()
     {
         if (PlayerStateManager.Instance.currentState != PlayerStateManager.PlayerState.HasImportantItem)
@@ -140,7 +129,6 @@ public class PlayerInteract : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-
                 inventoryNew.SelectSlot(0);
                 return;
             }
@@ -175,7 +163,6 @@ public class PlayerInteract : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-
             inventoryNew.Drop();
             return;
         }
