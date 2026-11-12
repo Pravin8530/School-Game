@@ -35,8 +35,6 @@ public class Lever : MonoBehaviour, IInteractables
    {
          if(puzzleComplete)
          fusebox.OpenDrawer();
-
-
    }
 
     IEnumerator RotateLever()

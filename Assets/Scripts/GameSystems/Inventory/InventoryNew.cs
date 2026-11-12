@@ -136,7 +136,6 @@ public class InventoryNew : MonoBehaviour
             return;
 
 
-        // Allow this object to be picked again
         Pickable pickable = item.GetComponent<Pickable>();
 
         if (pickable != null)
@@ -145,8 +144,7 @@ public class InventoryNew : MonoBehaviour
         }
 
 
-        // Remove from hand
-         item.transform.SetParent(null);
+        item.transform.SetParent(null);
         item.SetActive(true);
         pickable.isPickedup = false;
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);

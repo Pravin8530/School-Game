@@ -1950,7 +1950,6 @@ MonoBehaviour:
   player: {fileID: 8616685847658609963}
   teacherAnimation: {fileID: 0}
   teacherDebug: {fileID: 0}
-  teacherAudio: {fileID: 0}
   petrolPoints:
   - {fileID: 1391274621}
   - {fileID: 1378602221}
@@ -21607,6 +21606,8 @@ MonoBehaviour:
   holdPositionOffset: {x: 0, y: 0, z: 0}
   holdRotationOffset: {x: 0, y: 0, z: 0}
   pickUpSpeed: 20
+  rb: {fileID: 0}
+  col: {fileID: 0}
   isPickedup: 0
 --- !u!54 &886037696
 Rigidbody:
@@ -21870,10 +21871,6 @@ GameObject:
   - component: {fileID: 912029740}
   - component: {fileID: 912029739}
   - component: {fileID: 912029738}
-  - component: {fileID: 912029742}
-  - component: {fileID: 912029743}
-  - component: {fileID: 912029744}
-  - component: {fileID: 912029746}
   m_Layer: 0
   m_Name: Banana
   m_TagString: Untagged
@@ -21954,83 +21951,6 @@ Transform:
   - {fileID: 1484597610}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -175.652, z: 0}
---- !u!114 &912029742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912029736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f95292e072006544bd078a104b71a80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pickable
-  holdPositionOffset: {x: 0, y: 0, z: 0}
-  holdRotationOffset: {x: 0, y: 0, z: 0}
-  pickUpSpeed: 1
-  isPickedup: 0
---- !u!54 &912029743
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912029736}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!114 &912029744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912029736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4166f27dfe39b14d9149b1378f9a63c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldItem
-  itemData: {fileID: 11400000, guid: 15941b447c81dbd4691f404730d86e45, type: 2}
---- !u!65 &912029746
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912029736}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9999998, y: 1, z: 0.99999994}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &920349202
 GameObject:
   m_ObjectHideFlags: 0
@@ -22585,6 +22505,8 @@ MonoBehaviour:
   holdPositionOffset: {x: 0, y: 0, z: 0}
   holdRotationOffset: {x: 0, y: 0, z: 0}
   pickUpSpeed: 20
+  rb: {fileID: 0}
+  col: {fileID: 0}
   isPickedup: 0
 --- !u!114 &934493574
 MonoBehaviour:
@@ -32932,7 +32854,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -46470,7 +46392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4377cc9a616271a4eab255ced41bdc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeacherAudio
-  audioData: {fileID: 0}
 --- !u!1 &1964921883
 GameObject:
   m_ObjectHideFlags: 0

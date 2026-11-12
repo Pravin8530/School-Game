@@ -14,6 +14,8 @@ public class PrinterCap : MonoBehaviour, IInteractables
     [SerializeField] private GameObject printedPaperPrefab;
     [SerializeField] private Transform printExitLocation;
 
+
+
     private bool isOpen;
     private bool isPrinting;
 
@@ -26,7 +28,49 @@ public class PrinterCap : MonoBehaviour, IInteractables
     public void Interact(InventoryNew inventory)
     {
         if (isPrinting) return;
+//----for picables
+   if (inventory != null)
+        {
+            GameObject paperObj = inventory.HeldObject;
 
+            if (paperObj != null)
+            {
+                WorldItem worldItemScript = paperObj.GetComponent<WorldItem>();
+                if (worldItemScript == null)
+                {
+                    worldItemScript = paperObj.GetComponentInChildren<WorldItem>();
+                }
+
+                if (worldItemScript != null && worldItemScript.itemData != null && worldItemScript.itemData.itemName == "Paper")
+                {
+                    Paper paperScript = paperObj.GetComponent<Paper>();
+                    if (paperScript == null)
+                    {
+                        paperScript = paperObj.GetComponentInChildren<Paper>();
+                    }
+
+                    if (paperScript == null)
+                    {
+                        paperScript = paperObj.AddComponent<Paper>();
+                    }
+
+                    inventory.RemoveHeldItem(paperObj);
+
+                    paperObj.SetActive(true);
+                    paperObj.transform.localScale = Vector3.one; 
+
+                    Rigidbody rb = paperObj.GetComponent<Rigidbody>();
+                    if (rb != null) Destroy(rb);
+
+                    Collider col = paperObj.GetComponent<Collider>();
+                    if (col != null) col.enabled = false;
+
+                    StartCoroutine(FullyAutomatedPrintSequence(paperScript));
+                    return; 
+                }
+            }
+        }
+//-----
         if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasPaper)
         {
             Paper heldPaper = PlayerStateManager.Instance.HeldPaper;
@@ -40,6 +84,8 @@ public class PrinterCap : MonoBehaviour, IInteractables
         {
             isOpen = !isOpen;
         }
+
+       
     }
        
     private IEnumerator FullyAutomatedPrintSequence(Paper placedPaper)
@@ -48,7 +94,6 @@ public class PrinterCap : MonoBehaviour, IInteractables
         string identityName = placedPaper.GetPaperName();
 
         isOpen = true;
-        Debug.Log("Printer Lid opening automatically...");
 
         yield return new WaitForSeconds(0.01f);
 
@@ -63,11 +108,11 @@ public class PrinterCap : MonoBehaviour, IInteractables
         yield return new WaitForSeconds(0.8f);
 
         isOpen = false;
-        Debug.Log("Printer Lid closing automatically...");
+        Debug.Log("Printer Lid closing ");
 
         yield return new WaitForSeconds(0.8f);
 
-        Debug.Log("Printer: BZZZ... Copying document...");
+        Debug.Log("Copying document...");
         yield return new WaitForSeconds(3.0f);
 
         Destroy(placedPaper.gameObject);

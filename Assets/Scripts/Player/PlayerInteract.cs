@@ -7,7 +7,6 @@ public class PlayerInteract : MonoBehaviour
     public float interactDistance = 4f;
 
     [Header("Pickable")]
-
     public IPickable targetPickable;  // item you,re currently looking at
 
     [Header("Interactable")]
@@ -81,7 +80,7 @@ public class PlayerInteract : MonoBehaviour
                 Vector3 target = ray.origin +
                                 (ray.direction * heldBook.distanceFromCamera);
 
-               heldBook.MoveWithRay(target);
+                heldBook.MoveWithRay(target);
             }
             else
             {
@@ -121,7 +120,8 @@ public class PlayerInteract : MonoBehaviour
     }
 
 
-      // Why is the interact handling input here xd
+
+    // Why is the interact handling input here xd
     public void HandleInput()
     {
         if (PlayerStateManager.Instance.currentState != PlayerStateManager.PlayerState.HasImportantItem)
@@ -168,14 +168,36 @@ public class PlayerInteract : MonoBehaviour
         }
 
 
+        // if (!Input.GetKeyDown(KeyCode.E))
+        //     return;
+
+        // if (TryPickup())
+        //     return;
+
+        // TryInteract();
+
         if (!Input.GetKeyDown(KeyCode.E))
             return;
 
+        // Check selected inventory object first
+        GameObject heldObject = inventoryNew.HeldObject;
+
+        if (heldObject != null)
+        {
+            Book book = heldObject.GetComponent<Book>();
+
+            if (book != null)
+            {
+                book.Interact(inventoryNew);
+                return;
+            }
+        }
+
+        // Normal world pickup
         if (TryPickup())
             return;
 
         TryInteract();
-
 
     }
 
@@ -189,7 +211,7 @@ public class PlayerInteract : MonoBehaviour
     }
 
 
-
+    
 
     void TryInteract()
     {

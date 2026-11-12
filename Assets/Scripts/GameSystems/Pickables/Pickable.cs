@@ -11,16 +11,15 @@ public class Pickable : MonoBehaviour, IPickable
     public Vector3 HoldRotationOffset => holdRotationOffset;
     private Transform playerHand;
     [SerializeField] private float pickUpSpeed = 20f;
-    private Rigidbody rb;
+    public Rigidbody rb;
     private Renderer rend;
-    private Collider col;
+    public Collider col;
 
   
     [SerializeField] public bool isPickedup = false;
     private Coroutine pickupRoutine;
 
     
- //[SerializeField] private AudioData audioData;
     
 
     void Awake()

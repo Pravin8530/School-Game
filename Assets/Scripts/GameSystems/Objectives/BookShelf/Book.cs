@@ -1,112 +1,197 @@
-using UnityEditor.Callbacks;
+
 using UnityEngine;
 
 public class Book : MonoBehaviour, IInteractables
 {
+    [SerializeField] public float distanceFromCamera = 1.2f;
+
+    public bool IsHolding { get; private set; }
+    public bool isHolding => IsHolding;
     public int Priority => 1;
 
     [Header("Settings")]
-    public float moveSpeed = 12f;
-    public float distanceFromCamera = 1.2f;
+    [SerializeField] private float moveSpeed = 12f;
 
     [Header("References")]
     public BookShelf bookShelf;
 
-    public bool isHolding;
-    public bool IsHolding => isHolding;
+    public string bookColor;
+
 
     private Transform targetSlot;
 
-    public string bookColor;
+    public bool IsOnShelf { get; set; }
 
-    //  private Collider col;
-    //  private Rigidbody rb;
+
     // public void Interact(InventoryNew inventory)
     // {
-    //     isHolding = !isHolding;
+    //     IsHolding = !IsHolding;
 
-    //     if (isHolding)
+    //     if (IsHolding)
     //     {
-    //         targetSlot = null; 
 
+    //         targetSlot = null;
     //         bookShelf.OnBookPickedUp(this);
 
-    //         if (PlayerStateManager.Instance != null)
-    //             PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.BookInteract);
+    //         PlayerStateManager.Instance?.SetState(
+    //             PlayerStateManager.PlayerState.BookInteract);
     //     }
     //     else
     //     {
-    //         gameObject.layer = LayerMask.NameToLayer("Default");
-
     //         bookShelf.OnBookDropped(this, transform.position);
 
-    //         if (PlayerStateManager.Instance != null)
-    //             PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
+    //         PlayerStateManager.Instance?.SetState(
+    //             PlayerStateManager.PlayerState.Normal);
     //     }
     // }
 
+    // public void Interact(InventoryNew inventory)
+    // { 
 
-    public void Interact(InventoryNew inventory)
-    { 
-    //    col = GetComponent<Collider>();
-    //     rb = GetComponent<Rigidbody>();
-    //      col.isTrigger =true;
-    //      rb.useGravity =false;
-    //      rb.isKinematic=true;
-        isHolding = !isHolding;
+    //     IsHolding = !IsHolding;
 
-        if (isHolding)
-        {
-            targetSlot = null;
+    //     if (IsHolding)
+    //     {
+    //         targetSlot = null;
 
-            bookShelf.OnBookPickedUp(this);
+    //         bookShelf.OnBookPickedUp(this);
 
-            if (PlayerStateManager.Instance != null)
-                PlayerStateManager.Instance.SetState(
-                    PlayerStateManager.PlayerState.BookInteract);
-        }
-        else
-        {
-          // gameObject.layer = LayerMask.NameToLayer("Default");
+    //         PlayerStateManager.Instance?.SetState(
+    //             PlayerStateManager.PlayerState.BookInteract);
+    //     }
+    //     else
+    //     {
+    //         bookShelf.OnBookDropped(this, transform.position);
 
-            bookShelf.OnBookDropped(this, transform.position);
+    //         // Remove from inventory
+    //         inventory.RemoveHeldItem(gameObject);
 
-            if (PlayerStateManager.Instance != null)
-                PlayerStateManager.Instance.SetState(
-                    PlayerStateManager.PlayerState.Normal);
-        }
-    }
+    //         // Detach from player's hand
+    //         transform.SetParent(null);
 
+    //         // Keep physics disabled while on bookshelf
+    //         Rigidbody rb = GetComponent<Rigidbody>();
 
+    //         if (rb != null)
+    //         {
+    //             rb.isKinematic = true;
+    //             rb.useGravity = false;
+    //         }
 
+    //         PlayerStateManager.Instance?.SetState(
+    //             PlayerStateManager.PlayerState.Normal);
+    //     }
+    // }
 
-    // public void MoveWithRay(Vector3 targetPosition)
+    // public void Interact(InventoryNew inventory)
     // {
-    //     targetPosition.y = transform.position.y;
+    //     IsHolding = !IsHolding;
 
-
-    //     if (!isHolding) return;
-
-    //     if (bookShelf != null)
+    //     if (IsHolding)
     //     {
-    //         targetPosition = bookShelf.ClampPositionToShelf(targetPosition);
+    //         targetSlot = null;
+
+    //         bookShelf.OnBookPickedUp(this);
+
+    //         PlayerStateManager.Instance?.SetState(
+    //             PlayerStateManager.PlayerState.BookInteract);
     //     }
-    //     transform.position = Vector3.Lerp(
-    //         transform.position,
-    //         targetPosition,
-    //         moveSpeed * Time.deltaTime
-    //     );
-
-    //     if (bookShelf != null)
+    //     else
     //     {
-    //         bookShelf.OnBookHover(transform.position);
+    //         bookShelf.OnBookDropped(this, transform.position);
+
+    //         inventory.RemoveHeldItem(gameObject);
+
+    //         // Detach from player's hand
+    //         transform.SetParent(null);
+
+    //         // Reset the Pickable state so it can be picked up again from the shelf!
+    //         Pickable pickable = GetComponent<Pickable>();
+    //         if (pickable != null)
+    //         {
+    //             pickable.ResetPickup();
+    //         }
+
+    //         // Keep physics disabled while on bookshelf
+    //         Rigidbody rb = GetComponent<Rigidbody>();
+
+    //         if (rb != null)
+    //         {
+    //             rb.isKinematic = true;
+    //             rb.useGravity = false;
+    //         }
+
+    //         Collider col = GetComponent<Collider>();
+    //         if (col != null)
+    //         {
+    //             col.enabled = true;
+    //             col.isTrigger = false;
+    //         }
+
+    //         PlayerStateManager.Instance?.SetState(
+    //             PlayerStateManager.PlayerState.Normal);
     //     }
     // }
+public void Interact(InventoryNew inventory)
+{ 
+    IsHolding = !IsHolding;
 
+    if (IsHolding)
+    {
+        targetSlot = null;
 
+        bookShelf.OnBookPickedUp(this);
+
+        PlayerStateManager.Instance?.SetState(
+            PlayerStateManager.PlayerState.BookInteract);
+    }
+    else
+    {
+        bookShelf.OnBookDropped(this, transform.position);
+
+        // Remove from inventory
+        inventory.RemoveHeldItem(gameObject);
+
+        // Detach from player's hand
+        transform.SetParent(null);
+
+        // --- DISABLE PICKING UP PERMANENTLY ONCE ON THE BOOKSHELF ---
+        Pickable pickable = GetComponent<Pickable>();
+        if (pickable != null)
+        {
+            Destroy(pickable); // Removes the Pickable component so it can never be picked up again
+        }
+
+        WorldItem worldItem = GetComponent<WorldItem>();
+        if (worldItem != null)
+        {
+            Destroy(worldItem); // Removes world item data if needed
+        }
+        // -----------------------------------------------------------
+
+        // Keep physics disabled while on bookshelf
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = true;
+            col.isTrigger = false; // Still solid for interaction/raycasts if you want to click/hover it for the puzzle
+        }
+
+        PlayerStateManager.Instance?.SetState(
+            PlayerStateManager.PlayerState.Normal);
+    }
+}
     public void MoveWithRay(Vector3 targetPosition)
     {
-        if (!isHolding) return;
+        if (!IsHolding) return;
 
         targetPosition.y = transform.position.y;
 
@@ -116,20 +201,8 @@ public class Book : MonoBehaviour, IInteractables
             moveSpeed * Time.deltaTime
         );
 
-       // if (bookShelf != null)
-            //bookShelf.OnBookHover(transform.position);
-
-        if (bookShelf != null)
-        { 
-           // bookShelf.OnBookHover(transform.position);
-
-            if (bookShelf.IsNearShelf(transform.position))
-                bookShelf.OnBookHover(transform.position);
-            else
-                bookShelf.ResetHover();
-        }
+        bookShelf.OnBookHover(transform.position);
     }
-
 
     public void SetTargetSlot(Transform slot)
     {
@@ -137,27 +210,53 @@ public class Book : MonoBehaviour, IInteractables
     }
 
     private void Update()
-    {         // we get target slot and go to that and check if in range boom go there
-        if (targetSlot != null && !isHolding)
+    {
+        if (IsHolding || targetSlot == null)
+            return;
+
+        transform.position = Vector3.Lerp(
+            transform.position,
+            targetSlot.position,
+            moveSpeed * Time.deltaTime
+        );
+
+        transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            targetSlot.rotation,
+            moveSpeed * Time.deltaTime
+        );
+
+        if (Vector3.Distance(transform.position, targetSlot.position) < 0.01f)
         {
-            transform.position = Vector3.Lerp(
-                transform.position,
+            transform.SetPositionAndRotation(
                 targetSlot.position,
-                moveSpeed * Time.deltaTime
-            );
-// maybe need slerp xd
-            transform.rotation = Quaternion.Lerp(
-                transform.rotation,
-                targetSlot.rotation,
-                moveSpeed * Time.deltaTime
+                targetSlot.rotation
             );
 
-            if (Vector3.Distance(transform.position, targetSlot.position) < 0.001f)
-            {
-                transform.position = targetSlot.position;
-                transform.rotation = targetSlot.rotation;
-                targetSlot = null;
-            }
+            targetSlot = null;
+        }
+    }
+
+    public void RemoveFromInventory(InventoryNew inventory)
+    {
+        inventory.RemoveHeldItem(gameObject);
+
+        transform.SetParent(null);
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+
+        Collider col = GetComponent<Collider>();
+
+        if (col != null)
+        {
+            col.enabled = true;
+            col.isTrigger = false;
         }
     }
 }
