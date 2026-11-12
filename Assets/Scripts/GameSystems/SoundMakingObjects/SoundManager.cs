@@ -5,19 +5,29 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
     public GameObject soundVisualizerPrefab; 
     public bool isSoundVisualizerEnabled = true; 
+    public Color ringColor;
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    public void MakeNoise(Vector3 sourcePosition, float soundRadius, bool isSoundVisualizerEnabled)
+    private void Start()
+    {
+       //soundVisualizerPrefab = getComponent<SoundManager>();
+       // soundVisualizerPrefab.RingColor = 
+    }
+    public void MakeNoise(Vector3 sourcePosition, float soundRadius, bool isSoundVisualizerEnabled, Color? ringColor = null)
     {
         if (soundVisualizerPrefab != null && isSoundVisualizerEnabled)
         { 
             
             GameObject ring = Instantiate(soundVisualizerPrefab, sourcePosition, Quaternion.identity);
             ring.GetComponent<SoundVisualizer>().Setup(soundRadius);
+            if (ringColor.HasValue)
+            {
+                ring.GetComponent<SoundVisualizer>().RingColor = ringColor.Value;
+            }
         }
 
 

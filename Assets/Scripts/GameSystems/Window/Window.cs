@@ -7,7 +7,16 @@ public class Window : MonoBehaviour
     float breakThreshold = 3f;
 
     public bool isWindowBroken = false;
-
+    private SoundManager soundManager;
+  
+  private void Start()
+    {
+        if (soundManager == null)
+        {
+            soundManager = FindObjectOfType<SoundManager>();
+        }
+    }
+  
     void OnCollisionEnter(Collision other)
     {
         float objectSpeed = other.relativeVelocity.magnitude;
@@ -22,7 +31,8 @@ public class Window : MonoBehaviour
 
    
     public void WindowBreak()
-    {
+    { 
+        soundManager.MakeNoise(transform.position, 15f, true, Color.green);
         if(isWindowBroken)
              return;
         isWindowBroken = true;

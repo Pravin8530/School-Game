@@ -10,6 +10,11 @@ public class SoundVisualizer : MonoBehaviour
     private LineRenderer lineRenderer;
     private Material lineMaterial;
     private Color ringColor = Color.cyan;
+    public Color RingColor
+    {
+        get { return ringColor; }
+        set { ringColor = value; }
+    }
 
     public void Setup(float radius)
     {
