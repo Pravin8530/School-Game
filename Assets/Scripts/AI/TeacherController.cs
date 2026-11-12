@@ -47,6 +47,7 @@ public class TeacherController : MonoBehaviour
 
     [Header("national antham")]
     public float nationalAnthamDuriation = 30f;
+    public float EatingTimer = 5f;
     private bool isLooking;
     Quaternion currentRotation;
 
@@ -63,9 +64,9 @@ public class TeacherController : MonoBehaviour
 
     public void ChangeState(ITeacherState userState)
     {
+         
         currentState?.Exit();
         currentState = userState;
-        // if(currentState is VadaPawState) return;
         currentState?.Enter();
 
     }

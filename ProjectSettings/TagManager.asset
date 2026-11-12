@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - Ladder
   - FusePoint
+  - Teacher
   layers:
   - Default
   - TransparentFX

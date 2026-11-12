@@ -88,7 +88,7 @@ namespace StarterAssets
         [Header("Sound")]
         public int sprintNoiseRadius = 12;
         public int walkNoiseRadius = 4;
-
+        public bool enableSoundVisualizer;  
         //private Collider currentLadder;
 
 
@@ -498,7 +498,7 @@ namespace StarterAssets
             if (isMoving)
             {
                 float noiseRadius = _input.sprint ? sprintNoiseRadius : walkNoiseRadius;
-                SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
+                SoundManager.Instance.MakeNoise(transform.position, noiseRadius, enableSoundVisualizer);
             }
         }
 

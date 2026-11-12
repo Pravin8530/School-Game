@@ -12,7 +12,7 @@ public class NoiseOnHit : MonoBehaviour
         {
             if (SoundManager.Instance != null && collision.contactCount > 0)
             {
-                SoundManager.Instance.MakeNoise(transform.position, noiseRadius);
+                SoundManager.Instance.MakeNoise(transform.position, noiseRadius, true);
             }
         }
     }

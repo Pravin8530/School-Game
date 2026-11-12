@@ -4,16 +4,18 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
     public GameObject soundVisualizerPrefab; 
+    public bool isSoundVisualizerEnabled = true; 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    public void MakeNoise(Vector3 sourcePosition, float soundRadius)
+    public void MakeNoise(Vector3 sourcePosition, float soundRadius, bool isSoundVisualizerEnabled)
     {
-        if (soundVisualizerPrefab != null)
-        {
+        if (soundVisualizerPrefab != null && isSoundVisualizerEnabled)
+        { 
+            
             GameObject ring = Instantiate(soundVisualizerPrefab, sourcePosition, Quaternion.identity);
             ring.GetComponent<SoundVisualizer>().Setup(soundRadius);
         }

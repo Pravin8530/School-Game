@@ -67,11 +67,8 @@ public class VadaPaw : MonoBehaviour, IInteractables
             Vada.transform.localRotation = Quaternion.identity;
 
             VadaInstalled = true;
-           //teacherController.vadapawPos = vadapawPrefab.transform;
-           if( teacherController !=null){
-            teacherController.ChangeState(new VadaPawState(teacherController, vadapawPrefab.transform));
-           }
-            Debug.Log("Vada Placed Successfully");
+         
+            Debug.Log("Vada Placed ");
           
             Vector3 spawnPosition = transform.position;
             Quaternion spawnRotation = transform.rotation;
