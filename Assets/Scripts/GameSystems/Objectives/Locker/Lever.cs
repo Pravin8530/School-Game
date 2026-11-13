@@ -34,6 +34,9 @@ public class Lever : MonoBehaviour, IInteractables
    void Update()
    {
          if(puzzleComplete)
+         if(fusebox == null) // cause same lever used in safe and dpbox
+         return;
+         else
          fusebox.OpenDrawer();
    }
 

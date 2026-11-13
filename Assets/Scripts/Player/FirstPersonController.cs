@@ -73,7 +73,7 @@ namespace StarterAssets
         [Header("Window Jump")]
         private float windowCheakdistance = 1.5f;
         public LayerMask windowLayer;
-        public float jumpDuration = 0.5f;
+        public float jumpDuration = 1f;
         public float goinDownDuriation = 0.2f;
         private bool isWindowJumping = false;
 
@@ -88,7 +88,7 @@ namespace StarterAssets
         [Header("Sound")]
         public int sprintNoiseRadius = 12;
         public int walkNoiseRadius = 4;
-        public bool enableSoundVisualizer;  
+        public bool enableSoundVisualizer;
         //private Collider currentLadder;
 
 
@@ -213,11 +213,24 @@ namespace StarterAssets
                    state == PlayerStateManager.PlayerState.Hiding;
         }
 
+        // private void GroundedCheck()
+        // {
+        //     Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+        //     Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        // }
+
+        private Vector3 GetGroundCheckPosition()
+        {
+            CharacterController controller = _controller != null ? _controller : GetComponent<CharacterController>();
+            Vector3 center = transform.TransformPoint(controller.center);
+            return new Vector3(center.x, center.y - (controller.height / 2f) - GroundedOffset, center.z);
+        }
+
         private void GroundedCheck()
         {
-            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+            Grounded = Physics.CheckSphere(GetGroundCheckPosition(), GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
         }
+
 
         private void CameraRotation()
         {
@@ -638,7 +651,7 @@ namespace StarterAssets
                 float t = Mathf.Clamp01(elapsed / duration);
 
                 // Smooth forward movement with an arc.
-                float arc = Mathf.Sin(t * Mathf.PI) * 0.5f;
+                float arc = Mathf.Sin(t * Mathf.PI) * 1f;
 
                 transform.position = Vector3.Lerp(start, end, t)
                                      + Vector3.up * arc;
@@ -663,7 +676,13 @@ namespace StarterAssets
             if (Grounded) Gizmos.color = transparentGreen;
             else Gizmos.color = transparentRed;
 
-            Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+           // Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+
+           Gizmos.DrawSphere(GetGroundCheckPosition(), GroundedRadius);
+
+            // Gizmos.color = Color.blue;
+            // Vector3 origin = transform.position + Vector3.up * 1.0f;
+            // Gizmos.DrawRay(origin, transform.forward * windowCheakdistance);
         }
 
 
