@@ -8,7 +8,9 @@ public class FlagSpawner : MonoBehaviour
     public GameObject flagPrefab;
 
     public float timeToSpawn = 20f;
-
+  
+     public float duriation = 20f;
+  
     public void Start()
     {
        SpawnFlag();
@@ -31,6 +33,7 @@ public class FlagSpawner : MonoBehaviour
         if (flag != null)
         {
             Destroy(flag);
+            Debug.Log("destoryed flag " + flag);
         }
     }
 
@@ -38,6 +41,7 @@ public class FlagSpawner : MonoBehaviour
     { 
         yield return new WaitForSeconds(spawntime);
         DestroyPreviousFlag();
+        yield return new WaitForSeconds(duriation);
         SpawnFlag();
         timeToSpawn =20f;
 

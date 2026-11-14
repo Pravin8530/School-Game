@@ -126674,6 +126674,11 @@ PrefabInstance:
       propertyPath: flagSpawner
       value: 
       objectReference: {fileID: 516448270}
+    - target: {fileID: 8056631381919068782, guid: f4fa5523afd9dae418622fb0d6157090,
+        type: 3}
+      propertyPath: isFlagAttached
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9109402115472256428, guid: f4fa5523afd9dae418622fb0d6157090,
         type: 3}
       propertyPath: m_Name
