@@ -4,11 +4,11 @@
 - Active scene:
   - Name: Design
   - Tags:
-    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, CinemachineTarget, book, ChillSpots, Enemy, Ladder, FusePoint
+    - Untagged, Respawn, Finish, EditorOnly, MainCamera, Player, GameController, CinemachineTarget, book, ChillSpots, Enemy, Ladder, FusePoint, Teacher, Flag
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground, BlockLayer
 - Active game object:
-  - Name: FlagEvent
+  - Name: GameObject (1)
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

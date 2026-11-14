@@ -96,7 +96,7 @@ public class SpiningHandle : MonoBehaviour, IInteractables
                 {
                     StartCoroutine(SpinMechanism());
                 }
-                //StartCoroutine(SpinMechanism());
+               
             }
             return;
         }

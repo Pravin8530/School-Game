@@ -518,17 +518,18 @@ namespace StarterAssets
         private void Climb()
         {
             float input = _input.move.y;
-            if (input < 0f)
+            if (input < 0f && Grounded)
             {
                 IsClimbing = false;
                 _verticalVelocity = -2;
                 return;
             }
-
-
-            _controller.Move(Vector3.up * input * climbSpeed * Time.deltaTime);
+            Vector3 climbDirection = Vector3.up * input * climbSpeed;
+            _controller.Move(climbDirection * Time.deltaTime);
+            _verticalVelocity = 0f;
         }
 
+       
 
         private void OnTriggerEnter(Collider other)
         {
@@ -676,13 +677,9 @@ namespace StarterAssets
             if (Grounded) Gizmos.color = transparentGreen;
             else Gizmos.color = transparentRed;
 
-           // Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 
-           Gizmos.DrawSphere(GetGroundCheckPosition(), GroundedRadius);
+            Gizmos.DrawSphere(GetGroundCheckPosition(), GroundedRadius);
 
-            // Gizmos.color = Color.blue;
-            // Vector3 origin = transform.position + Vector3.up * 1.0f;
-            // Gizmos.DrawRay(origin, transform.forward * windowCheakdistance);
         }
 
 

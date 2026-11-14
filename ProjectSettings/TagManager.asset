@@ -11,6 +11,7 @@ TagManager:
   - Ladder
   - FusePoint
   - Teacher
+  - Flag
   layers:
   - Default
   - TransparentFX

@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 1634541600415241212}
   m_Layer: 0
   m_Name: Flag
-  m_TagString: Untagged
+  m_TagString: Flag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -379,6 +379,8 @@ MonoBehaviour:
   holdPositionOffset: {x: 0, y: 0, z: 0}
   holdRotationOffset: {x: 0, y: 0, z: 0}
   pickUpSpeed: 10
+  rb: {fileID: 0}
+  col: {fileID: 0}
   isPickedup: 0
 --- !u!65 &1938333997000527539
 BoxCollider:
@@ -399,8 +401,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.210968, y: 0.030427933, z: 0.8300171}
-  m_Center: {x: 0, y: -0.0224123, z: 0}
+  m_Size: {x: 1.244461, y: 0.0745697, z: 0.8707428}
+  m_Center: {x: 0.016746521, y: -0.035247803, z: 0.0009841919}
 --- !u!114 &1634541600415241212
 MonoBehaviour:
   m_ObjectHideFlags: 0

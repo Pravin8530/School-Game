@@ -42,12 +42,12 @@ public class Window : MonoBehaviour
             shard.isKinematic = false;
 
             Vector3 randomDirection =
-              - transform.right * Random.Range(2f, 5f) +
+              - transform.right * Random.Range(1f, 2f) +
                 Random.insideUnitSphere * 3f;
 
             shard.AddForce(randomDirection * 20f,ForceMode.Impulse);
 
-            shard.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
+            shard.AddTorque(Random.insideUnitSphere * 3f, ForceMode.Impulse);
             
         }
         

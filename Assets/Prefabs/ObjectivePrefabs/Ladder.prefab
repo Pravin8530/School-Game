@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 2638214110309617453}
   - component: {fileID: 7305621318788500099}
   - component: {fileID: 3690734693414005259}
-  - component: {fileID: 5334653405136885777}
   m_Layer: 0
   m_Name: Ladder
   m_TagString: Ladder
@@ -403,30 +402,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.108735, y: 0.32263818, z: 1.0054779}
   m_Center: {x: 0.9765658, y: -0.10208424, z: 0.2608809}
---- !u!54 &5334653405136885777
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8514411912976625380}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0

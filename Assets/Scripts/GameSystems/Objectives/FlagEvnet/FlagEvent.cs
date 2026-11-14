@@ -1,3 +1,5 @@
+using System.Collections;
+using JetBrains.Annotations;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -16,10 +18,12 @@ public class FlagEvent : MonoBehaviour, IInteractables
     public Transform salutePosition;
    [SerializeField] private float duriation = 3f;
     float time = 0f;
-
+  
+    public FlagSpawner flagSpawner;
 
     void Start()
-    {
+    { 
+       // flagSpawner = GetComponent<FlagSpawner>();
         startPosition = transform.position;
          
     }
@@ -43,6 +47,7 @@ public class FlagEvent : MonoBehaviour, IInteractables
                 }
 
                 teacher.ChangeState(new PatrioticState(teacher, salutePosition));
+               
             }
         }
     }
@@ -59,7 +64,6 @@ public class FlagEvent : MonoBehaviour, IInteractables
             if (item != null && item.itemName != "Flag")
             {
                 return;
-
             }
 
 
@@ -73,10 +77,33 @@ public class FlagEvent : MonoBehaviour, IInteractables
             flag.transform.localRotation = Quaternion.identity;
 
             isFlagAttached = true;
+            StartCoroutine(BackToOrigin(flag));
+            flagSpawner.SpawnFlagsWithDelay();
+          
         }
-
-      
-
-
     }
-}
+      
+    public IEnumerator BackToOrigin(GameObject flag)
+    { 
+         yield return new WaitUntil(()=> flag ==null); 
+
+        yield  return new WaitForSeconds(duriation);
+        Vector3 currentPos = transform.position;
+        float returnTime= 0f;
+
+
+         while(returnTime < duriation)
+        {
+            returnTime += Time.deltaTime;
+            float t = returnTime/duriation;
+            transform.position = Vector3.Lerp(currentPos,startPosition,t);
+            yield return null;
+
+        }
+      time =0f;
+      isFlagAttached = false;
+      transform.position = startPosition;
+  
+    }
+
+ }

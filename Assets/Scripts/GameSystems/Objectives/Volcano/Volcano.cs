@@ -74,7 +74,6 @@ public float arcHeight = 4f;        // How high it loops up
            rb.isKinematic = false;
             rb.angularVelocity = Vector3.zero;
             rb.linearVelocity = Vector3.zero;
-          //   rb.AddForce(Vector3.up * throwSpeed, ForceMode.Impulse);
             StartCoroutine(ArcToPosition());
         }
 
