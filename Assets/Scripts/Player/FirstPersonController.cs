@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using System;
+using Unity.VisualScripting;
+using Unity.Cinemachine;
+
+
+
+
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -34,7 +41,7 @@ namespace StarterAssets
         [Header("Player Grounded")]
         public bool Grounded = true;
         public float GroundedOffset = -0.14f;
-        public float GroundedRadius = 0.5f;
+        public float GroundedRadius = 0.1f;
         public LayerMask GroundLayers;
 
         [Header("Cinemachine")]
@@ -54,12 +61,29 @@ namespace StarterAssets
         public float ShakeSpeed = 25f;
         public float ShakeDurationAfterDrop = 0.4f;
 
+        // [Header("Crouch")]
+        // public float CrouchSpeed = 2f;
+        // [Range(0.1f,1f)]
+         public float CrouchCameraHeight = 0.8f;
+        // public float CrouchTransitionSpeed = 10f;
+        // public bool _isCrouching;
+        // public float _standingCameraHeight;
+        // public float _playerStandingHeight;
+        // public float _playerCrouchHeight;
+        // private Vector3 _standingCenterY;
+
         [Header("Crouch")]
         public float CrouchSpeed = 2f;
-        public float CrouchCameraHeight = 0.9f;
-        public float CrouchTransitionSpeed = 5f;
+        [Tooltip("Multiplier for standing camera height when crouching (e.g., 0.6 = 60% of standing height)")]
+        [Range(0.1f, 1f)]
+        public float CrouchCameraHeightMultiplier = 0.6f; // Adjust this in the inspector easily!
+        public float CrouchTransitionSpeed = 10f;
         public bool _isCrouching;
         public float _standingCameraHeight;
+        public float _playerStandingHeight;
+        public float _playerCrouchHeight;
+        private Vector3 _standingCenterY;
+
 
         private bool _isFalling = false;
         private float _pitchBeforeFall;
@@ -89,7 +113,6 @@ namespace StarterAssets
         public int sprintNoiseRadius = 12;
         public int walkNoiseRadius = 4;
         public bool enableSoundVisualizer;
-        //private Collider currentLadder;
 
 
         // player
@@ -111,10 +134,9 @@ namespace StarterAssets
         public float FOVPunchDuration = 0.3f;
 
         private float _normalFOV;
-
-
-
         private PlayerStateManager playerManager;
+
+
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -141,6 +163,7 @@ namespace StarterAssets
 
         private void Awake()
         {
+            _controller = GetComponent<CharacterController>();
 
             if (_mainCamera == null)
             {
@@ -150,9 +173,13 @@ namespace StarterAssets
 
         private void Start()
         {
+            AddressablesAudioManager.Instance.PlayMusic("AmbientBackground");
+            //  _cameraTargetOriginalLocalPos = CinemachineCameraTarget.transform.localPosition;
+            _standingCameraHeight = CinemachineCameraTarget.transform.localPosition.y;
+            _playerStandingHeight = _controller.height;
+            _standingCenterY = _controller.center;
+            if (_playerCrouchHeight <= 0f) _playerCrouchHeight = _playerStandingHeight * 0.5f;
 
-
-            _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
@@ -163,13 +190,16 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
 
-
-            _normalFOV = playerCamera.fieldOfView;
-
-            _cameraTargetOriginalLocalPos = CinemachineCameraTarget.transform.localPosition;
-            _standingCameraHeight = CinemachineCameraTarget.transform.localPosition.y;
+            if (playerCamera != null)
+            {
+                _normalFOV = playerCamera.fieldOfView;
+            }
+            // _cameraTargetOriginalLocalPos = CinemachineCameraTarget.transform.localPosition;
+            //  _standingCameraHeight = CinemachineCameraTarget.transform.localPosition.y;
 
         }
+
+
 
         private void Update()
         {
@@ -213,17 +243,24 @@ namespace StarterAssets
                    state == PlayerStateManager.PlayerState.Hiding;
         }
 
-        // private void GroundedCheck()
+
+
+        // private Vector3 GetGroundCheckPosition()
         // {
-        //     Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-        //     Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        //     CharacterController controller = _controller != null ? _controller : GetComponent<CharacterController>();
+        //     Vector3 center = transform.TransformPoint(controller.center);
+
+        //     return new Vector3(center.x, center.y - (controller.height / 2f) - GroundedOffset, center.z);
         // }
 
         private Vector3 GetGroundCheckPosition()
         {
             CharacterController controller = _controller != null ? _controller : GetComponent<CharacterController>();
-            Vector3 center = transform.TransformPoint(controller.center);
-            return new Vector3(center.x, center.y - (controller.height / 2f) - GroundedOffset, center.z);
+            Vector3 worldCenter = transform.TransformPoint(controller.center);
+            Vector3 FeetPoint = new Vector3(worldCenter.x, worldCenter.y - (controller.height / 2f), worldCenter.z);
+
+            return new Vector3(FeetPoint.x, FeetPoint.y - GroundedOffset, FeetPoint.z);
+
         }
 
         private void GroundedCheck()
@@ -305,8 +342,12 @@ namespace StarterAssets
             _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
         }
 
+
         private void JumpAndGravity()
         {
+            if (isWindowJumping || _isFalling)
+                return;
+
             if (Grounded)
             {
                 _fallTimeoutDelta = FallTimeout;
@@ -318,9 +359,13 @@ namespace StarterAssets
 
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
+                    _input.jump = false;
+                    _jumpTimeoutDelta = JumpTimeout;
+
+
+
                     if (CheckWindow())
                     {
-
                         Debug.Log(CheckWindow());
                         _input.jump = false;
 
@@ -328,6 +373,11 @@ namespace StarterAssets
                         return;
                     }
 
+                    Debug.Log($"JUMP SOUND CALL - Frame: {Time.frameCount}");
+
+                    //  AudioManager.Instance.PlayUiClip();
+
+                    AddressablesAudioManager.Instance.PlaySfx("JumpLanding");
 
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                 }
@@ -493,15 +543,70 @@ namespace StarterAssets
         //     CinemachineCameraTarget.transform.localPosition = cameraPos;
         // }
 
-        private void Crouch()
-        {
-            _isCrouching = _input.crouch;
-            Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
-            float targetHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
+        // private void Crouch()
+        // {
+        //     _isCrouching = _input.crouch;
+        //    // float targetCameraHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
+        //     float targetHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
 
-            cameraPos.y = Mathf.Lerp(cameraPos.y, targetHeight, 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime));
-            CinemachineCameraTarget.transform.localPosition = cameraPos;
-        }
+        //     _controller.height = Mathf.Lerp(_controller.height, targetHeight, 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime));
+
+        //     Vector3 center = _controller.center;
+        //     center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
+        //     _controller.center = center;
+
+        //     float targetCameraHeight = _isCrouching ? CrouchCameraHeight: _standingCameraHeight;
+        //     //  float heightRatio = _controller.height/ _playerStandingHeight;
+        //     // float targetCameraHeight = _standingCameraHeight * heightRatio;
+
+        //     Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+        //     cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime));
+        //     CinemachineCameraTarget.transform.localPosition = cameraPos;
+        // }
+
+        // private void Crouch()
+        // {
+        //     _isCrouching = _input.crouch;
+
+        //     // Target heights
+        //     float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
+        //     float targetCameraHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
+
+        //     // Smoothly interpolate CharacterController height
+        //     _controller.height = Mathf.Lerp(_controller.height, targetControllerHeight, CrouchTransitionSpeed * Time.deltaTime);
+
+        //     // Adjust center smoothly so the player stays grounded when crouching
+        //     Vector3 center = _controller.center;
+        //     center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
+        //     _controller.center = center;
+
+        //     // Smoothly interpolate Camera Target local Y position
+        //     Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+        //     cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, CrouchTransitionSpeed * Time.deltaTime);
+        //     CinemachineCameraTarget.transform.localPosition = cameraPos;
+        // }
+   private void Crouch()
+{
+    _isCrouching = _input.crouch;
+
+    float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
+    float targetCameraHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
+
+    float smoothFactor = 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime);
+
+    // Smoothly resize CharacterController height
+    _controller.height = Mathf.Lerp(_controller.height, targetControllerHeight, smoothFactor);
+
+    // Keep the collider grounded as it shrinks
+    Vector3 center = _controller.center;
+    center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
+    _controller.center = center;
+
+    // Smoothly move the camera target local position
+    Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+    cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, smoothFactor);
+    CinemachineCameraTarget.transform.localPosition = cameraPos;
+}
 
         private void HandleNoiseEmission()
         {
@@ -512,6 +617,7 @@ namespace StarterAssets
             {
                 float noiseRadius = _input.sprint ? sprintNoiseRadius : walkNoiseRadius;
                 SoundManager.Instance.MakeNoise(transform.position, noiseRadius, enableSoundVisualizer);
+
             }
         }
 
@@ -529,7 +635,7 @@ namespace StarterAssets
             _verticalVelocity = 0f;
         }
 
-       
+
 
         private void OnTriggerEnter(Collider other)
         {
@@ -632,9 +738,10 @@ namespace StarterAssets
 
 
         private IEnumerator WindowJumpRoutine()
-        {
-            isWindowJumping = true;
+        {        AddressablesAudioManager.Instance.PlaySfx("WindowJumping");
 
+            isWindowJumping = true;
+ 
             Vector3 start = transform.position;
             Vector3 end = start
                 + transform.forward * 2f
@@ -656,11 +763,11 @@ namespace StarterAssets
 
                 transform.position = Vector3.Lerp(start, end, t)
                                      + Vector3.up * arc;
-
+            
                 yield return null;
             }
 
-            transform.position = end;
+            transform.position = end + Vector3.up * 0.05f;
 
             _controller.enabled = true;
             _verticalVelocity = -2f;

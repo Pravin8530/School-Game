@@ -32,9 +32,10 @@ public class FlagEvent : MonoBehaviour, IInteractables
     {
         if (isFlagAttached)
         {
-           
+            
             if (time < duriation)
-            {
+            { 
+                AddressablesAudioManager.Instance.PlayMusic("NationalAntham");
                 time += Time.deltaTime;
                float  t =   time/duriation;
                 transform.position = Vector3.Lerp(startPosition, endPosition.position, t);

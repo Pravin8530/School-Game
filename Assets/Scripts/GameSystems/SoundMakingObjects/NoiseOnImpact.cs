@@ -13,7 +13,9 @@ public class NoiseOnImpact : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
+    {  
+        AddressablesAudioManager.Instance.PlaySfx("Bell");
+
         if (transform.parent != null) return;
 
         if (collision.relativeVelocity.magnitude >= minVelocityThreshold)

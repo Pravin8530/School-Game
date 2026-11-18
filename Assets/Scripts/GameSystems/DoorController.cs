@@ -88,10 +88,8 @@ public void Interact(InventoryNew inventory)
     isMoving = true;
 }
 
-  // can create through coding insted of animation anyway??????
     public IEnumerator DoorLockAnimation()     
     {
-
         lockedDoorAnimation.enabled = true;
         lockedDoorAnimation.Play("DoorLockAnim");
         yield return null;
@@ -99,7 +97,6 @@ public void Interact(InventoryNew inventory)
         yield return new WaitForSeconds(animLength);                                       
 
         lockedDoorAnimation.enabled = false;
-
 
     }
     public void SetLocked(bool locked)                  

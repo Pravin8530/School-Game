@@ -16,10 +16,10 @@ public class ChaseState : ITeacherState
     }
 
     public void Enter()
-    {  
-        if(teacher.CurrentState is VadaPawState)return;
+    {
+        if (teacher.CurrentState is VadaPawState) return;
 
-       teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.supriseClip, 0.15f);
+        teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.supriseClip, 0.15f);
 
 
         agent.isStopped = true;
@@ -38,7 +38,7 @@ public class ChaseState : ITeacherState
         teacher.lastSeenTimer = Time.time;
     }
 
-   
+
     public void Update()
     {
         if (!isDoneWaiting)
@@ -49,34 +49,48 @@ public class ChaseState : ITeacherState
                 isDoneWaiting = true;
                 agent.isStopped = false;
 
-               teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.chaseClip, 0.15f);
+                teacher.teacherAnimation.PlayAnimation(teacher.teacherAnimation.chaseClip, 0.15f);
+                AddressablesAudioManager.Instance.PlaySfx("Gasp");
+
+                AddressablesAudioManager.Instance.PlayMusic("Chase");
+
             }
             return;
         }
 
         float distanceToPlayer = Vector3.Distance(teacher.transform.position, teacher.player.transform.position);
         if (distanceToPlayer <= 2.5f)
-        {
-            teacher.ChangeState(new CatchState(teacher));
+        {    AddressablesAudioManager.Instance.PlaySfx("KidScreem");
+             teacher.ChangeState(new CatchState(teacher));
             return;
         }
 
         if (teacher.CanSeePlayer())
         {
             teacher.lastSeenTimer = Time.time;
-            teacher.lastKnownPosition = teacher.player.transform.position; 
+            teacher.lastKnownPosition = teacher.player.transform.position;
             agent.SetDestination(teacher.player.transform.position);
         }
+
         else
         {
-            
-            teacher.investigationPoint = teacher.lastKnownPosition;
-            teacher.ChangeState(new SearchState(teacher));
+
+            if (agent.destination != teacher.lastKnownPosition)
+            {
+                agent.SetDestination(teacher.lastKnownPosition);
+                AddressablesAudioManager.Instance.FadeMusic(4f);
+            }
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                teacher.ChangeState(new SearchState(teacher));
+            }
         }
+
     }
 
     public void Exit()
     {
         agent.isStopped = false;
     }
+
 }

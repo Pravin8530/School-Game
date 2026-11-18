@@ -31,7 +31,8 @@ public class Window : MonoBehaviour
 
    
     public void WindowBreak()
-    { 
+    {  
+        AddressablesAudioManager.Instance.PlaySfx("WindowBreaking");
         soundManager.MakeNoise(transform.position, 15f, true, Color.green);
         if(isWindowBroken)
              return;

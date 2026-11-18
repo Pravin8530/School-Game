@@ -121,7 +121,6 @@ public class PlayerInteract : MonoBehaviour
 
 
 
-    // Why is the interact handling input here xd
     public void HandleInput()
     {
         if (PlayerStateManager.Instance.currentState != PlayerStateManager.PlayerState.HasImportantItem)
@@ -168,18 +167,11 @@ public class PlayerInteract : MonoBehaviour
         }
 
 
-        // if (!Input.GetKeyDown(KeyCode.E))
-        //     return;
-
-        // if (TryPickup())
-        //     return;
-
-        // TryInteract();
+        
 
         if (!Input.GetKeyDown(KeyCode.E))
             return;
 
-        // Check selected inventory object first
         GameObject heldObject = inventoryNew.HeldObject;
 
         if (heldObject != null)
@@ -203,7 +195,7 @@ public class PlayerInteract : MonoBehaviour
 
 
     bool TryPickup()
-    {
+    {     
         if (targetPickable == null)
             return false;
         targetPickable.Interact(inventoryNew.hand);
@@ -214,7 +206,7 @@ public class PlayerInteract : MonoBehaviour
     
 
     void TryInteract()
-    {
+    { 
         if (heldBook != null)
         {
             heldBook.Interact(inventoryNew);

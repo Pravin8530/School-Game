@@ -36,7 +36,6 @@ public class PatrioticState : ITeacherState
     {
         if (isSaluted) 
         {
-            AudioManager.Instance.PlayAudioClip(teacher.AudioData.audioClips,0);
            
             timer += Time.deltaTime;
            // teacher.LookAtPlayer();
@@ -46,7 +45,6 @@ public class PatrioticState : ITeacherState
 
             }
                 return;
-
 
           }
 

@@ -51,9 +51,7 @@ public class TeacherController : MonoBehaviour
     private bool isLooking;
     Quaternion currentRotation;
 
-    [Header("audio data")]
-    public AudioData AudioData;
-
+ 
     public Transform vadapawPos; 
 
     void Start()
@@ -72,8 +70,7 @@ public class TeacherController : MonoBehaviour
     }
 
     void Update()
-    { 
-         
+    {    
         currentState?.Update();
 
         if (isLooking)
@@ -127,16 +124,11 @@ public class TeacherController : MonoBehaviour
 
 
 
-
-
     public void OnHearSound(Vector3 noisePosition)
     {
         if (currentState is ChaseState || currentState is CatchState) return;
         soundLocation = noisePosition;
         investigationPoint = soundLocation;
-
-
-
         hasHeardSound = true;
         ChangeState(new SearchState(this));
     }

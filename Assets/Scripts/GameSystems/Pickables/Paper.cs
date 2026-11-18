@@ -24,7 +24,8 @@ public class Paper : MonoBehaviour, IPickable
     }
 
     public void Interact(Transform hand)
-    { 
+    {  
+        AddressablesAudioManager.Instance.PlaySfx("PaperPickup");
         if (isOnPrinter) return; 
         
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HasPaper, this);

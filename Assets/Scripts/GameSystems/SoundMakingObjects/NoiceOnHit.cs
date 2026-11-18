@@ -7,7 +7,7 @@ public class NoiseOnHit : MonoBehaviour
     public float minImpactForce = 1.5f;
 
     private void OnCollisionEnter(Collision collision)
-    {
+    { AddressablesAudioManager.Instance.PlaySfx("Bell");
         if (collision.relativeVelocity.magnitude >= minImpactForce)
         {
             if (SoundManager.Instance != null && collision.contactCount > 0)

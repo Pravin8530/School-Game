@@ -31,7 +31,8 @@ public class Pickable : MonoBehaviour, IPickable
 
 
     public void Interact(Transform hand)
-    {
+    { 
+        AddressablesAudioManager.Instance.PlaySfx("PickUp");
         if (isPickedup) return;
 
         if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasImportantItem)
@@ -53,7 +54,6 @@ public class Pickable : MonoBehaviour, IPickable
 
     private IEnumerator PickupRoutine()
     {  
-       //AudioManager.Instance.PlayAudioClip(audioData.audioClip);
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
