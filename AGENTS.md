@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground, BlockLayer
 - Active game object:
-  - Name: Flag(Clone)
-  - Tag: Flag
-  - Layer: Default
+  - Name: PlayerCapsule
+  - Tag: Player
+  - Layer: Player
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

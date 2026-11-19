@@ -7,8 +7,6 @@ using Unity.Cinemachine;
 
 
 
-
-
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -61,16 +59,10 @@ namespace StarterAssets
         public float ShakeSpeed = 25f;
         public float ShakeDurationAfterDrop = 0.4f;
 
-        // [Header("Crouch")]
-        // public float CrouchSpeed = 2f;
-        // [Range(0.1f,1f)]
-         public float CrouchCameraHeight = 0.8f;
-        // public float CrouchTransitionSpeed = 10f;
-        // public bool _isCrouching;
-        // public float _standingCameraHeight;
-        // public float _playerStandingHeight;
-        // public float _playerCrouchHeight;
-        // private Vector3 _standingCenterY;
+        
+         [Range(0.1f,1f)]
+        public float CrouchCameraHeight = 0.8f;
+      
 
         [Header("Crouch")]
         public float CrouchSpeed = 2f;
@@ -259,7 +251,7 @@ namespace StarterAssets
             Vector3 worldCenter = transform.TransformPoint(controller.center);
             Vector3 FeetPoint = new Vector3(worldCenter.x, worldCenter.y - (controller.height / 2f), worldCenter.z);
 
-            return new Vector3(FeetPoint.x, FeetPoint.y - GroundedOffset, FeetPoint.z);
+            return new Vector3(FeetPoint.x, FeetPoint.y + GroundedOffset, FeetPoint.z);
 
         }
 
@@ -361,7 +353,6 @@ namespace StarterAssets
                 {
                     _input.jump = false;
                     _jumpTimeoutDelta = JumpTimeout;
-
 
 
                     if (CheckWindow())
@@ -471,142 +462,33 @@ namespace StarterAssets
             _isFalling = false;
         }
 
-        //private IEnumerator FallRoutine()
-        //{
-        //    _isFalling = true;
-
-        //    Quaternion startRotation = CinemachineCameraTarget.transform.localRotation;
-
-        //    Quaternion fallRotation = Quaternion.Euler(
-        //        -FallTargetRoll,
-        //        _cinemachineTargetPitch,
-        //        0f
-        //    );
-
-        //    float t = 0f;
-
-        //    while (t < FallTiltDuration)
-        //    {
-        //        t += Time.deltaTime;
-
-        //        CinemachineCameraTarget.transform.localRotation =
-        //            Quaternion.Slerp(startRotation, fallRotation, t / FallTiltDuration);
-
-        //        yield return null;
-        //    }
-
-        //    CinemachineCameraTarget.transform.localRotation = fallRotation;
-
-        //    transform.DOShakePosition(1f, new Vector3(0.5f,0.3f,0),12,90f,true).SetRelative(true);
-        //    transform.DOShakeRotation(1f, new Vector3(0.5f, 0.3f, 0), 12, 90f, true).SetRelative(true);
-
-        //    yield return new WaitForSeconds(FallHoldDuration);
-
-        //    t = 0f;
-
-        //    while (t < FallRecoverDuration)
-        //    {
-        //        t += Time.deltaTime;
-
-        //        CinemachineCameraTarget.transform.localRotation =
-        //            Quaternion.Slerp(fallRotation, startRotation, t / FallRecoverDuration);
-
-        //        yield return null;
-        //    }
-
-        //    CinemachineCameraTarget.transform.localRotation = startRotation;
-
-        //    _verticalVelocity = -2f;
-        //    _isFalling = false;
-        //}
 
 
+        private void Crouch()
+        {
+            _isCrouching = _input.crouch;
 
-        // private void Crouch()
-        // {
-        //     _isCrouching = _input.crouch;
+            float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
 
-        //     float targetSpeed = _isCrouching ? CrouchSpeed : MoveSpeed;
+            // Drop the camera proportionally to how much the capsule shrinks
+            float crouchDrop = (_playerStandingHeight - _playerCrouchHeight) * CrouchCameraHeightMultiplier;
+            float targetCameraHeight = _isCrouching ? (_standingCameraHeight - crouchDrop) : _standingCameraHeight;
 
-        //     Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+            float smoothFactor = 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime);
 
-        //     float targetHeight = _isCrouching
-        //         ? CrouchCameraHeight
-        //         : _standingCameraHeight;
+            // Smoothly resize CharacterController height
+            _controller.height = Mathf.Lerp(_controller.height, targetControllerHeight, smoothFactor);
 
-        //     cameraPos.y = Mathf.Lerp(
-        //         cameraPos.y,
-        //         targetHeight,
-        //         Time.deltaTime * CrouchTransitionSpeed
-        //     );
+            // Keep the collider grounded as it shrinks
+            Vector3 center = _controller.center;
+            center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
+            _controller.center = center;
 
-        //     CinemachineCameraTarget.transform.localPosition = cameraPos;
-        // }
-
-        // private void Crouch()
-        // {
-        //     _isCrouching = _input.crouch;
-        //    // float targetCameraHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
-        //     float targetHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
-
-        //     _controller.height = Mathf.Lerp(_controller.height, targetHeight, 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime));
-
-        //     Vector3 center = _controller.center;
-        //     center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
-        //     _controller.center = center;
-
-        //     float targetCameraHeight = _isCrouching ? CrouchCameraHeight: _standingCameraHeight;
-        //     //  float heightRatio = _controller.height/ _playerStandingHeight;
-        //     // float targetCameraHeight = _standingCameraHeight * heightRatio;
-
-        //     Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
-        //     cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime));
-        //     CinemachineCameraTarget.transform.localPosition = cameraPos;
-        // }
-
-        // private void Crouch()
-        // {
-        //     _isCrouching = _input.crouch;
-
-        //     // Target heights
-        //     float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
-        //     float targetCameraHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
-
-        //     // Smoothly interpolate CharacterController height
-        //     _controller.height = Mathf.Lerp(_controller.height, targetControllerHeight, CrouchTransitionSpeed * Time.deltaTime);
-
-        //     // Adjust center smoothly so the player stays grounded when crouching
-        //     Vector3 center = _controller.center;
-        //     center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
-        //     _controller.center = center;
-
-        //     // Smoothly interpolate Camera Target local Y position
-        //     Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
-        //     cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, CrouchTransitionSpeed * Time.deltaTime);
-        //     CinemachineCameraTarget.transform.localPosition = cameraPos;
-        // }
-   private void Crouch()
-{
-    _isCrouching = _input.crouch;
-
-    float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
-    float targetCameraHeight = _isCrouching ? CrouchCameraHeight : _standingCameraHeight;
-
-    float smoothFactor = 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime);
-
-    // Smoothly resize CharacterController height
-    _controller.height = Mathf.Lerp(_controller.height, targetControllerHeight, smoothFactor);
-
-    // Keep the collider grounded as it shrinks
-    Vector3 center = _controller.center;
-    center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
-    _controller.center = center;
-
-    // Smoothly move the camera target local position
-    Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
-    cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, smoothFactor);
-    CinemachineCameraTarget.transform.localPosition = cameraPos;
-}
+            // Smoothly move the camera target local position
+            Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
+            cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, smoothFactor);
+            CinemachineCameraTarget.transform.localPosition = cameraPos;
+        }
 
         private void HandleNoiseEmission()
         {
@@ -684,64 +566,13 @@ namespace StarterAssets
 
 
 
-        // private IEnumerator WindowJumpRoutine()
-        // {
-
-        //     isWindowJumping = true;
-
-
-        //     Debug.Log("JumpRoutine");
-        //     Vector3 start = transform.position;
-        //     Vector3 down = start - transform.up * 0.3f;
-        //     Vector3 end = transform.position + transform.forward * 2f + Vector3.up * 1f;
-        //     _controller.enabled = false;
-
-
-        //     float t = 0f;
-
-        //     // goin down
-        //     while (t < goinDownDuriation)
-        //     {
-        //         t += Time.deltaTime;
-
-        //         float normalized = Mathf.Clamp01(t / goinDownDuriation);
-
-        //         Vector3 position = Vector3.Lerp(start, down, normalized);
-
-        //         transform.position = position;
-
-        //         yield return null;
-
-        //     }
-
-        //     t = 0f;
-        //     // goingup and forward
-        //     while (t < jumpDuration)
-        //     {
-
-        //         t += Time.deltaTime;
-
-        //         float normalized = Mathf.Clamp01(t / jumpDuration);
-
-        //         Vector3 position = Vector3.Lerp(down, end, normalized);
-
-        //         transform.position = position;
-
-        //         yield return null;
-
-        //     }
-
-        //     transform.position = end;
-        //     _controller.enabled = true;
-        //     isWindowJumping = false;
-        // }
-
 
         private IEnumerator WindowJumpRoutine()
-        {        AddressablesAudioManager.Instance.PlaySfx("WindowJumping");
+        {
+            AddressablesAudioManager.Instance.PlaySfx("WindowJumping");
 
             isWindowJumping = true;
- 
+
             Vector3 start = transform.position;
             Vector3 end = start
                 + transform.forward * 2f
@@ -763,7 +594,7 @@ namespace StarterAssets
 
                 transform.position = Vector3.Lerp(start, end, t)
                                      + Vector3.up * arc;
-            
+
                 yield return null;
             }
 

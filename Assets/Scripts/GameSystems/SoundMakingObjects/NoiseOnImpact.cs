@@ -14,16 +14,18 @@ public class NoiseOnImpact : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {  
-        AddressablesAudioManager.Instance.PlaySfx("Bell");
 
         if (transform.parent != null) return;
 
         if (collision.relativeVelocity.magnitude >= minVelocityThreshold)
-        {
+        {   
+             AddressablesAudioManager.Instance.PlaySfx("DroppingObjectOnFloor");
+
             if (SoundManager.Instance != null && collision.contactCount > 0)
             {
                 SoundManager.Instance.MakeNoise(transform.position, noiseRadius, true, Color.green);
             }
         }
+        
     }
 }

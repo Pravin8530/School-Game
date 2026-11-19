@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Audio
   m_GUID: 96804a75c63ef4545af1c6df906aee4c
   m_SerializeEntries:
+  - m_GUID: 04b24dec44202a64086843ef34748ecd
+    m_Address: DroppingObjectOnFloor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 175e2b4270b2c1240801faefd7af56e0
     m_Address: KidScream
     m_ReadOnly: 0
