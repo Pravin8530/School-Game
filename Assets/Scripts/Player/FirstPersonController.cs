@@ -32,7 +32,7 @@ namespace StarterAssets
         public float Gravity = -15.0f;
 
         [Space(10)]
-        public float JumpTimeout = 0.1f;
+        public float JumpTimeout = 0.3f;
         public float FallTimeout = 0.15f;
 
 
@@ -220,13 +220,6 @@ namespace StarterAssets
 
             CameraRotation();
         }
-        // private void LateUpdate()
-        // {
-        //     if (_isFalling || isWindowJumping) return;
-
-        //     CameraRotation();
-        // }
-
         private bool IsStateRestricted()
         {
             if (PlayerStateManager.Instance == null) return false;
@@ -237,14 +230,7 @@ namespace StarterAssets
 
 
 
-        // private Vector3 GetGroundCheckPosition()
-        // {
-        //     CharacterController controller = _controller != null ? _controller : GetComponent<CharacterController>();
-        //     Vector3 center = transform.TransformPoint(controller.center);
-
-        //     return new Vector3(center.x, center.y - (controller.height / 2f) - GroundedOffset, center.z);
-        // }
-
+        
         private Vector3 GetGroundCheckPosition()
         {
             CharacterController controller = _controller != null ? _controller : GetComponent<CharacterController>();
@@ -288,6 +274,9 @@ namespace StarterAssets
             return _input.move;
         }
 
+
+       // when we sprint we need to run loop or timer/routine that lowers value of stamina
+       // when stamina zero back to normal speed
         private void Move()
         {
             if (ridingChair != null)
@@ -335,6 +324,13 @@ namespace StarterAssets
         }
 
 
+
+      // when sprint start routine that decreses value of stamina 
+      //when we not sprint it increses slowly
+      //when stamina zero target speed normal speed
+
+
+
         private void JumpAndGravity()
         {
             if (isWindowJumping || _isFalling)
@@ -366,7 +362,6 @@ namespace StarterAssets
 
                     Debug.Log($"JUMP SOUND CALL - Frame: {Time.frameCount}");
 
-                    //  AudioManager.Instance.PlayUiClip();
 
                     AddressablesAudioManager.Instance.PlaySfx("JumpLanding");
 
@@ -470,21 +465,17 @@ namespace StarterAssets
 
             float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
 
-            // Drop the camera proportionally to how much the capsule shrinks
             float crouchDrop = (_playerStandingHeight - _playerCrouchHeight) * CrouchCameraHeightMultiplier;
             float targetCameraHeight = _isCrouching ? (_standingCameraHeight - crouchDrop) : _standingCameraHeight;
 
             float smoothFactor = 1f - Mathf.Exp(-CrouchTransitionSpeed * Time.deltaTime);
 
-            // Smoothly resize CharacterController height
             _controller.height = Mathf.Lerp(_controller.height, targetControllerHeight, smoothFactor);
 
-            // Keep the collider grounded as it shrinks
             Vector3 center = _controller.center;
             center.y = _standingCenterY.y - (_playerStandingHeight - _controller.height) / 2f;
             _controller.center = center;
 
-            // Smoothly move the camera target local position
             Vector3 cameraPos = CinemachineCameraTarget.transform.localPosition;
             cameraPos.y = Mathf.Lerp(cameraPos.y, targetCameraHeight, smoothFactor);
             CinemachineCameraTarget.transform.localPosition = cameraPos;
@@ -575,8 +566,8 @@ namespace StarterAssets
 
             Vector3 start = transform.position;
             Vector3 end = start
-                + transform.forward * 2f
-                + Vector3.up * 1f;
+                + transform.forward * 2.5f
+                + Vector3.up * 0.5f;
 
             float duration = Mathf.Max(jumpDuration, 0.1f);
             float elapsed = 0f;

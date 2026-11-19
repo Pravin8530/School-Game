@@ -322137,7 +322137,7 @@ MonoBehaviour:
   ShakeAmount: 2
   ShakeSpeed: 25
   ShakeDurationAfterDrop: 0.6
-  CrouchCameraHeight: 0.01
+  CrouchCameraHeight: 0.1
   CrouchSpeed: 4
   CrouchCameraHeightMultiplier: 0.8
   CrouchTransitionSpeed: 10
@@ -322149,7 +322149,7 @@ MonoBehaviour:
   windowLayer:
     serializedVersion: 2
     m_Bits: 512
-  jumpDuration: 0.1
+  jumpDuration: 0.5
   goinDownDuriation: 0.5
   sprintNoiseRadius: 12
   walkNoiseRadius: 4
