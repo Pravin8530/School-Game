@@ -4,6 +4,10 @@ using DG.Tweening;
 using System;
 using Unity.VisualScripting;
 using Unity.Cinemachine;
+using UnityEngine.InputSystem.DualShock.LowLevel;
+using NUnit.Framework;
+
+
 
 
 
@@ -21,7 +25,7 @@ namespace StarterAssets
     {
 
         [Header("Player")]
-        public float MoveSpeed = 4.0f;
+        public float MoveSpeed = 3.0f;
         public float SprintSpeed = 6.0f;
         public float RotationSpeed = 1.0f;
         public float SpeedChangeRate = 10.0f;
@@ -59,16 +63,17 @@ namespace StarterAssets
         public float ShakeSpeed = 25f;
         public float ShakeDurationAfterDrop = 0.4f;
 
-        
-         [Range(0.1f,1f)]
+
+        // [Range(0.1f, 1f)]
         public float CrouchCameraHeight = 0.8f;
-      
+
 
         [Header("Crouch")]
         public float CrouchSpeed = 2f;
+        private bool _forcedCrouch;
         [Tooltip("Multiplier for standing camera height when crouching (e.g., 0.6 = 60% of standing height)")]
-        [Range(0.1f, 1f)]
-        public float CrouchCameraHeightMultiplier = 0.6f; // Adjust this in the inspector easily!
+        //[Range(0.1f, 1f)]
+        public float CrouchCameraHeightMultiplier = 0.6f; 
         public float CrouchTransitionSpeed = 10f;
         public bool _isCrouching;
         public float _standingCameraHeight;
@@ -128,6 +133,14 @@ namespace StarterAssets
         private float _normalFOV;
         private PlayerStateManager playerManager;
 
+        [Header("Stamina")]
+        public float maxStamina = 10f;
+        public float staminaDrainRate = 1.5f;
+        public float staminaRegenRate = 0.5f;
+        [SerializeField] private float currentStamina;
+        private bool isExhausted;
+        [SerializeField] private float staminaRegenDelay = 2f;
+        private float staminaRegenTimer;
 
 
 #if ENABLE_INPUT_SYSTEM
@@ -186,9 +199,8 @@ namespace StarterAssets
             {
                 _normalFOV = playerCamera.fieldOfView;
             }
-            // _cameraTargetOriginalLocalPos = CinemachineCameraTarget.transform.localPosition;
-            //  _standingCameraHeight = CinemachineCameraTarget.transform.localPosition.y;
 
+            currentStamina = maxStamina;
         }
 
 
@@ -208,6 +220,7 @@ namespace StarterAssets
             GroundedCheck();
             JumpAndGravity();
             Crouch();
+            HandleStamina();
             Move();
             HandleNoiseEmission();
 
@@ -225,12 +238,12 @@ namespace StarterAssets
             if (PlayerStateManager.Instance == null) return false;
             var state = PlayerStateManager.Instance.currentState;
             return state == PlayerStateManager.PlayerState.Inspecting ||
-                   state == PlayerStateManager.PlayerState.Hiding;
+             state == PlayerStateManager.PlayerState.Hiding;
         }
 
 
 
-        
+
         private Vector3 GetGroundCheckPosition()
         {
             CharacterController controller = _controller != null ? _controller : GetComponent<CharacterController>();
@@ -274,11 +287,14 @@ namespace StarterAssets
             return _input.move;
         }
 
+        private float targetSpeed;
 
-       // when we sprint we need to run loop or timer/routine that lowers value of stamina
-       // when stamina zero back to normal speed
+
         private void Move()
         {
+
+            bool canSprint = currentStamina > 0 && !isExhausted;
+
             if (ridingChair != null)
                 return;
 
@@ -286,15 +302,23 @@ namespace StarterAssets
             if (!_controller.enabled)
                 return;
 
-            float targetSpeed;
+
             if (_isCrouching)
             {
                 targetSpeed = CrouchSpeed;
             }
+            else if (_input.sprint && canSprint)
+            {
+
+                targetSpeed = SprintSpeed;
+            }
             else
             {
-                targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+                //targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+                targetSpeed = MoveSpeed;
             }
+
+
 
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
@@ -324,10 +348,50 @@ namespace StarterAssets
         }
 
 
+        private void HandleStamina()
+        {
+            bool isMoving = _input.move.sqrMagnitude > 00.01f;
+            bool canSprint = _input.sprint && isMoving && !_isCrouching && !isExhausted;
 
-      // when sprint start routine that decreses value of stamina 
-      //when we not sprint it increses slowly
-      //when stamina zero target speed normal speed
+            //Debug.Log($"Stamina: {currentStamina:F2} | Regen: {staminaRegenRate} | Exhausted: {isExhausted}");
+
+            if (canSprint)
+            {
+                targetSpeed = SprintSpeed;
+                currentStamina -= staminaDrainRate * Time.deltaTime;
+
+                if (currentStamina <= 0)
+                {
+                    staminaRegenTimer = staminaRegenDelay;
+                    isExhausted = true;
+                    currentStamina = 0f;
+                }
+
+            }
+            else
+            {
+                targetSpeed = MoveSpeed;
+                currentStamina += staminaRegenRate * Time.deltaTime;
+                if (staminaRegenTimer > 0f)
+                {
+                    staminaRegenTimer -= staminaRegenRate * Time.deltaTime;
+                    Debug.Log(staminaRegenTimer);
+                }
+
+                if (currentStamina >= maxStamina)
+                {
+                    currentStamina = maxStamina;
+
+                }
+
+                if (isExhausted && currentStamina >= maxStamina * 25 / 100)
+                {
+                    isExhausted = false;
+                }
+
+            }
+
+        }
 
 
 
@@ -457,11 +521,15 @@ namespace StarterAssets
             _isFalling = false;
         }
 
-
+        public void SetForcedCrouch(bool crouch)
+        {
+            _forcedCrouch = crouch;
+        }
 
         private void Crouch()
-        {
-            _isCrouching = _input.crouch;
+        { Debug.Log($"Crouching: {_isCrouching} | Camera Y: {CinemachineCameraTarget.transform.localPosition.y} | Target Y: {_standingCameraHeight}");
+            //_isCrouching = _input.crouch;
+            _isCrouching = _input.crouch || _forcedCrouch;
 
             float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
 

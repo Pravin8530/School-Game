@@ -75,9 +75,6 @@ public class DrawerBig : MonoBehaviour, IInteractables
 
     }
 
-    public void Drop()
-    {
-        
-    }
+  
 
 }
