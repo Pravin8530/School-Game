@@ -45,6 +45,7 @@ public class Pickable : MonoBehaviour, IPickable
         col.enabled = true;
         isPickedup = true;
         StartCoroutine(PickupRoutine());
+        
 
     }
 
