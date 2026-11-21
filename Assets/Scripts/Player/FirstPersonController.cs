@@ -472,50 +472,64 @@ namespace StarterAssets
             }
         }
 
+       
+
         private IEnumerator FallRoutine()
         {
             _isFalling = true;
+            CinemachineCameraTarget.transform.DOKill();
 
-            Quaternion startRotation = CinemachineCameraTarget.transform.localRotation;
+            Transform target = CinemachineCameraTarget.transform;
 
-            Quaternion fallRotation = Quaternion.Euler(
-                -FallTargetRoll,
-                _cinemachineTargetPitch,
-                0f
-            );
+            Vector3 startLocalPos = target.localPosition;
+            Quaternion startLocalRot = target.localRotation;
+
+            const float dropHeight = 0.8f;
+            Vector3 fallLocalPos = startLocalPos + new Vector3(0f, -dropHeight, 0f);
+           // Quaternion fallLocalRot = startLocalRot * Quaternion.Euler(0f, 0f, FallTargetRoll);
+      
+            Quaternion fallLocalRot = startLocalRot * Quaternion.Euler(-FallTargetRoll, 0f, 0f); 
 
             float t = 0f;
-
             while (t < FallTiltDuration)
             {
                 t += Time.deltaTime;
+                float k = Mathf.Clamp01(t / FallTiltDuration);
+                float easeIn = k * k;
 
-                CinemachineCameraTarget.transform.localRotation =
-                    Quaternion.Slerp(startRotation, fallRotation, t / FallTiltDuration);
+                target.localPosition = Vector3.Lerp(startLocalPos, fallLocalPos, easeIn);
+                target.localRotation = Quaternion.Slerp(startLocalRot, fallLocalRot, easeIn);
 
                 yield return null;
             }
 
-            CinemachineCameraTarget.transform.localRotation = fallRotation;
+            target.localPosition = fallLocalPos;
+            target.localRotation = fallLocalRot;
 
-            transform.DOShakePosition(0.5f, new Vector3(0.5f, 0.3f, 0), 12, 90f, true).SetRelative(true);
-            transform.DOShakeRotation(0.5f, new Vector3(0.5f, 0.3f, 0), 12, 90f, true).SetRelative(true);
+            target.DOShakeRotation(0.45f, new Vector3(1.5f, 1.0f, 2.5f), vibrato: 12, randomness: 90f, fadeOut: true)
+                  .SetRelative(true);
 
             yield return new WaitForSeconds(FallHoldDuration);
 
-            t = 0f;
+            Vector3 recoverStartPos = target.localPosition;
+            Quaternion recoverStartRot = target.localRotation;
 
+            t = 0f;
             while (t < FallRecoverDuration)
             {
                 t += Time.deltaTime;
+                float k = Mathf.Clamp01(t / FallRecoverDuration);
+                float smooth = k * k * (3f - 2f * k);
 
-                CinemachineCameraTarget.transform.localRotation =
-                    Quaternion.Slerp(fallRotation, startRotation, t / FallRecoverDuration);
+                target.localPosition = Vector3.Lerp(recoverStartPos, startLocalPos, smooth);
+                target.localRotation = Quaternion.Slerp(recoverStartRot, startLocalRot, smooth);
 
                 yield return null;
             }
 
-            CinemachineCameraTarget.transform.localRotation = startRotation;
+            target.DOKill();
+            target.localPosition = startLocalPos;
+            target.localRotation = startLocalRot;
 
             _verticalVelocity = -2f;
             _isFalling = false;
@@ -571,7 +585,7 @@ namespace StarterAssets
                 return;
 
             }
-            Vector3 stickToLadder = transform.forward * 0.5f; 
+            Vector3 stickToLadder = transform.forward * 0.5f;
             Vector3 climbDirection = Vector3.up * input * climbSpeed + stickToLadder;
             _controller.Move(climbDirection * Time.deltaTime);
             _verticalVelocity = 0f;
