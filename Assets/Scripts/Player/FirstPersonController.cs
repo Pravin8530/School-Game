@@ -73,7 +73,7 @@ namespace StarterAssets
         private bool _forcedCrouch;
         [Tooltip("Multiplier for standing camera height when crouching (e.g., 0.6 = 60% of standing height)")]
         //[Range(0.1f, 1f)]
-        public float CrouchCameraHeightMultiplier = 0.6f; 
+        public float CrouchCameraHeightMultiplier = 0.6f;
         public float CrouchTransitionSpeed = 10f;
         public bool _isCrouching;
         public float _standingCameraHeight;
@@ -210,6 +210,7 @@ namespace StarterAssets
 
             if (_isFalling || isWindowJumping) return;
             if (IsStateRestricted()) return;
+            GroundedCheck();
 
             if (IsClimbing)
             {
@@ -217,7 +218,6 @@ namespace StarterAssets
                 return;
             }
 
-            GroundedCheck();
             JumpAndGravity();
             Crouch();
             HandleStamina();
@@ -527,8 +527,7 @@ namespace StarterAssets
         }
 
         private void Crouch()
-        { Debug.Log($"Crouching: {_isCrouching} | Camera Y: {CinemachineCameraTarget.transform.localPosition.y} | Target Y: {_standingCameraHeight}");
-            //_isCrouching = _input.crouch;
+        {
             _isCrouching = _input.crouch || _forcedCrouch;
 
             float targetControllerHeight = _isCrouching ? _playerCrouchHeight : _playerStandingHeight;
@@ -570,10 +569,13 @@ namespace StarterAssets
                 IsClimbing = false;
                 _verticalVelocity = -2;
                 return;
+
             }
-            Vector3 climbDirection = Vector3.up * input * climbSpeed;
+            Vector3 stickToLadder = transform.forward * 0.5f; 
+            Vector3 climbDirection = Vector3.up * input * climbSpeed + stickToLadder;
             _controller.Move(climbDirection * Time.deltaTime);
             _verticalVelocity = 0f;
+
         }
 
 

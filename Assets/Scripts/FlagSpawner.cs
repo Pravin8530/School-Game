@@ -50,7 +50,7 @@ public class FlagSpawner : MonoBehaviour
 
     public void SpawnFlagsWithDelay()
     { 
-        // Debug.Log("flag spawned");
+        
         // timeToSpawn -= Time.deltaTime;
 
         // if (timeToSpawn <= 0)

@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground, BlockLayer
 - Active game object:
-  - Name: Cube (23)
-  - Tag: Untagged
+  - Name: Ladder
+  - Tag: Ladder
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
