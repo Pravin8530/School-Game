@@ -13,7 +13,7 @@ public class PrinterCap : MonoBehaviour, IInteractables
     [SerializeField] private Transform paperSlot;
     [SerializeField] private GameObject printedPaperPrefab;
     [SerializeField] private Transform printExitLocation;
-
+    [SerializeField] private  MovePrinter  shakePrinter;
 
 
     private bool isOpen;
@@ -109,14 +109,19 @@ public class PrinterCap : MonoBehaviour, IInteractables
         isOpen = false;
 
         yield return new WaitForSeconds(0.8f);
+      
+
+       //shaking printer heheheheheh
+        shakePrinter?.StartShaking();
 
         yield return new WaitForSeconds(3.0f);
-
+ 
+        shakePrinter?.StopShaking(); 
         Destroy(placedPaper.gameObject);
 
         isOpen = true;
 
-        GameObject printedPage = Instantiate(printedPaperPrefab, printExitLocation.position, printExitLocation.rotation);
+         GameObject printedPage = Instantiate(printedPaperPrefab, printExitLocation.position, printExitLocation.rotation);
          Destroy(printedPage, 1.0f);                   
 
         Paper newPaperScript = printedPage.GetComponent<Paper>();

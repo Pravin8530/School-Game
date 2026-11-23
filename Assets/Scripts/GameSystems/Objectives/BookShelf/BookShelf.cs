@@ -195,7 +195,7 @@ public class BookShelf : MonoBehaviour
                 drawer.localPosition = drawerOpenPosition.localPosition;
             }
         }
-        Debug.Log("BOOK PUZZLE SOLVED!");
+        Debug.Log("BOOK PUZZLE  SOLVED BOOOOOOM,!");
     }
 
 

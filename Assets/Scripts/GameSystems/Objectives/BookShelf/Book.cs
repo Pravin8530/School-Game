@@ -186,7 +186,7 @@ public void Interact(InventoryNew inventory)
         }
 
         PlayerStateManager.Instance?.SetState(
-            PlayerStateManager.PlayerState.Normal);
+        PlayerStateManager.PlayerState.Normal);
     }
 }
     public void MoveWithRay(Vector3 targetPosition)

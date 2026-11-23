@@ -81,8 +81,7 @@ public class DoorController : MonoBehaviour, IInteractables
         {
             if (!KeyItem.HasKey(requiredKeyID))
             {
-               // StartCoroutine(DoorlockedRoutine());
-
+             //Animation for locked door ( but i dont want it)
                 // if (lockedDoorAnimation != null)
                 //     StartCoroutine(DoorLockAnimation());
  

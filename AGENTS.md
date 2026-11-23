@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground, BlockLayer
 - Active game object:
-  - Name: GameObject (3)
-  - Tag: Untagged
-  - Layer: Default
+  - Name: Book (1)
+  - Tag: book
+  - Layer: Books
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

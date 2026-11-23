@@ -82,8 +82,8 @@ public class Pickable : MonoBehaviour, IPickable
 
         transform.localPosition = holdPositionOffset;
         transform.localRotation = targetRot;
+        
 
-        // add to inventory
         WorldItem worldItem = GetComponent<WorldItem>();
         InventoryNew inventoryNew = playerHand.GetComponentInParent<InventoryNew>();
 
