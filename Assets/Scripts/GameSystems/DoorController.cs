@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using NUnit.Framework;
 
 public class DoorController : MonoBehaviour, IInteractables
 {
@@ -7,16 +9,21 @@ public class DoorController : MonoBehaviour, IInteractables
     [Header("Door Speed And Angle")]
     public float openAngle = 90f;
     public float speed = 120f;
-
+    public float rattleSpeed = 25f;
+    public float rattleAngle = 3f;
+    public  float rattleTimer;
 
     [Header("Bool Value")]
     public bool isOpen;
     public bool isMoving;
     public bool isDoorLocked;
+    public bool isRattling;
 
     [Header("Quaternion")]
     Quaternion closedRot;
     Quaternion openRot;
+
+
 
     [Header("Animator")]
     public Animator lockedDoorAnimation;
@@ -27,8 +34,7 @@ public class DoorController : MonoBehaviour, IInteractables
 
     [Header("Key Requirement")]
     public string requiredKeyID = "key_01";
-   
-   //public Quaternion targetRot;
+
 
     void Start()
     {
@@ -43,18 +49,21 @@ public class DoorController : MonoBehaviour, IInteractables
     void Update()
     {
         Quaternion targetRot;
-        if (isOpen)
-        {
-            targetRot = openRot;
-        }
-        else
-        {
-            targetRot = closedRot;
-        }
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, speed * Time.deltaTime);      // Door Open Code 
+         if (rattleTimer > 0f)
+        {
+            rattleTimer -= Time.deltaTime;
+            float wiggle = Mathf.Sin(Time.time * rattleSpeed) * rattleAngle;
+            transform.rotation = closedRot * Quaternion.Euler(0f, 0f,wiggle);
+            return;
+        } 
 
-        if (Quaternion.Angle(transform.rotation, targetRot) < 0.1f)       // Stop movement when fully reached
+
+        targetRot = isOpen ? openRot : closedRot;
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, speed * Time.deltaTime);
+
+        if (Quaternion.Angle(transform.rotation, targetRot) < 0.1f)
         {
             transform.rotation = targetRot;
             isMoving = false;
@@ -62,44 +71,77 @@ public class DoorController : MonoBehaviour, IInteractables
 
     }
 
-  
-    
-public void Interact(InventoryNew inventory)
-{
-    if (isMoving) return;
 
-    if (isDoorLocked && !isOpen)
+
+    public void Interact(InventoryNew inventory)
     {
-        if (!KeyItem.HasKey(requiredKeyID))
-        {
-            if (lockedDoorAnimation != null)
-                StartCoroutine(DoorLockAnimation());
+        if (isMoving || rattleTimer > 0) return;
 
-            Debug.Log("Door locked. Required key: " + requiredKeyID);
-            return;
+        if (isDoorLocked && !isOpen)
+        {
+            if (!KeyItem.HasKey(requiredKeyID))
+            {
+               // StartCoroutine(DoorlockedRoutine());
+
+                // if (lockedDoorAnimation != null)
+                //     StartCoroutine(DoorLockAnimation());
+ 
+                rattleTimer = 0.3f;
+                Debug.Log("Door locked. Required key: " + requiredKeyID);
+                return;
+            }
+
+            isDoorLocked = false;
+            Debug.Log("Door unlocked!");
         }
 
-        // The correct key was collected.
-        isDoorLocked = false;
-        Debug.Log("Door unlocked!");
+        isOpen = !isOpen;
+        isMoving = true;
     }
 
-    isOpen = !isOpen;
-    isMoving = true;
-}
-
-    public IEnumerator DoorLockAnimation()     
+    public IEnumerator DoorLockAnimation()
     {
         lockedDoorAnimation.enabled = true;
         lockedDoorAnimation.Play("DoorLockAnim");
         yield return null;
-        float animLength = lockedDoorAnimation.GetCurrentAnimatorStateInfo(0).length;                
-        yield return new WaitForSeconds(animLength);                                       
+        float animLength = lockedDoorAnimation.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(animLength);
 
         lockedDoorAnimation.enabled = false;
 
     }
-    public void SetLocked(bool locked)                  
+
+
+    public IEnumerator DoorlockedRoutine()
+    {
+        isRattling = true;
+        Quaternion openRattle = closedRot * Quaternion.Euler(0f, 0f,rattleAngle);
+        Quaternion closeRattle = closedRot * Quaternion.Euler(0f, 0f, -rattleAngle);
+
+        yield return RattleDoorRoutine(openRattle);
+        yield return RattleDoorRoutine(closeRattle);
+        yield return RattleDoorRoutine(openRattle);
+        yield return RattleDoorRoutine(closeRattle);
+
+        isRattling = false;
+    }
+
+    private IEnumerator RattleDoorRoutine(Quaternion targetRot)
+    {
+
+        while (Quaternion.Angle(transform.localRotation, targetRot) > 0.1f)
+        {
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRot, Time.deltaTime * rattleSpeed);
+            yield return null;
+
+        }
+        transform.localRotation = targetRot;
+
+    }
+
+
+
+    public void SetLocked(bool locked)
     {
         isDoorLocked = locked;
     }

@@ -103,16 +103,13 @@ public class PrinterCap : MonoBehaviour, IInteractables
         placedPaper.isOnPrinter = true;       // blocking it from picking again while printing
         PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.Normal);
 
-        Debug.Log("Paper dropped into slot.");
 
         yield return new WaitForSeconds(0.8f);
 
         isOpen = false;
-        Debug.Log("Printer Lid closing ");
 
         yield return new WaitForSeconds(0.8f);
 
-        Debug.Log("Copying document...");
         yield return new WaitForSeconds(3.0f);
 
         Destroy(placedPaper.gameObject);

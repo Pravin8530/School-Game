@@ -31,7 +31,6 @@ namespace StarterAssets
         {
             RaycastHit hit;
             Vector3 origin = transform.position + Vector3.up * 0.1f;
-                        Debug.DrawRay(origin,Vector3.down, Color.green);
             if (Physics.Raycast(origin, Vector3.down, out hit, groundCheckDistance, groundLayer))
             {            
 
