@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, PP, Books, Player, Window, InspectItem, Ground, BlockLayer
 - Active game object:
-  - Name: Fan
+  - Name: Cube (9)
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

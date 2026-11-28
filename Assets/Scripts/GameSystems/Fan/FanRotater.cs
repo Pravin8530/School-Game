@@ -19,11 +19,13 @@ public class FanRotater : MonoBehaviour, IInteractables
     { 
 
         currentRotation = transform.localRotation;
+        Debug.Log("current target speed is "+fancontroller.GetSpeed());
     }
 
     void Update()
     {
         fan.transform.Rotate(0f,0f,fancontroller.GetSpeed()* Time.deltaTime);
+        
     }
 
     public void Interact(InventoryNew inventory)

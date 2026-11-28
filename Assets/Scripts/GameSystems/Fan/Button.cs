@@ -10,6 +10,7 @@ public class Button : MonoBehaviour, IInteractables
     private Vector3 startPos;
     public FanController fancontroller;
     public int buttonIndex;
+    
     void Start()
     {
 
