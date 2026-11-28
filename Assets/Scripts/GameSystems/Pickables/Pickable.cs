@@ -1,4 +1,5 @@
 using System.Collections;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -15,12 +16,12 @@ public class Pickable : MonoBehaviour, IPickable
     private Renderer rend;
     public Collider col;
 
-  
+
     [SerializeField] public bool isPickedup = false;
     private Coroutine pickupRoutine;
 
-    
-    
+
+
 
     void Awake()
     {
@@ -30,31 +31,68 @@ public class Pickable : MonoBehaviour, IPickable
     }
 
 
+    // public void Interact(Transform hand)
+    // {
+
+    //     AddressablesAudioManager.Instance.PlaySfx("PickUp");
+    //     if (isPickedup) return;
+
+    //     Book heldBook = FindFirstObjectByType<Book>();
+    //     if (heldBook != null && heldBook.IsHolding)
+    //     {
+    //         heldBook.Interact(hand.GetComponentInParent<InventoryNew>());
+    //     }
+
+
+    //     if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasImportantItem)
+    //         return;
+
+    //     PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HoldingItem);
+
+    //     playerHand = hand;
+    //     rend.enabled = true;
+    //     col.enabled = true;
+    //     isPickedup = true;
+    //     StartCoroutine(PickupRoutine());
+
+
+    // }
+
+
     public void Interact(Transform hand)
-    { 
-        AddressablesAudioManager.Instance.PlaySfx("PickUp");
+    {
         if (isPickedup) return;
 
-        if (PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasImportantItem)
+        if (PlayerStateManager.Instance != null &&
+            PlayerStateManager.Instance.currentState == PlayerStateManager.PlayerState.HasImportantItem)
             return;
 
-        PlayerStateManager.Instance.SetState(PlayerStateManager.PlayerState.HoldingItem);
+        Book heldBook = FindFirstObjectByType<Book>();
+        if (heldBook != null && heldBook.IsHolding)
+        {
+            heldBook.Interact(hand.GetComponentInParent<InventoryNew>());
+        }
+
+        AddressablesAudioManager.Instance?.PlaySfx("PickUp");
+        PlayerStateManager.Instance?.SetState(PlayerStateManager.PlayerState.HoldingItem);
 
         playerHand = hand;
-        rend.enabled = true;
-        col.enabled = true;
+        if (rend != null) rend.enabled = true;
+        if (col != null) col.enabled = true;
         isPickedup = true;
-        StartCoroutine(PickupRoutine());
-        
 
+        if (pickupRoutine != null)
+        {
+            StopCoroutine(pickupRoutine);
+        }
+        pickupRoutine = StartCoroutine(PickupRoutine());
     }
 
 
 
 
-
     private IEnumerator PickupRoutine()
-    {  
+    {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
@@ -82,7 +120,7 @@ public class Pickable : MonoBehaviour, IPickable
 
         transform.localPosition = holdPositionOffset;
         transform.localRotation = targetRot;
-        
+
 
         WorldItem worldItem = GetComponent<WorldItem>();
         InventoryNew inventoryNew = playerHand.GetComponentInParent<InventoryNew>();
@@ -90,7 +128,7 @@ public class Pickable : MonoBehaviour, IPickable
         if (inventoryNew != null && worldItem != null)
         {
             inventoryNew.AddItem(worldItem.itemData, gameObject);
-            
+
         }
 
 
@@ -101,12 +139,20 @@ public class Pickable : MonoBehaviour, IPickable
             KeyItem.RegisterKey(key.keyID);
             Debug.Log("Key collected: " + key.keyID);
         }
+        pickupRoutine = null;
     }
 
 
 
     public void ResetPickup()
-    {
+    { 
+        if(pickupRoutine != null)
+        {
+             StopCoroutine(pickupRoutine);
+             pickupRoutine=null;
+
+        }
+        playerHand =null;
         isPickedup = false;
 
     }
